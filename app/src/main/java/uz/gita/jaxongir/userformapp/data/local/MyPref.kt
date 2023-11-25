@@ -16,6 +16,10 @@ class MyPref @Inject constructor(
 
     fun isLogin():Boolean = sharedPreferences.getBoolean(isLogin, false) ?: false
 
+    fun saveUserName(name:String) = sharedPreferences.edit().putString("NAME", name).apply()
+
+    fun getUserName():String = sharedPreferences.getString("NAME", "User") ?: ""
+
     fun clearData(){
         sharedPreferences.edit().clear().apply()
     }

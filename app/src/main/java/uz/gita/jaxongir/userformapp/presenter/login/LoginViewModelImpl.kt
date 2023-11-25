@@ -29,6 +29,7 @@ class LoginViewModelImpl @Inject constructor(
                     appRepository.login(intent.name, intent.password)
                         .onEach {
                             it.onSuccess {
+                                pref.saveUserName(intent.name)
                                 pref.setLogin(true)
                                 loginDirection.moveToMain()
                             }
