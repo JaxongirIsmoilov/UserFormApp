@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -62,6 +63,7 @@ fun LoginScreenContent(
     onEventDispatcher: (LoginContract.Intent) -> Unit,
     isVisibleProgress: Boolean
 ) {
+    val context= LocalContext.current
     var username: String by remember { mutableStateOf("") }
     var password: String by remember { mutableStateOf("") }
 
@@ -72,7 +74,9 @@ fun LoginScreenContent(
             .background(Color.White)
     ) {
         Spacer(modifier = Modifier.height(22.dp))
-        Box() {
+        Box(modifier = Modifier
+            .padding(top = 20.dp)
+            .align(Alignment.CenterHorizontally)) {
             Image(
                 painter = painterResource(id = R.drawable.register),
                 contentDescription = "",
@@ -81,7 +85,7 @@ fun LoginScreenContent(
                     .height(80.dp)
             )
 
-            Text(text = "Login", fontSize = 36.sp)
+            Text(text = "Login", fontSize = 36.sp, modifier = Modifier.align(Alignment.TopCenter))
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -139,7 +143,11 @@ fun LoginScreenContent(
 
         Button(
             onClick = {
-                onEventDispatcher.invoke(LoginContract.Intent.OnLogin(username, password))
+                if (username.length>3 && password.length>3 ){
+                    onEventDispatcher.invoke(LoginContract.Intent.OnLogin(username, password, context = context))
+                } else{
+                    Toast.makeText(context, "Username and password length should be more than 3!", Toast.LENGTH_SHORT).show()
+                }
             }, modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
@@ -162,7 +170,6 @@ fun LoginScreenContent(
                 Text(text = "Login", fontSize = 22.sp)
             }
         }
-
     }
 }
 

@@ -17,8 +17,7 @@ interface MainContract {
 
     interface Intent {
         object Logout:Intent
-
-
+        object LoadList:Intent
     }
 
 }

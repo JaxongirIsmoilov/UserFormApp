@@ -4,8 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,29 +29,27 @@ fun InputField(
     minValue: Int,
     question: String
 ) {
-    var value by remember {
+    var valueForEmail by remember {
         mutableStateOf("Hello world")
     }
-    TextField(
-        value = value, onValueChange = {
-            value = it
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0x33C4C4C4)),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color(0xFFFF3951),
-            unfocusedBorderColor = Color(0xFFFF7686)
-        )
-    )
 
+    var valueForNumber by remember {
+        mutableStateOf("Hello world")
+    }
 
+    var valueForPhone by remember {
+        mutableStateOf("Hello world")
+    }
+
+    var valueForText by remember {
+        mutableStateOf("Hello world")
+    }
 
     when (textFieldType) {
         TextFieldType.Email -> {
-            TextField(
-                value = value, onValueChange = {
-                    value = it
+            OutlinedTextField(
+                value = valueForEmail, onValueChange = {
+                    valueForEmail = it
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -71,9 +69,9 @@ fun InputField(
         }
 
         TextFieldType.Number -> {
-            TextField(
-                value = value, onValueChange = {
-                    value = it
+            OutlinedTextField(
+                value = valueForNumber, onValueChange = {
+                    valueForNumber = it
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -93,9 +91,9 @@ fun InputField(
         }
 
         TextFieldType.Phone -> {
-            TextField(
-                value = value, onValueChange = {
-                    value = it
+            OutlinedTextField(
+                value = valueForPhone, onValueChange = {
+                    valueForPhone = it
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -115,9 +113,9 @@ fun InputField(
         }
 
         TextFieldType.Text -> {
-            TextField(
-                value = value, onValueChange = {
-                    value = it
+            OutlinedTextField(
+                value = valueForText, onValueChange = {
+                    valueForText = it
                 },
                 modifier = Modifier
                     .fillMaxWidth()

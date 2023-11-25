@@ -17,7 +17,7 @@ class SplashDirectionImpl @Inject constructor(
     private val appNavigator: AppNavigator
 ) : SplashDirection {
     override suspend fun moveToLogin() {
-        appNavigator.addScreen(LoginScreen())
+        appNavigator.replaceScreen(LoginScreen())
     }
 
     override suspend fun moveToMain() {

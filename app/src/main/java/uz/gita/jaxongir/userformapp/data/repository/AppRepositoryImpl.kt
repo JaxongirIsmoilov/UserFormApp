@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.MyPref
@@ -19,94 +18,101 @@ class AppRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val pref: MyPref
 ) : AppRepository {
-//    val userId: String = ""
-    override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow{
+    //    val userId: String = ""
+    override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
         firestore.collection("Users")
             .whereEqualTo("userName", name)
             .get()
             .addOnSuccessListener {
                 if (it.documents.isEmpty()) {
                     trySend(Result.failure(Exception("There is not such user")))
-                }else{
+                } else {
                     it.documents.forEach {
-                        if (it.data?.getOrDefault("password","").toString()
+                        if (it.data?.getOrDefault("password", "").toString()
                             == password
-                        ){
+                        ) {
                             pref.saveId(it.id)
                             myLog(pref.getId())
                             trySend(Result.success(Unit))
                         }
                     }
+
                 }
             }
         awaitClose()
     }
 
-    override fun getComponentsByUserId(userID: String): Flow<Result<List<ComponentData>>> = callbackFlow{
-        val resultList = arrayListOf<ComponentData>()
-        val converter = Gson()
-        firestore.collection("Components")
-            .get()
-            .addOnSuccessListener {
-                it.documents.forEach {
-                    resultList.add(
-                        ComponentData(
-                            id = it.id,
-                            userId = it.data?.getOrDefault("userId", "null").toString(),
-                            locId = Integer.parseInt(
-                                it.data?.getOrDefault("locId", "0").toString()
-                            ),
-                            idEnteredByUser = it.data?.getOrDefault("idEnteredByUser", "null")
-                                .toString(),
-                            content = it.data?.getOrDefault("idEnteredByUser", "null").toString(),
-                            textFieldType = converter.fromJson(
-                                it.data?.getOrDefault(
-                                    "textFieldType",
-                                    "null"
-                                ).toString(), TextFieldType::class.java
-                            ),
-                            maxLines = Integer.parseInt(
-                                it.data?.getOrDefault("maxLines", "0").toString()
-                            ),
-                            maxLength = Integer.parseInt(
-                                it.data?.getOrDefault("maxLength", "0").toString()
-                            ),
-                            minLength = Integer.parseInt(
-                                it.data?.getOrDefault("minLength", "0").toString()
-                            ),
-                            maxValue = Integer.parseInt(
-                                it.data?.getOrDefault("maxValue", "0").toString()
-                            ),
-                            minValue = Integer.parseInt(
-                                it.data?.getOrDefault("minValue", "0").toString()
-                            ),
-                            isMulti = it.data?.getOrDefault("isMulti", "false")
-                                .toString() == "true",
-                            variants = converter.fromJson(
-                                it.data?.getOrDefault("variants", "[]").toString(),
-                                Array<String>::class.java
-                            ).asList(),
-                            selected = converter.fromJson(
-                                it.data?.getOrDefault("selected", "[]").toString(),
-                                Array<Boolean>::class.java
-                            ).asList(),
-                            conditions = converter.fromJson(
-                                it.data?.getOrDefault("conditions", "[]").toString(),
-                                Array<Conditions>::class.java
-                            ).asList(),
-                            type = converter.fromJson(it.data?.getOrDefault("type", "").toString(), ComponentEnum::class.java)
+    override fun getComponentsByUserId(userID: String): Flow<Result<List<ComponentData>>> =
+        callbackFlow {
+            val resultList = arrayListOf<ComponentData>()
+            val converter = Gson()
+            firestore.collection("Components")
+                .whereEqualTo("userId", userID)
+                .get()
+                .addOnSuccessListener {
+                    it.documents.forEach {
+                        resultList.add(
+                            ComponentData(
+                                id = it.id,
+                                userId = it.data?.getOrDefault("userId", "null").toString(),
+                                locId = Integer.parseInt(
+                                    it.data?.getOrDefault("locId", "0").toString()
+                                ),
+                                idEnteredByUser = it.data?.getOrDefault("idEnteredByUser", "null")
+                                    .toString(),
+                                content = it.data?.getOrDefault("idEnteredByUser", "null")
+                                    .toString(),
+                                textFieldType = converter.fromJson(
+                                    it.data?.getOrDefault(
+                                        "textFieldType",
+                                        "null"
+                                    ).toString(), TextFieldType::class.java
+                                ),
+                                maxLines = Integer.parseInt(
+                                    it.data?.getOrDefault("maxLines", "0").toString()
+                                ),
+                                maxLength = Integer.parseInt(
+                                    it.data?.getOrDefault("maxLength", "0").toString()
+                                ),
+                                minLength = Integer.parseInt(
+                                    it.data?.getOrDefault("minLength", "0").toString()
+                                ),
+                                maxValue = Integer.parseInt(
+                                    it.data?.getOrDefault("maxValue", "0").toString()
+                                ),
+                                minValue = Integer.parseInt(
+                                    it.data?.getOrDefault("minValue", "0").toString()
+                                ),
+                                isMulti = it.data?.getOrDefault("isMulti", "false")
+                                    .toString() == "true",
+                                variants = converter.fromJson(
+                                    it.data?.getOrDefault("variants", "[]").toString(),
+                                    Array<String>::class.java
+                                ).asList(),
+                                selected = converter.fromJson(
+                                    it.data?.getOrDefault("selected", "[]").toString(),
+                                    Array<Boolean>::class.java
+                                ).asList(),
+                                conditions = converter.fromJson(
+                                    it.data?.getOrDefault("conditions", "[]").toString(),
+                                    Array<Conditions>::class.java
+                                ).asList(),
+                                type = converter.fromJson(
+                                    it.data?.getOrDefault("type", "").toString(),
+                                    ComponentEnum::class.java
+                                )
+                            )
                         )
-                    )
+                        myLog("result size:${resultList.size}")
+                    }
 
+                    trySend(Result.success(resultList))
+                }
+                .addOnFailureListener {
+                    trySend(Result.failure(it))
                 }
 
-                trySend(Result.success(resultList))
-            }
-            .addOnFailureListener {
-                trySend(Result.failure(it))
-            }
-
-        awaitClose()
-    }
+            awaitClose()
+        }
 
 }

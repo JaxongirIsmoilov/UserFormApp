@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.login
 
+import android.content.Context
 import kotlinx.coroutines.flow.StateFlow
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
@@ -15,7 +16,7 @@ interface LoginContract {
     )
 
     interface Intent {
-        data class OnLogin(val name: String, val password: String):Intent
+        data class OnLogin(val name: String, val password: String, val context: Context):Intent
     }
 
 
