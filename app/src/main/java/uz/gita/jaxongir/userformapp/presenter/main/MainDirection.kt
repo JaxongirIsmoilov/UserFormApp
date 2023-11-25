@@ -3,17 +3,18 @@ package uz.gita.jaxongir.userformapp.presenter.main
 import uz.gita.jaxongir.userformapp.presenter.login.LoginScreen
 import uz.gita.jaxongir.userformapp.utills.navigation.AppNavigator
 import javax.inject.Inject
+import javax.inject.Singleton
 
 interface MainDirection {
     suspend fun moveToLogin()
 }
 
+@Singleton
 class MainDirectionImpl @Inject constructor(
     private val appNavigator: AppNavigator
-) : MainDirection{
+):MainDirection{
     override suspend fun moveToLogin() {
         appNavigator.replaceScreen(LoginScreen())
     }
-
 
 }
