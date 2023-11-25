@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.local.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
+import uz.gita.jaxongir.userformapp.utills.myLog
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,6 +35,7 @@ class LoginViewModelImpl @Inject constructor(
                                 loginDirection.moveToMain()
                             }
                             it.onFailure{
+                                myLog("ViewMOdel fail")
                                 //
                             }
 

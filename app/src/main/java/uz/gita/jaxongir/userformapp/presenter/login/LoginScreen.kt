@@ -81,7 +81,7 @@ fun LoginScreenContent(
                     .height(80.dp)
             )
 
-            Text(text = "Get Started", fontSize = 36.sp)
+            Text(text = "Login", fontSize = 36.sp)
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -139,7 +139,7 @@ fun LoginScreenContent(
 
         Button(
             onClick = {
-
+                onEventDispatcher.invoke(LoginContract.Intent.OnLogin(username, password))
             }, modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
@@ -159,7 +159,7 @@ fun LoginScreenContent(
                     strokeWidth = 4.dp
                 )
             } else {
-                Text(text = "Add User", fontSize = 22.sp)
+                Text(text = "Login", fontSize = 22.sp)
             }
         }
 

@@ -12,6 +12,7 @@ import uz.gita.jaxongir.userformapp.data.local.MyPref
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.data.model.Conditions
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
+import uz.gita.jaxongir.userformapp.utills.myLog
 import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
@@ -27,17 +28,18 @@ class AppRepositoryImpl @Inject constructor(
                 if (it.documents.isEmpty()) {
                     trySend(Result.failure(Exception("There is not such user")))
                 }else{
-                    val components = mutableListOf<ComponentData>()
-                    val converter = Gson()
                     it.documents.forEach {
                         if (it.data?.getOrDefault("password","").toString()
                             == password
                         ){
                             pref.saveId(it.id)
+                            myLog(pref.getId())
+                            trySend(Result.success(Unit))
                         }
                     }
                 }
             }
+        awaitClose()
     }
 
     override fun getComponentsByUserId(userID: String): Flow<Result<List<ComponentData>>> = callbackFlow{
