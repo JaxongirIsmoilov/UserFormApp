@@ -40,6 +40,7 @@ class MainScreen() : AndroidScreen() {
     override fun Content() {
         val vm: MainContract.ViewModel = getViewModel<MainViewModel>()
         MainScreenContent(vm.uiState.collectAsState(), vm::onEventDispatcher)
+        //
     }
 }
 
