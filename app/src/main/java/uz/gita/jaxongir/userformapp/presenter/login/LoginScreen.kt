@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.login
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -20,6 +22,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,7 +56,7 @@ class LoginScreen : AndroidScreen() {
 
         LoginScreenContent(
             onEventDispatcher = vm::onEventDispatcher,
-            isVisibleProgress = progressState
+            uiState = vm.uiState.collectAsState()
         )
     }
 }
@@ -61,9 +65,8 @@ class LoginScreen : AndroidScreen() {
 @Composable
 fun LoginScreenContent(
     onEventDispatcher: (LoginContract.Intent) -> Unit,
-    isVisibleProgress: Boolean
+    uiState: State<LoginContract.UIState>
 ) {
-    val context= LocalContext.current
     var username: String by remember { mutableStateOf("") }
     var password: String by remember { mutableStateOf("") }
 
@@ -74,18 +77,16 @@ fun LoginScreenContent(
             .background(Color.White)
     ) {
         Spacer(modifier = Modifier.height(22.dp))
-        Box(modifier = Modifier
-            .padding(top = 20.dp)
-            .align(Alignment.CenterHorizontally)) {
+        Box(modifier = Modifier.fillMaxWidth()) {
             Image(
-                painter = painterResource(id = R.drawable.register),
+                painter = painterResource(id = R.drawable.ic_login),
                 contentDescription = "",
                 modifier = Modifier
-                    .width(188.dp)
-                    .height(80.dp)
+                    .width(200.dp)
+                    .height(200.dp)
+                    .padding(top = 36.dp)
+                    .align(Alignment.TopCenter)
             )
-
-            Text(text = "Login", fontSize = 36.sp, modifier = Modifier.align(Alignment.TopCenter))
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -101,7 +102,15 @@ fun LoginScreenContent(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xFFFF3951),
                 unfocusedBorderColor = Color(0xFFFF7686),
-            )
+            ),
+            trailingIcon = {
+                    Image(
+                        painter = painterResource(id = R.drawable.name_icon),
+                        contentDescription = "name",
+                        modifier = Modifier.size(24.dp)
+
+                    )
+            }
         )
 
         var isPasswordVisible by remember { mutableStateOf(false) }
@@ -125,8 +134,9 @@ fun LoginScreenContent(
                     }
                 ) {
                     Image(
-                        painter = painterResource(id = if (isPasswordVisible) R.drawable.key1 else R.drawable.key2),
-                        contentDescription = if (isPasswordVisible) "Hide Password" else "Show Password"
+                        painter = painterResource(id = if (isPasswordVisible) R.drawable.visibility_icon else R.drawable.visibility_icon),
+                        contentDescription = if (isPasswordVisible) "Hide Password" else "Show Password",
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             },
@@ -143,24 +153,20 @@ fun LoginScreenContent(
 
         Button(
             onClick = {
-                if (username.length>3 && password.length>3 ){
-                    onEventDispatcher.invoke(LoginContract.Intent.OnLogin(username, password, context = context))
-                } else{
-                    Toast.makeText(context, "Username and password length should be more than 3!", Toast.LENGTH_SHORT).show()
-                }
+                onEventDispatcher.invoke(LoginContract.Intent.OnLogin(username, password))
             }, modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
                 .height(60.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor =
-                (if (password.length > 3 && username.length > 3) Color(0xFFFF3951) else Color(
+                (if (password.length >= 3 && username.length >= 3) Color(0xFFFF3951) else Color(
                     0xFFFF7686
                 ))
             )
         ) {
 
-            if (isVisibleProgress) {
+            if (uiState.value.loading) {
                 CircularProgressIndicator(
                     modifier = Modifier.padding(2.dp),
                     color = Purple80,
@@ -170,14 +176,16 @@ fun LoginScreenContent(
                 Text(text = "Login", fontSize = 22.sp)
             }
         }
+
     }
 }
 
 
+@SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
 fun LoginScreenPreview() {
     UserFormAppTheme() {
-        LoginScreenContent(onEventDispatcher = {}, isVisibleProgress = false)
+        LoginScreenContent(onEventDispatcher = {}, uiState = mutableStateOf(LoginContract.UIState()))
     }
 }

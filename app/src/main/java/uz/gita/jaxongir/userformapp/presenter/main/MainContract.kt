@@ -12,6 +12,7 @@ interface MainContract {
     data class UIState(
         val loading: Boolean = false,
         val userName:String = "User",
+        val userId:String = "",
         val components: List<ComponentData> = emptyList()
     )
 

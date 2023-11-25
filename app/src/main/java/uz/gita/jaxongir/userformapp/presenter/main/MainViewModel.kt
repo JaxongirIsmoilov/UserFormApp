@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,8 +23,24 @@ class MainViewModel @Inject constructor(
     init {
 
         uiState.update { it.copy(userName = pref.getUserName()) }
-    }
 
+        viewModelScope.launch {
+            uiState.update { it.copy(loading = true) }
+            appRepository.getComponentsByUserId(pref.getId())
+                .onEach {
+                    it.onSuccess { components ->
+                        uiState.update { it.copy(components = components) }
+                    }
+
+                    it.onFailure {
+                        // error message
+                    }
+
+                            uiState.update { it.copy(loading = false) }
+
+                }
+        }
+    }
 
     override fun onEventDispatcher(intent: MainContract.Intent) {
         when (intent) {
@@ -33,26 +49,6 @@ class MainViewModel @Inject constructor(
                     pref.clearData()
                     mainDirection.moveToLogin()
                 }
-            }
-
-            MainContract.Intent.LoadList -> {
-                viewModelScope.launch {
-                    uiState.update { it.copy(loading = true) }
-                    appRepository.getComponentsByUserId(pref.getId())
-                        .onEach {
-                            it.onSuccess { components ->
-                                uiState.update { it.copy(components = components) }
-                            }
-
-                            it.onFailure {
-
-                            }
-
-                            uiState.update { it.copy(loading = false) }
-
-                        }.launchIn(viewModelScope)
-                }
-
             }
         }
     }
