@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SampleSpinner(
+fun MySampleSpinner(
     list: List<String>,
     preselected: String,
     onSelectionChanged: (selection: String) -> Unit,
@@ -97,5 +97,5 @@ fun SampleSpinner(
 @Preview(showBackground = true)
 @Composable
 fun PreviewSimple(){
-    SampleSpinner(listOf("Malle","Isfan"),"Isfan",{},Modifier,"Hello world")
+    MySampleSpinner(listOf("Malle","Isfan"),"Isfan",{},Modifier,"Hello world")
 }

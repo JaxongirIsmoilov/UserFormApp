@@ -39,7 +39,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DatePicker(
+fun MyDatePicker(
     content: String
 ) {
     var pickedDate by remember {
@@ -100,6 +100,6 @@ fun DatePicker(
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
-fun DatePickerPreview() {
-    DatePicker("Hello")
+fun MyDatePickerPreview() {
+    MyDatePicker("Hello")
 }

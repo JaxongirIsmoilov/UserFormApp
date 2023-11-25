@@ -146,7 +146,7 @@ fun LoginScreenContent(
                 .height(60.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor =
-                (if (password.length > 3 && username.length > 3) Color(0xFFFF3951) else Color(
+                (if (password.length >= 3 && username.length >= 3) Color(0xFFFF3951) else Color(
                     0xFFFF7686
                 ))
             )

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ class MainViewModel @Inject constructor(
     init {
 
         uiState.update { it.copy(userName = pref.getUserName()) }
+        uiState.update { it.copy(userId = pref.getId()) }
 
         viewModelScope.launch {
             uiState.update { it.copy(loading = true) }
@@ -38,15 +40,17 @@ class MainViewModel @Inject constructor(
 
                     uiState.update { it.copy(loading = false) }
 
-                }
+                }.launchIn(viewModelScope)
         }
     }
 
     override fun onEventDispatcher(intent: MainContract.Intent) {
         when (intent) {
             MainContract.Intent.Logout -> {
+                uiState.update { it.copy(loading = true) }
                 viewModelScope.launch {
                     pref.clearData()
+                    uiState.update { it.copy(loading = false) }
                     mainDirection.moveToLogin()
                 }
             }
