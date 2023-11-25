@@ -5,20 +5,24 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import uz.gita.jaxongir.userformapp.data.local.MyPref
 import javax.inject.Inject
 
 
 @HiltViewModel
 class SplashViewModelImpl @Inject constructor(
-    private val direction: SplashDirection
-) : ViewModel(), SplashContract.ViewModel {
-    override fun onEventDispatchers(intent: SplashContract.Intent) {
-        when (intent) {
-            SplashContract.Intent.MOveToLogin -> {
-                viewModelScope.launch {
-                    delay(1500L)
-                    direction.moveToLogin()
-                }
+    private val direction: SplashDirection,
+    private val pref: MyPref
+) : ViewModel() {
+
+    init {
+        viewModelScope.launch {
+            if (pref.isLogin()) {
+                delay(1500L)
+                direction.moveToMain()
+            }else{
+                delay(1500L)
+                direction.moveToLogin()
             }
         }
     }

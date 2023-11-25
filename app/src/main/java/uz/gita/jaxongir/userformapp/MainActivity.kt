@@ -17,6 +17,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import uz.gita.jaxongir.userformapp.presenter.splash.SplashScreen
 import uz.gita.jaxongir.userformapp.ui.theme.UserFormAppTheme
 import uz.gita.jaxongir.userformapp.utills.navigation.AppNavigationHandler
 import javax.inject.Inject
