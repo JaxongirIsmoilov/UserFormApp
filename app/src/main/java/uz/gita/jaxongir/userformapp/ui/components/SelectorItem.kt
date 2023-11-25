@@ -1,4 +1,4 @@
-package uz.gita.jaxongir.adminformapp.ui.components
+package uz.gita.jaxongir.userformapp.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

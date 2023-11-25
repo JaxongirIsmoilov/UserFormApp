@@ -1,8 +1,6 @@
-package uz.gita.jaxongir.adminformapp.ui.components
+package uz.gita.jaxongir.userformapp.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
