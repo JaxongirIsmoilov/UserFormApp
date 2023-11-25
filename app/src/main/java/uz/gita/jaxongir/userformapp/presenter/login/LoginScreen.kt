@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.ui.theme.Purple80
 import uz.gita.jaxongir.userformapp.ui.theme.UserFormAppTheme
@@ -53,11 +54,11 @@ class LoginScreen : AndroidScreen() {
             mutableStateOf(false)
         }
         val context = LocalContext.current
-
         LoginScreenContent(
             onEventDispatcher = vm::onEventDispatcher,
             uiState = vm.uiState.collectAsState()
         )
+
     }
 }
 
@@ -69,7 +70,9 @@ fun LoginScreenContent(
 ) {
     var username: String by remember { mutableStateOf("") }
     var password: String by remember { mutableStateOf("") }
-
+    val context = LocalContext.current
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(color = Color.White)
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -104,12 +107,12 @@ fun LoginScreenContent(
                 unfocusedBorderColor = Color(0xFFFF7686),
             ),
             trailingIcon = {
-                    Image(
-                        painter = painterResource(id = R.drawable.name_icon),
-                        contentDescription = "name",
-                        modifier = Modifier.size(24.dp)
+                Image(
+                    painter = painterResource(id = R.drawable.name_icon),
+                    contentDescription = "name",
+                    modifier = Modifier.size(24.dp)
 
-                    )
+                )
             }
         )
 
@@ -153,7 +156,23 @@ fun LoginScreenContent(
 
         Button(
             onClick = {
-                onEventDispatcher.invoke(LoginContract.Intent.OnLogin(username, password))
+
+                if (username.length > 3 && password.length > 3) {
+                    onEventDispatcher.invoke(
+                        LoginContract.Intent.OnLogin(
+                            username,
+                            password,
+                            context = context
+                        )
+                    )
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Username and password should be bigger than 3!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
             }, modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
@@ -186,6 +205,9 @@ fun LoginScreenContent(
 @Composable
 fun LoginScreenPreview() {
     UserFormAppTheme() {
-        LoginScreenContent(onEventDispatcher = {}, uiState = mutableStateOf(LoginContract.UIState()))
+        LoginScreenContent(
+            onEventDispatcher = {},
+            uiState = mutableStateOf(LoginContract.UIState())
+        )
     }
 }

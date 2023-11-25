@@ -2,6 +2,7 @@ package uz.gita.jaxongir.userformapp.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,6 +54,7 @@ fun InputField(
                     valueForEmail = it
                 },
                 modifier = Modifier
+                    .padding(horizontal = 10.dp)
                     .fillMaxWidth()
                     .background(Color(0x33C4C4C4)),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -74,6 +77,7 @@ fun InputField(
                     valueForNumber = it
                 },
                 modifier = Modifier
+                    .padding(horizontal = 10.dp)
                     .fillMaxWidth()
                     .background(Color(0x33C4C4C4)),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -96,6 +100,7 @@ fun InputField(
                     valueForPhone = it
                 },
                 modifier = Modifier
+                    .padding(horizontal = 10.dp)
                     .fillMaxWidth()
                     .background(Color(0x33C4C4C4)),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -118,6 +123,7 @@ fun InputField(
                     valueForText = it
                 },
                 modifier = Modifier
+                    .padding(horizontal = 10.dp)
                     .fillMaxWidth()
                     .background(Color(0x33C4C4C4)),
                 colors = TextFieldDefaults.outlinedTextFieldColors(

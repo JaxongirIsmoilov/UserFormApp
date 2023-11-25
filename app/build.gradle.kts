@@ -117,6 +117,7 @@ dependencies {
     // MVI orbit
     implementation ("org.orbit-mvi:orbit-viewmodel:4.6.1")
     implementation ("org.orbit-mvi:orbit-compose:4.6.1")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
 
 }
 

@@ -36,11 +36,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
-import uz.gita.jaxongir.userformapp.ui.components.DatePicker
 import uz.gita.jaxongir.userformapp.ui.components.InputField
-import uz.gita.jaxongir.userformapp.ui.components.SampleSpinner
+import uz.gita.jaxongir.userformapp.ui.components.MyDatePicker
+import uz.gita.jaxongir.userformapp.ui.components.MySampleSpinner
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
 import uz.gita.jaxongir.userformapp.utills.myLog
 
@@ -61,6 +62,8 @@ fun MainScreenContent(
     uiState: State<MainContract.UIState>,
     onEventDispatchers: (MainContract.Intent) -> Unit
 ) {
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(color = Color(0xFFFF3951))
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
             Box(
@@ -149,7 +152,7 @@ fun MainScreenContent(
                                                     color = Color.White,
                                                     fontWeight = FontWeight.SemiBold
                                                 )
-                                                SampleSpinner(
+                                                MySampleSpinner(
                                                     list = data.variants,
                                                     preselected = data.variants.first(),
                                                     onSelectionChanged = {},
@@ -247,13 +250,14 @@ fun MainScreenContent(
                                             Column(
                                                 horizontalAlignment = Alignment.CenterHorizontally,
                                                 modifier = Modifier.background(
-                                                    color = Color(0xFFF59AA5)
+                                                    color = Color(0xFFE6B4BA)
                                                 )
                                             ) {
                                                 Text(
                                                     text = "---------Text field-----------",
                                                     color = Color.White,
-                                                    fontWeight = FontWeight.SemiBold
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    modifier = Modifier.padding(bottom = 10.dp)
                                                 )
                                                 InputField(
                                                     textFieldType = data.textFieldType,
@@ -264,7 +268,7 @@ fun MainScreenContent(
                                                     minValue = data.minValue,
                                                     question = data.content
                                                 )
-                                                Spacer(modifier = Modifier.fillMaxWidth())
+                                                Spacer(modifier = Modifier.size(10.dp))
                                             }
                                         }
                                     }
@@ -290,7 +294,7 @@ fun MainScreenContent(
                                                     color = Color.White,
                                                     fontWeight = FontWeight.SemiBold
                                                 )
-                                                DatePicker(content = data.content)
+                                                MyDatePicker(content = data.content)
                                                 Spacer(modifier = Modifier.fillMaxWidth())
 
                                             }

@@ -10,10 +10,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -32,6 +34,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             UserFormAppTheme {
+                val systemUiController = rememberSystemUiController()
+                systemUiController.setStatusBarColor(color = Color(0xFFFF7686))
                 Navigator(screen = SplashScreen()) { navigate ->
                     handler.uiNavigator
                         .onEach { it.invoke(navigate) }

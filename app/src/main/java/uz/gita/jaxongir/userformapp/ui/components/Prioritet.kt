@@ -25,7 +25,8 @@ fun Priority() {
 
     var text: String by remember { mutableStateOf("savolga javob") }
 
-    OutlinedTextField(value = text,
+    OutlinedTextField(
+        value = text,
         onValueChange = {
             text = it
         },
@@ -37,8 +38,8 @@ fun Priority() {
                 }
             ) {
                 Image(
-                    painter = painterResource(id = if (text=="") R.drawable.ic_error else R.drawable.ic_save),
-                    contentDescription ="savol"
+                    painter = painterResource(id = if (text == "") R.drawable.ic_error else R.drawable.ic_save),
+                    contentDescription = "savol"
                 )
             }
         },
@@ -54,6 +55,6 @@ fun Priority() {
 
 @Composable
 @Preview(showBackground = true)
-fun preview(){
+fun preview() {
     Priority()
 }

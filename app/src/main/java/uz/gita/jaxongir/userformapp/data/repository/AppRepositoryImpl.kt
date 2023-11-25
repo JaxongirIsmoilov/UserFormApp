@@ -51,7 +51,7 @@ class AppRepositoryImpl @Inject constructor(
                 .get()
                 .addOnSuccessListener {
                     it.documents.forEach {
-                        resultList.add(
+                     val state= resultList.add(
                             ComponentData(
                                 id = it.id,
                                 userId = it.data?.getOrDefault("userId", "null").toString(),

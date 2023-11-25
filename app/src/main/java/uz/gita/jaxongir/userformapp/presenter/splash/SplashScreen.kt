@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import uz.gita.jaxongir.userformapp.R
 
 class SplashScreen : AndroidScreen() {
@@ -27,11 +28,14 @@ class SplashScreen : AndroidScreen() {
     override fun Content() {
         getViewModel<SplashViewModelImpl>()
         SplashContent()
+
     }
 }
 
 @Composable
 fun SplashContent() {
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(color = Color(0xFFFF7686))
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -52,7 +56,9 @@ fun SplashContent() {
             fontSize = 48.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Cursive,
-            modifier = Modifier.align(Alignment.Center).padding(top = 320.dp)
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(top = 320.dp)
         )
     }
 }
