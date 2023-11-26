@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.data.repository
 
+import android.annotation.SuppressLint
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import kotlinx.coroutines.channels.awaitClose
@@ -42,6 +43,7 @@ class AppRepositoryImpl @Inject constructor(
         awaitClose()
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun getComponentsByUserId(userID: String): Flow<Result<List<ComponentData>>> =
         callbackFlow {
             val resultList = arrayListOf<ComponentData>()
@@ -55,9 +57,7 @@ class AppRepositoryImpl @Inject constructor(
                             ComponentData(
                                 id = it.id,
                                 userId = it.data?.getOrDefault("userId", "null").toString(),
-                                locId = Integer.parseInt(
-                                    it.data?.getOrDefault("locId", "0").toString()
-                                ),
+                                locId = it.data?.getOrDefault("locId", "0").toString().toLong(),
                                 idEnteredByUser = it.data?.getOrDefault("idEnteredByUser", "null")
                                     .toString(),
                                 content = it.data?.getOrDefault("idEnteredByUser", "null")

@@ -160,8 +160,8 @@ fun LoginScreenContent(
                 if (username.length > 3 && password.length > 3) {
                     onEventDispatcher.invoke(
                         LoginContract.Intent.OnLogin(
-                            username,
-                            password,
+                            username.trim(),
+                            password.trim(),
                             context = context
                         )
                     )

@@ -6,7 +6,7 @@ import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 data class ComponentData(
     val id: String,
     val userId: String,
-    val locId: Int,
+    val locId: Long,
     val idEnteredByUser: String = "",
     val content: String,
     val textFieldType: TextFieldType,
