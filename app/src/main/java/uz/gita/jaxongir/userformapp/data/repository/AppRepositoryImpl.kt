@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.data.repository
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -51,6 +52,8 @@ class AppRepositoryImpl @Inject constructor(
                 .get()
                 .addOnSuccessListener {
                     it.documents.forEach {
+                        Log.d("AJAX", "getComponentsByUserId: ${it.data?.getOrDefault("conditions", "[]")}")
+
                         resultList.add(
                             ComponentData(
                                 id = it.id,

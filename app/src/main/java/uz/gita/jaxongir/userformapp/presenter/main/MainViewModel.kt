@@ -63,7 +63,7 @@ class MainViewModel @Inject constructor(
                     intent.componentData.conditions.forEach {
                         checkForCondition(it.id)
                         when (it.operator) {
-                            "Equal" -> {
+                            "Not equal" -> {
                                 if (!(uiState.value.checkedComponent?.enteredValue == it.value && isVisible)) {
                                     isVisible = false
                                     appRepository.updateComponent(
@@ -95,7 +95,7 @@ class MainViewModel @Inject constructor(
                                 }
                             }
 
-                            "Not equal" -> {
+                            "Equal" -> {
                                 if (!(uiState.value.checkedComponent?.enteredValue != it.value && isVisible)) {
                                     isVisible = false
                                     appRepository.updateComponent(

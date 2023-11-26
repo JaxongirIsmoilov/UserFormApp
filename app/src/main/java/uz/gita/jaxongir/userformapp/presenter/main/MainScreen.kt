@@ -138,11 +138,13 @@ fun MainScreenContent(
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
-                                            onEventDispatchers.invoke(
-                                                MainContract.Intent.CheckedComponent(
-                                                    data
+                                            if(data.conditions.isNotEmpty()) {
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.CheckedComponent(
+                                                        data
+                                                    )
                                                 )
-                                            )
+                                            }
                                             SampleSpinnerPreview(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
