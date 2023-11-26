@@ -126,4 +126,16 @@ class AppRepositoryImpl @Inject constructor(
         awaitClose()
     }
 
+    override fun hasUserInFireBase(userID: String): Flow<Boolean> = callbackFlow {
+        firestore.collection("Users")
+            .whereEqualTo("userId", userID)
+            .get()
+            .addOnSuccessListener {
+                trySend(true)
+            }
+            .addOnFailureListener { trySend(false) }
+
+        awaitClose()
+    }
+
 }

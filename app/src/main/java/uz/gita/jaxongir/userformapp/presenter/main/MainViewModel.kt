@@ -27,13 +27,11 @@ class MainViewModel @Inject constructor(
 
     init {
         uiState.update { it.copy(userName = pref.getUserName()) }
-
         viewModelScope.launch {
             uiState.update { it.copy(loading = true) }
             appRepository.getComponentsByUserId(pref.getId())
                 .onEach {
                     it.onSuccess { components ->
-
                         val sortedList = components.sortedBy {
                             it.locId
                         }
@@ -41,7 +39,7 @@ class MainViewModel @Inject constructor(
                     }
 
                     it.onFailure {
-                        // error message
+                        myLog("failrue viewmodle")
                     }
 
                     uiState.update { it.copy(loading = false) }

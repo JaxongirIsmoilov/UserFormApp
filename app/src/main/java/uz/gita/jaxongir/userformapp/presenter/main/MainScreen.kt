@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -54,6 +53,7 @@ class MainScreen : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     override fun Content() {
+        myLog("Main screen")
         val vm: MainContract.ViewModel = getViewModel<MainViewModel>()
         vm.onEventDispatcher(MainContract.Intent.LoadList)
         MainScreenContent(vm.uiState.collectAsState(), vm::onEventDispatcher)
@@ -69,184 +69,184 @@ fun MainScreenContent(
 ) {
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(color = Color(0xFFFF3951))
-    if (uiState.value.components.isEmpty()) {
-
-    } else {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .background(color = Color(0xFFFF3951))
+                    .height(70.dp)
             ) {
-                Box(
+                Text(
+                    text = "User: ${uiState.value.userName}",
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        fontStyle = FontStyle.Normal,
+                        fontWeight = FontWeight.Bold
+                    ),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color(0xFFFF3951))
-                        .height(70.dp)
+                        .align(Alignment.CenterStart)
+                        .padding(start = 16.dp),
+                    color = Color.White
+                )
+
+                IconButton(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd),
+                    onClick = {
+                        onEventDispatchers.invoke(MainContract.Intent.Logout)
+                    }
                 ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_logout),
+                        contentDescription = null,
+                        modifier = Modifier.size(36.dp),
+                        tint = Color.White
+                    )
+                }
+            }
+
+            Box(modifier = Modifier.fillMaxSize()) {
+                myLog("list size screen:${uiState.value.components.size}")
+                if (uiState.value.components.isEmpty()) {
                     Text(
-                        text = "User: ${uiState.value.userName}",
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            fontStyle = FontStyle.Normal,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .padding(start = 16.dp),
-                        color = Color.White
+                        text = "There is no components yet!",
+                        fontSize = 22.sp,
+                        modifier = Modifier.align(Alignment.Center)
                     )
 
-                    IconButton(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd),
-                        onClick = {
-                            onEventDispatchers.invoke(MainContract.Intent.Logout)
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_logout),
-                            contentDescription = null,
-                            modifier = Modifier.size(36.dp),
-                            tint = Color.White
-                        )
-                    }
-                }
-
-                Box(modifier = Modifier.fillMaxSize()) {
-                    myLog("list size screen:${uiState.value.components.size}")
-                    if (uiState.value.components.isEmpty()) {
+                } else {
+                    Column(modifier = Modifier.padding(horizontal = 15.dp)) {
                         Text(
-                            text = "There is no components yet!",
-                            fontSize = 22.sp,
-                            modifier = Modifier.align(Alignment.Center)
+                            text = "Components",
+                            modifier = Modifier
+                                .padding(top = 15.dp)
+                                .align(Alignment.CenterHorizontally),
+                            fontWeight = FontWeight.Black,
+                            fontSize = 25.sp
                         )
-
-                    } else {
-                        Column(modifier = Modifier.padding(horizontal = 15.dp)) {
-                            Text(
-                                text = "Components",
-                                modifier = Modifier
-                                    .padding(top = 15.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                fontWeight = FontWeight.Black,
-                                fontSize = 25.sp
-                            )
-                            LazyColumn(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentHeight()
-                                    .padding(top = 55.dp)
-                            ) {
-                                uiState.value.components.forEach { data ->
-                                    when (data.type) {
-                                        ComponentEnum.Spinner -> {
-                                            item {
-                                                onEventDispatchers.invoke(
-                                                    MainContract.Intent.CheckedComponent(
-                                                        data
-                                                    )
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(top = 55.dp)
+                        ) {
+                            uiState.value.components.forEach { data ->
+                                when (data.type) {
+                                    ComponentEnum.Spinner -> {
+                                        item {
+                                            onEventDispatchers.invoke(
+                                                MainContract.Intent.CheckedComponent(
+                                                    data
                                                 )
-                                                SampleSpinnerPreview(
-                                                    list = data.variants,
-                                                    preselected = data.variants[0],
-                                                    onSelectionChanged = {
-                                                        onEventDispatchers.invoke(
-                                                            MainContract.Intent.UpdateComponent(
-                                                                data.copy(enteredValue = it)
-                                                            )
+                                            )
+                                            SampleSpinnerPreview(
+                                                list = data.variants ?: listOf(),
+                                                preselected = data.variants[0] ?: "",
+                                                onSelectionChanged = {
+                                                    onEventDispatchers.invoke(
+                                                        MainContract.Intent.UpdateComponent(
+                                                            data.copy(enteredValue = it)
                                                         )
-                                                    },
-                                                    content = data.content,
-                                                    componentData = data
-                                                ) {
+                                                    )
+                                                },
+                                                content = data.content,
+                                                componentData = data
+                                            ) {
 
-                                                }
+                                            }
+
+                                        }
+                                    }
+
+                                    ComponentEnum.Selector -> {
+                                        item {
+                                            onEventDispatchers.invoke(
+                                                MainContract.Intent.CheckedComponent(
+                                                    data
+                                                )
+                                            )
+                                            SelectorItem(
+                                                question = data.content,
+                                                list = data.variants,
+                                                componentData = data
+                                            ) {
 
                                             }
                                         }
+                                    }
 
-                                        ComponentEnum.Selector -> {
-                                            item {
-                                                onEventDispatchers.invoke(
-                                                    MainContract.Intent.CheckedComponent(
-                                                        data
-                                                    )
+                                    ComponentEnum.SampleText -> {
+                                        item {
+                                            onEventDispatchers.invoke(
+                                                MainContract.Intent.CheckedComponent(
+                                                    data
                                                 )
-                                                SelectorItem(
-                                                    question = data.content,
-                                                    list = data.variants,
-                                                    componentData = data
-                                                ) {
-
-                                                }
-                                            }
-                                        }
-
-                                        ComponentEnum.SampleText -> {
-                                            item {
-                                                onEventDispatchers.invoke(
-                                                    MainContract.Intent.CheckedComponent(
-                                                        data
+                                            )
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clip(RoundedCornerShape(12.dp))
+                                                    .border(
+                                                        1.dp,
+                                                        Color(0xFFFF7686),
+                                                        RoundedCornerShape(12.dp)
                                                     )
-                                                )
-                                                Row(
+                                                    .background(Color(0x33C4C4C4))
+                                                    .padding(
+                                                        horizontal = 16.dp,
+                                                        vertical = 5.dp
+                                                    ),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(
+                                                    text = data.content,
+                                                    fontSize = 22.sp,
                                                     modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .clip(RoundedCornerShape(12.dp))
-                                                        .border(
-                                                            1.dp,
-                                                            Color(0xFFFF7686),
-                                                            RoundedCornerShape(12.dp)
-                                                        )
-                                                        .background(Color(0x33C4C4C4))
-                                                        .padding(
-                                                            horizontal = 16.dp,
-                                                            vertical = 5.dp
-                                                        ),
-                                                    verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                    Text(
-                                                        text = data.content,
-                                                        fontSize = 22.sp,
-                                                        modifier = Modifier
-                                                            .padding(bottom = 10.dp)
-                                                    )
-                                                }
-                                                Spacer(modifier = Modifier.height(16.dp))
-
+                                                        .padding(bottom = 10.dp)
+                                                )
                                             }
-                                        }
+                                            Spacer(modifier = Modifier.height(16.dp))
 
-                                        ComponentEnum.Input -> {
-                                            item {
+                                        }
+                                    }
+
+                                    ComponentEnum.Input -> {
+                                        item {
+                                            onEventDispatchers.invoke(
+                                                MainContract.Intent.CheckedComponent(
+                                                    data
+                                                )
+                                            )
+                                            var inputVal by remember {
+                                                mutableStateOf(data.enteredValue)
+                                            }
+
+                                            InputField(onEdit = {
                                                 onEventDispatchers.invoke(
-                                                    MainContract.Intent.CheckedComponent(
-                                                        data
+                                                    MainContract.Intent.UpdateComponent(
+                                                        data.copy(enteredValue = it)
                                                     )
                                                 )
-                                                var inputVal by remember {
-                                                    mutableStateOf(data.enteredValue)
-                                                }
-
-                                                InputField(onEdit = {
-                                                                    onEventDispatchers.invoke(MainContract.Intent.UpdateComponent(data.copy(enteredValue = it)))
-                                                }, componentData = data)
-                                            }
+                                            }, componentData = data)
                                         }
+                                    }
 
-                                        ComponentEnum.Dater -> {
-                                            item {
-                                                onEventDispatchers.invoke(
-                                                    MainContract.Intent.CheckedComponent(
-                                                        data
-                                                    )
+                                    ComponentEnum.Dater -> {
+                                        item {
+                                            onEventDispatchers.invoke(
+                                                MainContract.Intent.CheckedComponent(
+                                                    data
                                                 )
-                                                DatePickerPreview(
-                                                    componentData = data,
-                                                    content = data.content
-                                                ) {
+                                            )
+                                            DatePickerPreview(
+                                                componentData = data,
+                                                content = data.content
+                                            ) {
 
-                                                }
                                             }
                                         }
                                     }
