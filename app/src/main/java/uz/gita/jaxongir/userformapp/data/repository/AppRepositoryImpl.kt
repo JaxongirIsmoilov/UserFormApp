@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.data.repository
 
+import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import kotlinx.coroutines.channels.awaitClose
@@ -90,10 +91,10 @@ class AppRepositoryImpl @Inject constructor(
                                     it.data?.getOrDefault("selected", "[]").toString(),
                                     Array<Boolean>::class.java
                                 ).asList(),
-                                conditions = converter.fromJson(
+                                conditions = converter.fromJson<List<Conditions>>(
                                     it.data?.getOrDefault("conditions", "[]").toString(),
-                                    Array<Conditions>::class.java
-                                ).asList(),
+                                    object : TypeToken<List<Conditions>>() {}.type
+                                ),
                                 type = converter.fromJson(
                                     it.data?.getOrDefault("type", "").toString(),
                                     ComponentEnum::class.java
