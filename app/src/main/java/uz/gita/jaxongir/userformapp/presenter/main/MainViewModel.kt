@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val appRepository: AppRepository,
     private val mainDirection: MainDirection,
-    private val pref: MyPref
+    private val pref: MyPref,
 ) : MainContract.ViewModel, ViewModel() {
     override val uiState = MutableStateFlow(MainContract.UIState())
 
@@ -56,10 +57,40 @@ class MainViewModel @Inject constructor(
             }
 
             is MainContract.Intent.CheckedComponent -> {
-                uiState.value.components.forEach { data->
-                    if (intent.id == data.idEnteredByUser){
+                uiState.value.components.forEach { data ->
+                    if (intent.id == data.idEnteredByUser) {
                         uiState.update { it.copy(checkedComponent = data) }
                     }
+                }
+            }
+
+            is MainContract.Intent.UpdateComponent -> {
+                viewModelScope.launch {
+                    appRepository.updateComponent(intent.componentData)
+                        .onEach {
+                            it
+                                .onSuccess {
+                                    appRepository.getComponentsByUserId(pref.getId())
+                                        .onEach {
+                                            it.onSuccess { components ->
+
+                                                val sortedList = components.sortedBy {
+                                                    it.locId
+                                                }
+                                                uiState.update { it.copy(components = sortedList) }
+                                            }
+
+                                            it.onFailure {
+                                                // error message
+                                            }
+
+                                            uiState.update { it.copy(loading = false) }
+                                        }.collect()
+                                }
+                                .onFailure {
+
+                                }
+                        }.collect()
                 }
             }
         }

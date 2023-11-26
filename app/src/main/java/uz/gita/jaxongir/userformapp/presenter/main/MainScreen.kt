@@ -142,7 +142,9 @@ fun MainScreenContent(
                                                         list = data.variants,
                                                         preselected = data.variants[0],
                                                         onSelectionChanged = {
-
+                                                            onEventDispatchers.invoke(MainContract.Intent.UpdateComponent(
+                                                                data.copy(enteredValue = it)
+                                                            ))
                                                         },
                                                         content = data.content,
                                                         componentData = data

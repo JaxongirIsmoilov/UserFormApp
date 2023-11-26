@@ -25,7 +25,7 @@ interface MainContract {
 
         data class CheckedComponent(val id: String) : Intent
 
-        data class UpdateComponent(val id: String): Intent
+        data class UpdateComponent(val componentData: ComponentData): Intent
     }
 
 }
