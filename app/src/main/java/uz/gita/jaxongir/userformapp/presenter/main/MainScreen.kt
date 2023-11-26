@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -39,9 +40,9 @@ import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
+import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
-import uz.gita.jaxongir.userformapp.ui.components.MyDatePicker
-import uz.gita.jaxongir.userformapp.ui.components.MySampleSpinner
+import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
 import uz.gita.jaxongir.userformapp.utills.myLog
 
@@ -65,7 +66,10 @@ fun MainScreenContent(
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(color = Color(0xFFFF3951))
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,191 +115,97 @@ fun MainScreenContent(
                     )
 
                 } else {
-                    Text(
-                        text = "Components",
-                        modifier = Modifier
-                            .padding(top = 15.dp)
-                            .align(Alignment.TopCenter),
-                        fontWeight = FontWeight.Black,
-                        fontSize = 25.sp
-                    )
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(top = 55.dp)
-                    ) {
-                        uiState.value.components.forEach { data ->
-                            when (data.type) {
-                                ComponentEnum.Spinner -> {
-                                    item {
-                                        Card(
-                                            modifier = Modifier
-                                                .padding(horizontal = 20.dp, vertical = 5.dp)
-                                                .fillMaxWidth()
-                                                .wrapContentHeight()
-                                                .clip(RoundedCornerShape(12.dp))
-                                        ) {
-                                            Column(
-                                                modifier = Modifier.background(
-                                                    color = Color(
-                                                        0xFFDAA8AD
-                                                    )
-                                                )
+                    Column(modifier = Modifier.padding(horizontal = 15.dp)) {
+                        Text(
+                            text = "Components",
+                            modifier = Modifier
+                                .padding(top = 15.dp)
+                                .align(Alignment.CenterHorizontally),
+                            fontWeight = FontWeight.Black,
+                            fontSize = 25.sp
+                        )
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(top = 55.dp)
+                        ) {
+                            uiState.value.components.forEach { data ->
+                                when (data.type) {
+                                    ComponentEnum.Spinner -> {
+                                        item {
+                                            SampleSpinnerPreview(
+                                                list = data.variants,
+                                                preselected = data.variants[0],
+                                                onSelectionChanged = {},
+                                                content = data.content,
+                                                componentData = data
                                             ) {
-                                                Text(
-                                                    text = "---------Spinner--------------",
-                                                    fontSize = 20.sp,
-                                                    modifier = Modifier
-                                                        .padding(bottom = 10.dp)
-                                                        .align(Alignment.CenterHorizontally),
-                                                    color = Color.White,
-                                                    fontWeight = FontWeight.SemiBold
-                                                )
-                                                MySampleSpinner(
-                                                    list = data.variants,
-                                                    preselected = data.variants.first(),
-                                                    onSelectionChanged = {},
-                                                    content = data.content,
-                                                    modifier = Modifier.padding(bottom = 10.dp)
-                                                )
+
                                             }
-
-                                        }
-
-                                    }
-                                }
-
-                                ComponentEnum.Selector -> {
-                                    item {
-                                        Card(
-                                            modifier = Modifier
-                                                .padding(horizontal = 20.dp, vertical = 5.dp)
-                                                .fillMaxWidth()
-                                                .wrapContentHeight()
-                                                .clip(RoundedCornerShape(12.dp))
-                                        ) {
-                                            Column(
-                                                modifier = Modifier.background(
-                                                    color = Color(0xFFD5BFC2)
-                                                )
-                                            ) {
-                                                Spacer(modifier = Modifier.size(10.dp))
-                                                Text(
-                                                    text = "-----------Selector-----------",
-                                                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                                                    color = Color.White,
-                                                    fontWeight = FontWeight.SemiBold
-                                                )
-                                                Spacer(modifier = Modifier.size(10.dp))
-                                                SelectorItem(data.content, data.variants)
-                                                Spacer(modifier = Modifier.size(10.dp))
-                                            }
-
                                         }
                                     }
-                                }
 
-                                ComponentEnum.SampleText -> {
-                                    item {
-                                        Card(
-                                            modifier = Modifier
-                                                .padding(horizontal = 20.dp, vertical = 5.dp)
-                                                .fillMaxWidth()
-                                                .wrapContentHeight()
-                                                .clip(RoundedCornerShape(12.dp))
-                                        ) {
-                                            Column(
-                                                modifier = Modifier.background(
-                                                    color = Color(
-                                                        0xFFDAA8AD
-                                                    )
-                                                )
+                                    ComponentEnum.Selector -> {
+                                        item {
+                                            SelectorItem(
+                                                question = data.content,
+                                                list = data.variants,
+                                                componentData = data
                                             ) {
-                                                Spacer(modifier = Modifier.size(10.dp))
-                                                Text(
-                                                    text = "-----------Text View-------------",
-                                                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                                                    color = Color.White,
-                                                    fontWeight = FontWeight.SemiBold
-                                                )
+
+                                            }
+                                        }
+                                    }
+
+                                    ComponentEnum.SampleText -> {
+                                        item {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clip(RoundedCornerShape(12.dp))
+                                                    .border(
+                                                        1.dp,
+                                                        Color(0xFFFF7686),
+                                                        RoundedCornerShape(12.dp)
+                                                    )
+                                                    .background(Color(0x33C4C4C4))
+                                                    .padding(horizontal = 16.dp, vertical = 5.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
                                                 Text(
                                                     text = data.content,
                                                     fontSize = 22.sp,
                                                     modifier = Modifier
-                                                        .padding(
-                                                            horizontal = 20.dp,
-                                                            vertical = 5.dp
-                                                        )
-                                                        .fillMaxWidth()
-                                                        .wrapContentHeight()
-                                                        .clip(RoundedCornerShape(12.dp))
+                                                        .padding(bottom = 10.dp)
                                                 )
                                             }
-                                        }
+                                            Spacer(modifier = Modifier.height(16.dp))
 
-                                    }
-                                }
-
-                                ComponentEnum.Input -> {
-                                    item {
-                                        Card(
-                                            modifier = Modifier
-                                                .padding(horizontal = 20.dp, vertical = 5.dp)
-                                                .fillMaxWidth()
-                                                .wrapContentHeight()
-                                                .clip(RoundedCornerShape(12.dp)),
-
-                                            ) {
-                                            Column(
-                                                horizontalAlignment = Alignment.CenterHorizontally,
-                                                modifier = Modifier.background(
-                                                    color = Color(0xFFE6B4BA)
-                                                )
-                                            ) {
-                                                Text(
-                                                    text = "---------Text field-----------",
-                                                    color = Color.White,
-                                                    fontWeight = FontWeight.SemiBold,
-                                                    modifier = Modifier.padding(bottom = 10.dp)
-                                                )
-                                                InputField(
-                                                    textFieldType = data.textFieldType,
-                                                    maxLines = data.maxLines,
-                                                    maxLength = data.maxLength,
-                                                    minLength = data.minLength,
-                                                    maxValue = data.maxValue,
-                                                    minValue = data.minValue,
-                                                    question = data.content
-                                                )
-                                                Spacer(modifier = Modifier.size(10.dp))
-                                            }
                                         }
                                     }
-                                }
 
-                                ComponentEnum.Dater -> {
-                                    item {
-                                        Card(
-                                            modifier = Modifier
-                                                .padding(horizontal = 20.dp, vertical = 5.dp)
-                                                .fillMaxWidth()
-                                                .wrapContentHeight()
-                                                .clip(RoundedCornerShape(12.dp)),
-                                        ) {
-                                            Column(
-                                                horizontalAlignment = Alignment.CenterHorizontally,
-                                                modifier = Modifier.background(
-                                                    color = Color(0xFFF59AA5)
-                                                )
+                                    ComponentEnum.Input -> {
+                                        item {
+                                            InputField(
+                                                textFieldType = data.textFieldType,
+                                                maxLines = data.maxLines,
+                                                maxLength = data.maxLength,
+                                                minLength = data.minLength,
+                                                maxValue = data.maxValue,
+                                                minValue = data.minValue,
+                                                question = data.content,
+                                                componentData = data, {}
+                                            )
+                                        }
+                                    }
+
+                                    ComponentEnum.Dater -> {
+                                        item {
+                                            DatePickerPreview(
+                                                componentData = data,
+                                                content = data.content
                                             ) {
-                                                Text(
-                                                    text = "----------Data picker----------",
-                                                    color = Color.White,
-                                                    fontWeight = FontWeight.SemiBold
-                                                )
-                                                MyDatePicker(content = data.content)
-                                                Spacer(modifier = Modifier.fillMaxWidth())
 
                                             }
                                         }

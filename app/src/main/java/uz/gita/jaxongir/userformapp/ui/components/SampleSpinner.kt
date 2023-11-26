@@ -4,15 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -24,35 +27,52 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import uz.gita.jaxongir.userformapp.R
+import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
 @Composable
-fun MySampleSpinner(
+fun SampleSpinnerPreview(
     list: List<String>,
     preselected: String,
     onSelectionChanged: (selection: String) -> Unit,
-    modifier: Modifier = Modifier,
-    content: String
+    content: String,
+    componentData: ComponentData,
+    deleteComp: (ComponentData) -> Unit
 ) {
 
     var selected by remember { mutableStateOf(preselected) }
     var expanded by remember { mutableStateOf(false) }
 
-    Box(modifier = modifier) {
+    Box() {
         Column {
-            OutlinedTextField(
-                value = (selected),
-                onValueChange = { },
-                label = { Text(text = content) },
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, null) },
-                readOnly = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFFFF3951),
-                    unfocusedBorderColor = Color(0xFFFF7686),
+            Row {
+
+                OutlinedTextField(
+                    value = (selected),
+                    onValueChange = { },
+                    label = { Text(text = content) },
+                    modifier = Modifier.weight(1f),
+                    trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, null) },
+                    readOnly = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFFFF3951),
+                        unfocusedBorderColor = Color(0xFFFF7686),
+                    )
                 )
-            )
+                Spacer(modifier = Modifier.width(16.dp))
+                IconButton(onClick = {
+                    deleteComp(componentData)
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.cancel),
+                        contentDescription = "",
+                        tint = Color(0xFFFF3951),
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
             DropdownMenu(
                 modifier = Modifier.wrapContentWidth(),
                 expanded = expanded,
@@ -64,6 +84,7 @@ fun MySampleSpinner(
                         onClick = {
                             selected = entry
                             expanded = false
+                            onSelectionChanged(entry)
                         },
                         text = {
                             Text(
@@ -92,10 +113,4 @@ fun MySampleSpinner(
                 )
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSimple(){
-    MySampleSpinner(listOf("Malle","Isfan"),"Isfan",{},Modifier,"Hello world")
 }

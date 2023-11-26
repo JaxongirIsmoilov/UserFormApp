@@ -51,13 +51,12 @@ class AppRepositoryImpl @Inject constructor(
                 .get()
                 .addOnSuccessListener {
                     it.documents.forEach {
-                     val state= resultList.add(
+                     resultList.add(
                             ComponentData(
                                 id = it.id,
                                 userId = it.data?.getOrDefault("userId", "null").toString(),
-                                locId = Integer.parseInt(
-                                    it.data?.getOrDefault("locId", "0").toString()
-                                ),
+                                locId = it.data?.getOrDefault("locId", "0").toString().toLong().toInt()
+                                ,
                                 idEnteredByUser = it.data?.getOrDefault("idEnteredByUser", "null")
                                     .toString(),
                                 content = it.data?.getOrDefault("idEnteredByUser", "null")

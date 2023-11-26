@@ -14,7 +14,6 @@ class SplashViewModelImpl @Inject constructor(
     private val direction: SplashDirection,
     private val pref: MyPref
 ) : ViewModel() {
-
     init {
         viewModelScope.launch {
             if (pref.isLogin()) {
