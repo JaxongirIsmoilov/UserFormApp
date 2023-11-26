@@ -50,6 +50,7 @@ class AppRepositoryImpl @Inject constructor(
                 .whereEqualTo("userId", userID)
                 .get()
                 .addOnSuccessListener {
+                    myLog("success")
                     it.documents.forEach {
                         resultList.add(
                             ComponentData(
