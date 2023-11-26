@@ -146,7 +146,6 @@ fun MainScreenContent(
                                                         data
                                                     )
                                                 )
-//                                                if (uiState.value.checkedComponent?.enteredValue == data.conditions.first().value) {
                                                 SampleSpinnerPreview(
                                                     list = data.variants,
                                                     preselected = data.variants[0],
@@ -162,7 +161,7 @@ fun MainScreenContent(
                                                 ) {
 
                                                 }
-//                                                }
+
                                             }
                                         }
 

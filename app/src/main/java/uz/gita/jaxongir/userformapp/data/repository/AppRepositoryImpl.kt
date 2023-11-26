@@ -50,12 +50,11 @@ class AppRepositoryImpl @Inject constructor(
                 .get()
                 .addOnSuccessListener {
                     it.documents.forEach {
-                     resultList.add(
+                        resultList.add(
                             ComponentData(
                                 id = it.id,
                                 userId = it.data?.getOrDefault("userId", "null").toString(),
-                                locId = it.data?.getOrDefault("locId", "0").toString().toLong()
-                                ,
+                                locId = it.data?.getOrDefault("locId", "0").toString().toLong(),
                                 idEnteredByUser = it.data?.getOrDefault("idEnteredByUser", "null")
                                     .toString(),
                                 content = it.data?.getOrDefault("content", "null")
@@ -98,10 +97,12 @@ class AppRepositoryImpl @Inject constructor(
                                 type = converter.fromJson(
                                     it.data?.getOrDefault("type", "").toString(),
                                     ComponentEnum::class.java
-                                )
+                                ),
+                                enteredValue = it.data?.getOrDefault("enteredValue", "").toString(),
+                                isVisible = it.data?.getOrDefault("visible", "true").toString() == "true"
                             )
                         )
-                        myLog("result size:${resultList.size}")
+                        myLog("result size:${resultList}")
                     }
 
                     trySend(Result.success(resultList))
