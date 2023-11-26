@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
+import uz.gita.jaxongir.userformapp.utills.myLog
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +22,7 @@ class MainViewModel @Inject constructor(
     private val pref: MyPref,
 ) : MainContract.ViewModel, ViewModel() {
     override val uiState = MutableStateFlow(MainContract.UIState())
+
 
 
     init {
