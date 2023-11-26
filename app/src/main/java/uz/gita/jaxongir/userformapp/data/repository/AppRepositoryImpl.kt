@@ -113,4 +113,18 @@ class AppRepositoryImpl @Inject constructor(
             awaitClose()
         }
 
+    override fun updateComponent(componentData: ComponentData): Flow<Result<Unit>> = callbackFlow{
+        firestore.collection("Components")
+            .document(componentData.id)
+            .set(componentData)
+            .addOnSuccessListener {
+                trySend(Result.success(Unit))
+            }
+            .addOnFailureListener {
+                trySend(Result.failure(it))
+            }
+
+        awaitClose()
+    }
+
 }
