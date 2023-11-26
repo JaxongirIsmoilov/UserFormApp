@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
@@ -39,16 +40,19 @@ fun SampleSpinnerPreview(
     onSelectionChanged: (selection: String) -> Unit,
     content: String,
     componentData: ComponentData,
-    deleteComp: (ComponentData) -> Unit
+    deleteComp: (ComponentData) -> Unit,
 ) {
 
     var selected by remember { mutableStateOf(preselected) }
     var expanded by remember { mutableStateOf(false) }
 
-    Box() {
+    Box(
+        modifier = Modifier.then(
+            if (componentData.isVisible) Modifier.wrapContentSize() else Modifier.size(0.dp)
+        )
+    ) {
         Column {
             Row {
-
                 OutlinedTextField(
                     value = (selected),
                     onValueChange = { },

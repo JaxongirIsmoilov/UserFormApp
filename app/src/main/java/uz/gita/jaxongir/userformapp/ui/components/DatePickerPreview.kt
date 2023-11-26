@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -68,7 +70,9 @@ fun DatePickerPreview(
 
     val dateDialogState = rememberMaterialDialogState()
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.then(
+        if (componentData.isVisible) Modifier.fillMaxWidth() else Modifier.size(0.dp)
+    )) {
         Text(text = content, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(8.dp))
         Row {

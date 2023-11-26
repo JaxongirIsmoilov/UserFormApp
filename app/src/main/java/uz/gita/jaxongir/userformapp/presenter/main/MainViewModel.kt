@@ -61,81 +61,208 @@ class MainViewModel @Inject constructor(
 
             is MainContract.Intent.CheckedComponent -> {
                 var isVisible: Boolean = true
-                intent.componentData.conditions.forEach {
-                    checkForCondition(it.id)
-                    when (it.operator) {
-                        "\u003d\u003d" -> {
-                            myLog("Inside when ${it.operator}")
-                            if (uiState.value.checkedComponent?.enteredValue == it.value && isVisible) {
-                                appRepository.updateComponent(intent.componentData.copy(isVisible = isVisible))
-                            } else {
-                                isVisible = false
-                            }
-
-                        }
-
-                        "!\u003d" -> {
-                            myLog("Inside when ${it.operator}")
-                            if (uiState.value.checkedComponent?.enteredValue != it.value && isVisible) {
-                                appRepository.updateComponent(intent.componentData.copy(isVisible = isVisible))
-                            } else {
-                                isVisible = false
-                            }
-                        }
-
-                        "\u003e\u003d" -> {
-                            myLog("Inside when ${it.operator}")
-                            if (intent.componentData.textFieldType == TextFieldType.Number) {
-                                if ((uiState.value.checkedComponent?.enteredValue?.toInt()
-                                        ?: 0) >= it.value.toInt() && isVisible
-                                ) {
+                viewModelScope.launch {
+                    intent.componentData.conditions.forEach {
+                        checkForCondition(it.id)
+                        when (it.operator) {
+                            "Equal" -> {
+                                if (!(uiState.value.checkedComponent?.enteredValue == it.value && isVisible)) {
+                                    isVisible = false
                                     appRepository.updateComponent(
                                         intent.componentData.copy(
-                                            isVisible = isVisible
+                                            isVisible = false
                                         )
-                                    )
-                                } else {
-                                    isVisible = false
-                                }
-                            } else {
-                                if ((uiState.value.checkedComponent?.enteredValue?.length ?: 0) >= it.value.length && isVisible
-                                ) {
-                                    appRepository.updateComponent(
-                                        intent.componentData.copy(
-                                            isVisible = isVisible
-                                        )
-                                    )
-                                } else {
-                                    isVisible = false
+                                    ).onEach {
+                                        it
+                                            .onSuccess {
+                                                appRepository.getComponentsByUserId(pref.getId())
+                                                    .onEach {
+                                                        it.onSuccess { components ->
+
+                                                            val sortedList = components.sortedBy {
+                                                                it.locId
+                                                            }
+                                                            uiState.update { it.copy(components = sortedList) }
+                                                        }
+
+                                                        it.onFailure {
+                                                            // error message
+                                                        }
+
+                                                        uiState.update { it.copy(loading = false) }
+
+                                                    }.collect()
+                                            }
+                                    }.collect()
                                 }
                             }
 
-                        }
+                            "Not equal" -> {
+                                if (!(uiState.value.checkedComponent?.enteredValue != it.value && isVisible)) {
+                                    isVisible = false
+                                    appRepository.updateComponent(
+                                        intent.componentData.copy(
+                                            isVisible = false
+                                        )
+                                    ).onEach {
+                                        it
+                                            .onSuccess {
+                                                appRepository.getComponentsByUserId(pref.getId())
+                                                    .onEach {
+                                                        it.onSuccess { components ->
 
-                        "\u003c\u003d" -> {
-                            myLog("Inside when ${it.operator}")
-                            if (intent.componentData.textFieldType == TextFieldType.Number) {
-                                if ((uiState.value.checkedComponent?.enteredValue?.toInt()
-                                        ?: 0) <= it.value.toInt() && isVisible
-                                ) {
-                                    appRepository.updateComponent(
-                                        intent.componentData.copy(
-                                            isVisible = isVisible
-                                        )
-                                    )
-                                } else {
-                                    isVisible = false
+                                                            val sortedList = components.sortedBy {
+                                                                it.locId
+                                                            }
+                                                            uiState.update { it.copy(components = sortedList) }
+                                                        }
+
+                                                        it.onFailure {
+                                                            // error message
+                                                        }
+
+                                                        uiState.update { it.copy(loading = false) }
+
+                                                    }.collect()
+                                            }
+                                    }.collect()
                                 }
-                            } else {
-                                if ((uiState.value.checkedComponent?.enteredValue?.length ?: 0) <= it.value.length && isVisible
-                                ) {
-                                    appRepository.updateComponent(
-                                        intent.componentData.copy(
-                                            isVisible = isVisible
-                                        )
-                                    )
+                            }
+
+                            "More" -> {
+                                if (intent.componentData.textFieldType == TextFieldType.Number) {
+                                    if (!((uiState.value.checkedComponent?.enteredValue?.toInt()
+                                            ?: 0) >= it.value.toInt() && isVisible)
+                                    ) {
+                                        isVisible = false
+                                        appRepository.updateComponent(
+                                            intent.componentData.copy(
+                                                isVisible = false
+                                            )
+                                        ).onEach {
+                                            it
+                                                .onSuccess {
+                                                    appRepository.getComponentsByUserId(pref.getId())
+                                                        .onEach {
+                                                            it.onSuccess { components ->
+
+                                                                val sortedList = components.sortedBy {
+                                                                    it.locId
+                                                                }
+                                                                uiState.update { it.copy(components = sortedList) }
+                                                            }
+
+                                                            it.onFailure {
+                                                                // error message
+                                                            }
+
+                                                            uiState.update { it.copy(loading = false) }
+
+                                                        }.collect()
+                                                }
+                                        }.collect()
+                                    }
                                 } else {
-                                    isVisible = false
+                                    if ((uiState.value.checkedComponent?.enteredValue?.length
+                                            ?: 0) >= it.value.length && isVisible
+                                    ) {
+                                        isVisible = false
+                                        appRepository.updateComponent(
+                                            intent.componentData.copy(
+                                                isVisible = false
+                                            )
+                                        ).onEach {
+                                            it
+                                                .onSuccess {
+                                                    appRepository.getComponentsByUserId(pref.getId())
+                                                        .onEach {
+                                                            it.onSuccess { components ->
+
+                                                                val sortedList = components.sortedBy {
+                                                                    it.locId
+                                                                }
+                                                                uiState.update { it.copy(components = sortedList) }
+                                                            }
+
+                                                            it.onFailure {
+                                                                // error message
+                                                            }
+
+                                                            uiState.update { it.copy(loading = false) }
+
+                                                        }.collect()
+                                                }
+                                        }.collect()
+                                    }
+                                }
+
+                            }
+
+                            "Less" -> {
+                                if (intent.componentData.textFieldType == TextFieldType.Number) {
+                                    if ((uiState.value.checkedComponent?.enteredValue?.toInt()
+                                            ?: 0) <= it.value.toInt() && isVisible
+                                    ) {
+                                        isVisible = false
+                                        appRepository.updateComponent(
+                                            intent.componentData.copy(
+                                                isVisible = false
+                                            )
+                                        ).onEach {
+                                            it
+                                                .onSuccess {
+                                                    appRepository.getComponentsByUserId(pref.getId())
+                                                        .onEach {
+                                                            it.onSuccess { components ->
+
+                                                                val sortedList = components.sortedBy {
+                                                                    it.locId
+                                                                }
+                                                                uiState.update { it.copy(components = sortedList) }
+                                                            }
+
+                                                            it.onFailure {
+                                                                // error message
+                                                            }
+
+                                                            uiState.update { it.copy(loading = false) }
+
+                                                        }.collect()
+                                                }
+                                        }.collect()
+                                    }
+                                } else {
+                                    if ((uiState.value.checkedComponent?.enteredValue?.length
+                                            ?: 0) <= it.value.length && isVisible
+                                    ) {
+                                        isVisible = false
+                                        appRepository.updateComponent(
+                                            intent.componentData.copy(
+                                                isVisible = false
+                                            )
+                                        ).onEach {
+                                            it
+                                                .onSuccess {
+                                                    appRepository.getComponentsByUserId(pref.getId())
+                                                        .onEach {
+                                                            it.onSuccess { components ->
+
+                                                                val sortedList = components.sortedBy {
+                                                                    it.locId
+                                                                }
+                                                                uiState.update { it.copy(components = sortedList) }
+                                                            }
+
+                                                            it.onFailure {
+                                                                // error message
+                                                            }
+
+                                                            uiState.update { it.copy(loading = false) }
+
+                                                        }.collect()
+                                                }
+                                        }.collect()
+                                    }
                                 }
                             }
                         }
