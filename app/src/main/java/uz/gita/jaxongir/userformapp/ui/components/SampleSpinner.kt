@@ -61,17 +61,6 @@ fun SampleSpinnerPreview(
                         unfocusedBorderColor = Color(0xFFFF7686),
                     )
                 )
-                Spacer(modifier = Modifier.width(16.dp))
-                IconButton(onClick = {
-                    deleteComp(componentData)
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.cancel),
-                        contentDescription = "",
-                        tint = Color(0xFFFF3951),
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
             }
             DropdownMenu(
                 modifier = Modifier.wrapContentWidth(),

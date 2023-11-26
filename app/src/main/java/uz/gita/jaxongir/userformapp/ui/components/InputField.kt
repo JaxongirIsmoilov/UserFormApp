@@ -22,57 +22,103 @@ fun InputField(
     onEdit: (String) -> Unit,
     componentData: ComponentData,
 ) {
-    var newContent by remember {
-        mutableStateOf("0")
+    val maxLength = if (componentData.maxLength == 0) Integer.MAX_VALUE else componentData.maxLength
+    val minLength = if (componentData.minLength == 0) Integer.MIN_VALUE else componentData.minLength
+    val maxValue = if (componentData.maxValue == 0) Integer.MAX_VALUE else componentData.maxValue
+    val minValue = if (componentData.minValue == 0) Integer.MIN_VALUE else componentData.minValue
+    var newContentForNumber by remember {
+        mutableStateOf("")
     }
-    val type =
-        when (componentData.textFieldType) {
-            TextFieldType.Email -> {
-                KeyboardType.Email
-            }
+    var newContentForOther by remember {
+        mutableStateOf("")
+    }
 
-            TextFieldType.Number -> {
-                KeyboardType.Number
-            }
+    var newContentForText by remember {
+        mutableStateOf("")
+    }
 
-            TextFieldType.Text -> {
-                KeyboardType.Text
-            }
+    var currentValue by remember {
+        mutableStateOf("")
+    }
 
-            TextFieldType.Phone -> {
-                KeyboardType.Phone
-            }
+    when (componentData.textFieldType) {
+        TextFieldType.Email -> {
+            OutlinedTextField(
+                value = newContentForOther,
+                onValueChange = {
+                    newContentForOther = it
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                label = { Text(text = componentData.content) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFFFF3951),
+                    unfocusedBorderColor = Color(0xFFFF7686)
+                )
+            )
         }
 
-    val maxLength = if(componentData.maxLength == 0) Integer.MAX_VALUE else componentData.maxLength
-    val minLength = if (componentData.minLength == 0) Integer.MIN_VALUE else componentData.minLength
-    val maxValue = if(componentData.maxValue == 0) Integer.MAX_VALUE else componentData.maxValue
-    val minValue = if(componentData.minValue == 0) Integer.MIN_VALUE else componentData.minValue
+        TextFieldType.Number -> {
+            OutlinedTextField(
+                value = newContentForNumber,
+                onValueChange = { input ->
+                    currentValue = input
+                    if (input.isEmpty()){
+                        newContentForNumber = ""
+                    }else{
+                        if (input.toInt() < minValue) {
+                            newContentForNumber = minValue.toString()
+                        }else if (input.toInt() in minValue .. maxValue) {
+                            newContentForNumber = input
+                        } else {
+                            newContentForNumber = maxValue.toString()
+                        }
+                    }
 
-
-        OutlinedTextField(
-            value = newContent,
-            onValueChange = {
-                if (maxLength < it.length) {
-                    newContent = it
-                    onEdit(newContent)
-                } else if(maxValue < it.toInt()) {
-                    newContent = it
-                    onEdit(newContent)
-                }else if(minValue> it.toInt()){
-                    newContent = it
-                    onEdit(newContent)
-                }else{
-                    newContent = newContent
-                }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = type),
-            label = { Text(text = componentData.content) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFFFF3951),
-                unfocusedBorderColor = Color(0xFFFF7686)
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                label = { Text(text = componentData.content) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFFFF3951),
+                    unfocusedBorderColor = Color(0xFFFF7686)
+                )
             )
-        )
+        }
+
+        TextFieldType.Text -> {
+            OutlinedTextField(
+                value = newContentForText,
+                onValueChange = {
+                    if (it.length <= maxLength){
+                        newContentForText = it
+                    }
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                label = { Text(text = componentData.content) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFFFF3951),
+                    unfocusedBorderColor = Color(0xFFFF7686)
+                )
+            )
+        }
+
+        TextFieldType.Phone -> {
+            OutlinedTextField(
+                value = newContentForOther,
+                onValueChange = {
+                    newContentForOther = it
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                label = { Text(text = componentData.content) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFFFF3951),
+                    unfocusedBorderColor = Color(0xFFFF7686)
+                )
+            )
+        }
+    }
 
 }

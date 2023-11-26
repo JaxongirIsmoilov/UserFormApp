@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
+import uz.gita.jaxongir.userformapp.utills.myLog
 import javax.inject.Inject
 
 @HiltViewModel
@@ -64,6 +65,7 @@ class MainViewModel @Inject constructor(
                     checkForCondition(it.id)
                     when (it.operator) {
                         "\u003d\u003d" -> {
+                            myLog("Inside when ${it.operator}")
                             if (uiState.value.checkedComponent?.enteredValue == it.value && isVisible) {
                                 appRepository.updateComponent(intent.componentData.copy(isVisible = isVisible))
                             } else {
@@ -73,6 +75,7 @@ class MainViewModel @Inject constructor(
                         }
 
                         "!\u003d" -> {
+                            myLog("Inside when ${it.operator}")
                             if (uiState.value.checkedComponent?.enteredValue != it.value && isVisible) {
                                 appRepository.updateComponent(intent.componentData.copy(isVisible = isVisible))
                             } else {
@@ -81,6 +84,7 @@ class MainViewModel @Inject constructor(
                         }
 
                         "\u003e\u003d" -> {
+                            myLog("Inside when ${it.operator}")
                             if (intent.componentData.textFieldType == TextFieldType.Number) {
                                 if ((uiState.value.checkedComponent?.enteredValue?.toInt()
                                         ?: 0) >= it.value.toInt() && isVisible
@@ -109,6 +113,7 @@ class MainViewModel @Inject constructor(
                         }
 
                         "\u003c\u003d" -> {
+                            myLog("Inside when ${it.operator}")
                             if (intent.componentData.textFieldType == TextFieldType.Number) {
                                 if ((uiState.value.checkedComponent?.enteredValue?.toInt()
                                         ?: 0) <= it.value.toInt() && isVisible
