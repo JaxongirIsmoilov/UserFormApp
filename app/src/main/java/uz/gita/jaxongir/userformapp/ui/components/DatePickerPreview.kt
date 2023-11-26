@@ -92,12 +92,6 @@ fun DatePickerPreview(
                         }
                         .width(36.dp))
             }
-            Spacer(modifier = Modifier.width(16.dp))
-            IconButton(onClick = {
-                deleteComp(componentData)
-            }) {
-
-            }
         }
 
     }
