@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import uz.gita.jaxongir.userformapp.data.local.MyPref
+import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
+import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import javax.inject.Inject
 
@@ -57,11 +58,84 @@ class MainViewModel @Inject constructor(
             }
 
             is MainContract.Intent.CheckedComponent -> {
-                uiState.value.components.forEach { data ->
-                    if (intent.id == data.idEnteredByUser) {
-                        uiState.update { it.copy(checkedComponent = data) }
+                var isVisible: Boolean = true
+                intent.componentData.conditions.forEach {
+                    checkForCondition(it.id)
+                    when (it.operator) {
+                        "\u003d\u003d" -> {
+                            if (uiState.value.checkedComponent?.enteredValue == it.value && isVisible) {
+                                appRepository.updateComponent(intent.componentData.copy(isVisible = isVisible))
+                            } else {
+                                isVisible = false
+                            }
+
+                        }
+
+                        "!\u003d" -> {
+                            if (uiState.value.checkedComponent?.enteredValue != it.value && isVisible) {
+                                appRepository.updateComponent(intent.componentData.copy(isVisible = isVisible))
+                            } else {
+                                isVisible = false
+                            }
+                        }
+
+                        "\u003e\u003d" -> {
+                            if (intent.componentData.textFieldType == TextFieldType.Number) {
+                                if ((uiState.value.checkedComponent?.enteredValue?.toInt()
+                                        ?: 0) >= it.value.toInt() && isVisible
+                                ) {
+                                    appRepository.updateComponent(
+                                        intent.componentData.copy(
+                                            isVisible = isVisible
+                                        )
+                                    )
+                                } else {
+                                    isVisible = false
+                                }
+                            } else {
+                                if ((uiState.value.checkedComponent?.enteredValue?.length ?: 0) >= it.value.length && isVisible
+                                ) {
+                                    appRepository.updateComponent(
+                                        intent.componentData.copy(
+                                            isVisible = isVisible
+                                        )
+                                    )
+                                } else {
+                                    isVisible = false
+                                }
+                            }
+
+                        }
+
+                        "\u003c\u003d" -> {
+                            if (intent.componentData.textFieldType == TextFieldType.Number) {
+                                if ((uiState.value.checkedComponent?.enteredValue?.toInt()
+                                        ?: 0) <= it.value.toInt() && isVisible
+                                ) {
+                                    appRepository.updateComponent(
+                                        intent.componentData.copy(
+                                            isVisible = isVisible
+                                        )
+                                    )
+                                } else {
+                                    isVisible = false
+                                }
+                            } else {
+                                if ((uiState.value.checkedComponent?.enteredValue?.length ?: 0) <= it.value.length && isVisible
+                                ) {
+                                    appRepository.updateComponent(
+                                        intent.componentData.copy(
+                                            isVisible = isVisible
+                                        )
+                                    )
+                                } else {
+                                    isVisible = false
+                                }
+                            }
+                        }
                     }
                 }
+
             }
 
             is MainContract.Intent.UpdateComponent -> {
@@ -95,4 +169,15 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+    private fun checkForCondition(value: String) {
+        uiState.value.components.forEach { data ->
+            if (value == data.idEnteredByUser) {
+                uiState.update { it.copy(checkedComponent = data) }
+            }
+
+        }
+    }
+
+
 }

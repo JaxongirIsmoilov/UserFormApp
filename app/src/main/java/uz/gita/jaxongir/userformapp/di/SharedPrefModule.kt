@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import uz.gita.jaxongir.userformapp.data.local.MyPref
+import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import javax.inject.Singleton
 
 @Module

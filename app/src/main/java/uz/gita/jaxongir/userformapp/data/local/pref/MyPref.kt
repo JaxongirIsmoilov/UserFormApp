@@ -1,4 +1,4 @@
-package uz.gita.jaxongir.userformapp.data.local
+package uz.gita.jaxongir.userformapp.data.local.pref
 
 import android.content.SharedPreferences
 import javax.inject.Inject

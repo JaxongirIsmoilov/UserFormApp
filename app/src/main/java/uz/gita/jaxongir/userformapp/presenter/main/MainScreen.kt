@@ -20,10 +20,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -137,24 +141,38 @@ fun MainScreenContent(
                                     when (data.type) {
                                         ComponentEnum.Spinner -> {
                                             item {
-                                                    SampleSpinnerPreview(
-                                                        list = data.variants,
-                                                        preselected = data.variants[0],
-                                                        onSelectionChanged = {
-                                                            onEventDispatchers.invoke(MainContract.Intent.UpdateComponent(
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.CheckedComponent(
+                                                        data
+                                                    )
+                                                )
+//                                                if (uiState.value.checkedComponent?.enteredValue == data.conditions.first().value) {
+                                                SampleSpinnerPreview(
+                                                    list = data.variants,
+                                                    preselected = data.variants[0],
+                                                    onSelectionChanged = {
+                                                        onEventDispatchers.invoke(
+                                                            MainContract.Intent.UpdateComponent(
                                                                 data.copy(enteredValue = it)
-                                                            ))
-                                                        },
-                                                        content = data.content,
-                                                        componentData = data
-                                                    ) {
+                                                            )
+                                                        )
+                                                    },
+                                                    content = data.content,
+                                                    componentData = data
+                                                ) {
 
-                                                    }
+                                                }
+//                                                }
                                             }
                                         }
 
                                         ComponentEnum.Selector -> {
                                             item {
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.CheckedComponent(
+                                                        data
+                                                    )
+                                                )
                                                 SelectorItem(
                                                     question = data.content,
                                                     list = data.variants,
@@ -167,6 +185,11 @@ fun MainScreenContent(
 
                                         ComponentEnum.SampleText -> {
                                             item {
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.CheckedComponent(
+                                                        data
+                                                    )
+                                                )
                                                 Row(
                                                     modifier = Modifier
                                                         .fillMaxWidth()
@@ -197,6 +220,33 @@ fun MainScreenContent(
 
                                         ComponentEnum.Input -> {
                                             item {
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.CheckedComponent(
+                                                        data
+                                                    )
+                                                )
+                                                var inputVal by remember {
+                                                    mutableStateOf(data.enteredValue)
+                                                }
+                                                TextField(
+                                                    value = inputVal,
+                                                    onValueChange = {
+                                                        if (it.length < 3) {
+                                                            inputVal = it
+                                                            onEventDispatchers.invoke(
+                                                                MainContract.Intent.UpdateComponent(
+                                                                    data.copy(enteredValue = inputVal)
+                                                                )
+                                                            )
+                                                            onEventDispatchers.invoke(
+                                                                MainContract.Intent.CheckedComponent(
+                                                                    data.copy(enteredValue = inputVal)
+                                                                )
+                                                            )
+                                                        }
+                                                    },
+
+                                                    )
                                                 InputField(
                                                     textFieldType = data.textFieldType,
                                                     maxLines = data.maxLines,
@@ -212,6 +262,11 @@ fun MainScreenContent(
 
                                         ComponentEnum.Dater -> {
                                             item {
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.CheckedComponent(
+                                                        data
+                                                    )
+                                                )
                                                 DatePickerPreview(
                                                     componentData = data,
                                                     content = data.content

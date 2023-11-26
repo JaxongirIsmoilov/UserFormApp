@@ -23,7 +23,7 @@ interface MainContract {
         object Logout : Intent
         object LoadList : Intent
 
-        data class CheckedComponent(val id: String) : Intent
+        data class CheckedComponent(val componentData: ComponentData) : Intent
 
         data class UpdateComponent(val componentData: ComponentData): Intent
     }
