@@ -134,6 +134,7 @@ fun MainScreenContent(
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
+//                                            if (uiState.value.checkedComponent.)
                                             SampleSpinnerPreview(
                                                 list = data.variants,
                                                 preselected = data.variants[0],

@@ -20,4 +20,5 @@ data class ComponentData(
     val selected: List<Boolean>,
     val conditions: List<Conditions>,
     val type: ComponentEnum,
+    val enteredValue : String = ""
 )

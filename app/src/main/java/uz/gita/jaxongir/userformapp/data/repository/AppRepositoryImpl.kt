@@ -55,11 +55,11 @@ class AppRepositoryImpl @Inject constructor(
                             ComponentData(
                                 id = it.id,
                                 userId = it.data?.getOrDefault("userId", "null").toString(),
-                                locId = it.data?.getOrDefault("locId", "0").toString().toLong().toInt()
+                                locId = it.data?.getOrDefault("locId", "0").toString().toLong()
                                 ,
                                 idEnteredByUser = it.data?.getOrDefault("idEnteredByUser", "null")
                                     .toString(),
-                                content = it.data?.getOrDefault("idEnteredByUser", "null")
+                                content = it.data?.getOrDefault("content", "null")
                                     .toString(),
                                 textFieldType = converter.fromJson(
                                     it.data?.getOrDefault(

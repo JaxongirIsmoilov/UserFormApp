@@ -50,6 +50,14 @@ class MainViewModel @Inject constructor(
                     mainDirection.moveToLogin()
                 }
             }
+
+            is MainContract.Intent.CheckedComponent -> {
+                uiState.value.components.forEach { data->
+                    if (intent.id == data.idEnteredByUser){
+                        uiState.update { it.copy(checkedComponent = data) }
+                    }
+                }
+            }
         }
     }
 }
