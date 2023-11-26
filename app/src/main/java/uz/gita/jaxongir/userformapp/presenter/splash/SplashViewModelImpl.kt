@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import uz.gita.jaxongir.userformapp.data.local.MyPref
+import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import javax.inject.Inject
 
 
