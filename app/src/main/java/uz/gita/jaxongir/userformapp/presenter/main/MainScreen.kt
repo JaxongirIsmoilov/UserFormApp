@@ -228,26 +228,10 @@ fun MainScreenContent(
                                                 var inputVal by remember {
                                                     mutableStateOf(data.enteredValue)
                                                 }
-                                                TextField(
-                                                    value = inputVal,
-                                                    onValueChange = {
-                                                        if (it.length < 3) {
-                                                            inputVal = it
-                                                            onEventDispatchers.invoke(
-                                                                MainContract.Intent.UpdateComponent(
-                                                                    data.copy(enteredValue = inputVal)
-                                                                )
-                                                            )
-                                                            onEventDispatchers.invoke(
-                                                                MainContract.Intent.CheckedComponent(
-                                                                    data.copy(enteredValue = inputVal)
-                                                                )
-                                                            )
-                                                        }
-                                                    },
 
-                                                    )
-
+                                                InputField(onEdit = {
+                                                                    onEventDispatchers.invoke(MainContract.Intent.UpdateComponent(data.copy(enteredValue = it)))
+                                                }, componentData = data)
                                             }
                                         }
 
