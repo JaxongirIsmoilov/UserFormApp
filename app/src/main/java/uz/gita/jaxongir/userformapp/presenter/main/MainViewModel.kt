@@ -22,8 +22,9 @@ class MainViewModel @Inject constructor(
 ) : MainContract.ViewModel, ViewModel() {
     override val uiState = MutableStateFlow(MainContract.UIState())
 
-    init {
 
+
+    init {
         uiState.update { it.copy(userName = pref.getUserName()) }
 
         viewModelScope.launch {
