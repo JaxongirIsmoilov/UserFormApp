@@ -138,13 +138,7 @@ fun MainScreenContent(
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
-                                            if(data.conditions.isNotEmpty()) {
-                                                onEventDispatchers.invoke(
-                                                    MainContract.Intent.CheckedComponent(
-                                                        data
-                                                    )
-                                                )
-                                            }
+
                                             SampleSpinnerPreview(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
@@ -154,6 +148,14 @@ fun MainScreenContent(
                                                             data.copy(enteredValue = it)
                                                         )
                                                     )
+                                                    if(data.conditions.isNotEmpty()) {
+                                                        onEventDispatchers.invoke(
+                                                            MainContract.Intent.CheckedComponent(
+                                                                data
+                                                            )
+                                                        )
+                                                    }
+
                                                 },
                                                 content = data.content,
                                                 componentData = data
@@ -176,7 +178,18 @@ fun MainScreenContent(
                                                 list = data.variants,
                                                 componentData = data
                                             ) {
-
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.UpdateComponent(
+                                                        data.copy(enteredValue = "asdfds")
+                                                    )
+                                                )
+                                                if(data.conditions.isNotEmpty()) {
+                                                    onEventDispatchers.invoke(
+                                                        MainContract.Intent.CheckedComponent(
+                                                            data
+                                                        )
+                                                    )
+                                                }
                                             }
                                         }
                                     }
@@ -233,6 +246,14 @@ fun MainScreenContent(
                                                         data.copy(enteredValue = it)
                                                     )
                                                 )
+                                                if(data.conditions.isNotEmpty()) {
+                                                    onEventDispatchers.invoke(
+                                                        MainContract.Intent.CheckedComponent(
+                                                            data
+                                                        )
+                                                    )
+                                                }
+
                                             }, componentData = data)
                                         }
                                     }
@@ -248,7 +269,18 @@ fun MainScreenContent(
                                                 componentData = data,
                                                 content = data.content
                                             ) {
-
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.UpdateComponent(
+                                                        data.copy(enteredValue = "asdfdsa")
+                                                    )
+                                                )
+                                                if(data.conditions.isNotEmpty()) {
+                                                    onEventDispatchers.invoke(
+                                                        MainContract.Intent.CheckedComponent(
+                                                            data
+                                                        )
+                                                    )
+                                                }
                                             }
                                         }
                                     }

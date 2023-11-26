@@ -144,9 +144,10 @@ class MainViewModel @Inject constructor(
                                                         .onEach {
                                                             it.onSuccess { components ->
 
-                                                                val sortedList = components.sortedBy {
-                                                                    it.locId
-                                                                }
+                                                                val sortedList =
+                                                                    components.sortedBy {
+                                                                        it.locId
+                                                                    }
                                                                 uiState.update { it.copy(components = sortedList) }
                                                             }
 
@@ -176,9 +177,10 @@ class MainViewModel @Inject constructor(
                                                         .onEach {
                                                             it.onSuccess { components ->
 
-                                                                val sortedList = components.sortedBy {
-                                                                    it.locId
-                                                                }
+                                                                val sortedList =
+                                                                    components.sortedBy {
+                                                                        it.locId
+                                                                    }
                                                                 uiState.update { it.copy(components = sortedList) }
                                                             }
 
@@ -213,9 +215,10 @@ class MainViewModel @Inject constructor(
                                                         .onEach {
                                                             it.onSuccess { components ->
 
-                                                                val sortedList = components.sortedBy {
-                                                                    it.locId
-                                                                }
+                                                                val sortedList =
+                                                                    components.sortedBy {
+                                                                        it.locId
+                                                                    }
                                                                 uiState.update { it.copy(components = sortedList) }
                                                             }
 
@@ -245,9 +248,10 @@ class MainViewModel @Inject constructor(
                                                         .onEach {
                                                             it.onSuccess { components ->
 
-                                                                val sortedList = components.sortedBy {
-                                                                    it.locId
-                                                                }
+                                                                val sortedList =
+                                                                    components.sortedBy {
+                                                                        it.locId
+                                                                    }
                                                                 uiState.update { it.copy(components = sortedList) }
                                                             }
 
@@ -297,6 +301,25 @@ class MainViewModel @Inject constructor(
                                 }
                         }.collect()
                 }
+            }
+
+            MainContract.Intent.Load -> {
+                appRepository.getComponentsByUserId(pref.getId())
+                    .onEach {
+                        it.onSuccess { components ->
+                            val sortedList = components.sortedBy {
+                                it.locId
+                            }
+                            uiState.update { it.copy(components = sortedList) }
+                        }
+
+                        it.onFailure {
+                            myLog("failrue viewmodle")
+                        }
+
+                        uiState.update { it.copy(loading = false) }
+
+                    }.launchIn(viewModelScope)
             }
         }
     }
