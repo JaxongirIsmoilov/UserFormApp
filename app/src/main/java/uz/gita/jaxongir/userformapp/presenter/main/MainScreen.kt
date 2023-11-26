@@ -247,16 +247,7 @@ fun MainScreenContent(
                                                     },
 
                                                     )
-                                                InputField(
-                                                    textFieldType = data.textFieldType,
-                                                    maxLines = data.maxLines,
-                                                    maxLength = data.maxLength,
-                                                    minLength = data.minLength,
-                                                    maxValue = data.maxValue,
-                                                    minValue = data.minValue,
-                                                    question = data.content,
-                                                    componentData = data, {}
-                                                )
+
                                             }
                                         }
 
