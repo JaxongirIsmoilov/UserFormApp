@@ -2,6 +2,7 @@ package uz.gita.jaxongir.userformapp.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -90,10 +91,7 @@ class AppRepositoryImpl @Inject constructor(
                                     it.data?.getOrDefault("selected", "[]").toString(),
                                     Array<Boolean>::class.java
                                 ).asList(),
-                                conditions = converter.fromJson(
-                                    it.data?.getOrDefault("conditions", "[]").toString(),
-                                    Array<Conditions>::class.java
-                                ).asList(),
+                                conditions = converter.fromJson<List<Conditions>>(it.data?.getOrDefault("conditions", "[]").toString(), object : TypeToken<List<Conditions>>() {}.type),
                                 type = converter.fromJson(
                                     it.data?.getOrDefault("type", "").toString(),
                                     ComponentEnum::class.java
