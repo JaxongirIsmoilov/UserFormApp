@@ -18,7 +18,6 @@ class AppRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val pref: MyPref
 ) : AppRepository {
-    //    val userId: String = ""
     override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
         firestore.collection("Users")
             .whereEqualTo("userName", name)

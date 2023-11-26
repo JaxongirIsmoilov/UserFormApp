@@ -29,7 +29,11 @@ class MainViewModel @Inject constructor(
             appRepository.getComponentsByUserId(pref.getId())
                 .onEach {
                     it.onSuccess { components ->
-                        uiState.update { it.copy(components = components) }
+
+                        val sortedList = components.sortedBy {
+                            it.locId
+                        }
+                        uiState.update { it.copy(components = sortedList) }
                     }
 
                     it.onFailure {

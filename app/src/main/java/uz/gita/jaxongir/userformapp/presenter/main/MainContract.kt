@@ -16,12 +16,7 @@ interface MainContract {
         val userName: String = "User",
         val userId: String = "",
         val components: List<ComponentData> = emptyList(),
-        val checkedComponent: ComponentData = ComponentData(
-            "", "", "".toLong(), "", "", TextFieldType.Phone, 0, 0, 0, 0, 0, true,
-            emptyList(),
-            emptyList(),
-            emptyList(), ComponentEnum.Dater
-        )
+        val checkedComponent: ComponentData? = null
     )
 
     interface Intent {
@@ -29,6 +24,8 @@ interface MainContract {
         object LoadList : Intent
 
         data class CheckedComponent(val id: String) : Intent
+
+        data class UpdateComponent(val id: String): Intent
     }
 
 }
