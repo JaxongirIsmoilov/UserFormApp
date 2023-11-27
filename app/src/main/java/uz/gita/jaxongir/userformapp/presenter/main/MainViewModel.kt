@@ -90,6 +90,32 @@ class MainViewModel @Inject constructor(
                                         }
                                     }.collect()
                                 }
+                                else {
+                                    appRepository.updateComponent(
+                                        intent.componentData.copy(
+                                            isVisible = true
+                                        )
+                                    ).onEach {
+                                        it.onSuccess {
+                                            appRepository.getComponentsByUserId(pref.getId())
+                                                .onEach {
+                                                    it.onSuccess { components ->
+                                                        val sortedList = components.sortedBy {
+                                                            it.locId
+                                                        }
+                                                        uiState.update { it.copy(components = sortedList) }
+                                                    }
+
+                                                    it.onFailure {
+                                                        // error message
+                                                    }
+
+                                                    uiState.update { it.copy(loading = false) }
+
+                                                }.collect()
+                                        }
+                                    }.collect()
+                                }
                             }
 
                             "Not equal" -> {

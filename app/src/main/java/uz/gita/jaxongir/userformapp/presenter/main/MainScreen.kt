@@ -133,9 +133,7 @@ fun MainScreenContent(
                                 .wrapContentHeight()
                                 .padding(top = 55.dp)
                         ) {
-                            myLog("Lazy Main : ${uiState.value.components.size}")
                             uiState.value.components.forEach { data ->
-                                myLog("Inside ForEach Type:  ${data.type} condition :  ${data.conditions}")
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
@@ -144,22 +142,22 @@ fun MainScreenContent(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
                                                 onSelectionChanged = {
+                                                    onEventDispatchers.invoke(
+                                                        MainContract.Intent.UpdateComponent(
+                                                            data.copy(enteredValue = it)
+                                                        )
+                                                    )
+                                                    if (data.operators.isNotEmpty()) {
+                                                        onEventDispatchers.invoke(
+                                                            MainContract.Intent.CheckedComponent(
+                                                                data
+                                                            )
+                                                        )
+                                                    }
                                                 },
                                                 content = data.content,
                                                 componentData = data
                                             ) {
-                                                onEventDispatchers.invoke(
-                                                    MainContract.Intent.UpdateComponent(
-                                                        data.copy(enteredValue = it)
-                                                    )
-                                                )
-                                                if (data.operators.isNotEmpty()) {
-                                                    onEventDispatchers.invoke(
-                                                        MainContract.Intent.CheckedComponent(
-                                                            data
-                                                        )
-                                                    )
-                                                }
                                             }
 
                                         }
@@ -203,18 +201,22 @@ fun MainScreenContent(
                                             )
                                             Row(
                                                 modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .clip(RoundedCornerShape(12.dp))
-                                                    .border(
-                                                        1.dp,
-                                                        Color(0xFFFF7686),
-                                                        RoundedCornerShape(12.dp)
+                                                    .then(
+                                                        if(data.isVisible) Modifier.fillMaxWidth()
+                                                            .clip(RoundedCornerShape(12.dp))
+                                                            .border(
+                                                                1.dp,
+                                                                Color(0xFFFF7686),
+                                                                RoundedCornerShape(12.dp)
+                                                            )
+                                                            .background(Color(0x33C4C4C4))
+                                                            .padding(
+                                                                horizontal = 16.dp,
+                                                                vertical = 5.dp
+                                                            )
+                                                        else Modifier.size(0.dp)
                                                     )
-                                                    .background(Color(0x33C4C4C4))
-                                                    .padding(
-                                                        horizontal = 16.dp,
-                                                        vertical = 5.dp
-                                                    ),
+                                                    ,
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
                                                 Text(
