@@ -171,23 +171,24 @@ fun MainScreenContent(
                                                     data
                                                 )
                                             )
-                                            Log.d("TTT", "MainScreenContent: chizildim")
-                                            SelectorItem(
-                                                question = data.content,
-                                                list = data.variants,
-                                                componentData = data
-                                            ) {
-                                                onEventDispatchers.invoke(
-                                                    MainContract.Intent.UpdateComponent(
-                                                        data.copy(enteredValue = "asdfds")
-                                                    )
-                                                )
-                                                if (data.operators.isNotEmpty()) {
+                                            Column {
+                                                SelectorItem(
+                                                    question = data.content,
+                                                    list = data.variants,
+                                                    componentData = data
+                                                ) {
                                                     onEventDispatchers.invoke(
-                                                        MainContract.Intent.CheckedComponent(
-                                                            data
+                                                        MainContract.Intent.UpdateComponent(
+                                                            data.copy(enteredValue = "asdfds")
                                                         )
                                                     )
+                                                    if (data.operators.isNotEmpty()) {
+                                                        onEventDispatchers.invoke(
+                                                            MainContract.Intent.CheckedComponent(
+                                                                data
+                                                            )
+                                                        )
+                                                    }
                                                 }
                                             }
                                         }
@@ -249,10 +250,15 @@ fun MainScreenContent(
 
                                             Column(modifier = Modifier.fillMaxWidth()) {
                                                 Spacer(modifier = Modifier.size(10.dp))
+                                                Log.d(
+                                                    "DDD",
+                                                    "MainScreenContent: ${data.isRequired}"
+                                                )
                                                 if (data.isRequired) {
                                                     Text(
                                                         text = "This Field is required",
-                                                        fontWeight = FontWeight(600)
+                                                        fontWeight = FontWeight(600),
+                                                        color = Color(0xFFff7686)
                                                     )
                                                 }
                                                 Spacer(modifier = Modifier.size(10.dp))

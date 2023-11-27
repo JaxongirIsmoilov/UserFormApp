@@ -16,6 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,8 +32,6 @@ fun SelectorItem(
 ) {
     val selectedItem = remember { mutableStateOf<String?>(null) }
 
-    Log.d("TTT", "SelectorItem: ${componentData.isVisible}")
-
 
     Column(
         modifier = Modifier
@@ -43,12 +43,21 @@ fun SelectorItem(
             )
 
     ) {
+
         Spacer(modifier = Modifier.size(10.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = question,
                 fontSize = 22.sp,
             )
+            Spacer(modifier = Modifier.weight(1f))
+            if (componentData.isRequired){
+                Text(
+                    text = "This Field is required",
+                    fontWeight = FontWeight(600),
+                    color = Color(0xFFff7686)
+                )
+            }
         }
         Spacer(modifier = Modifier.size(16.dp))
         list.forEach {

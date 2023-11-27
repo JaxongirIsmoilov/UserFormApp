@@ -113,7 +113,7 @@ class AppRepositoryImpl @Inject constructor(
                                 enteredValue = it.data?.getOrDefault("enteredValue", "").toString(),
                                 isVisible = it.data?.getOrDefault("visible", "true")
                                     .toString() == "true",
-                                isRequired = it.data?.getOrDefault("isRequired", false)
+                                isRequired = it.data?.getOrDefault("required", false)
                                     .toString() == "true"
                             )
                         )
