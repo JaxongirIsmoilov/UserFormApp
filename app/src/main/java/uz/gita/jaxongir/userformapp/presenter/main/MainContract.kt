@@ -26,6 +26,8 @@ interface MainContract {
         data class CheckedComponent(val componentData: ComponentData) : Intent
 
         data class UpdateComponent(val componentData: ComponentData): Intent
+
+        object Load: Intent
     }
 
 }
