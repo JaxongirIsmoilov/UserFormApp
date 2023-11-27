@@ -119,7 +119,7 @@ class MainViewModel @Inject constructor(
                                 }
                             }
 
-                            "Not equal" -> {
+                            "Not" -> {
                                 Log.d("AJAX", "onEventDispatcher: Not equal")
 
                                 if (!(uiState.value.checkedComponent?.enteredValue != intent.componentData.connectedValues[index] && isVisible)) {
