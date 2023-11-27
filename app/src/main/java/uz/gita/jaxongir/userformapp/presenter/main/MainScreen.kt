@@ -54,7 +54,6 @@ class MainScreen : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     override fun Content() {
-        myLog("Main screen")
         val vm: MainContract.ViewModel = getViewModel<MainViewModel>()
         vm.onEventDispatcher(MainContract.Intent.LoadList)
         MainScreenContent(vm.uiState.collectAsState(), vm::onEventDispatcher)
@@ -134,7 +133,9 @@ fun MainScreenContent(
                                 .wrapContentHeight()
                                 .padding(top = 55.dp)
                         ) {
+                            myLog("Lazy Main : ${uiState.value.components.size}")
                             uiState.value.components.forEach { data ->
+                                myLog("Inside ForEach Type:  ${data.type} condition :  ${data.conditions}")
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
