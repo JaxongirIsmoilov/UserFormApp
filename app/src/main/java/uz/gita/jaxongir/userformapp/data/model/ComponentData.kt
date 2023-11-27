@@ -16,9 +16,11 @@ data class ComponentData(
     val maxValue: Int,
     val minValue: Int,
     val isMulti: Boolean,
-    val variants: List<String>,
-    val selected: List<Boolean>,
-    val conditions: List<Conditions>,
+    val variants: List<String> = listOf(),
+    val selected: List<Boolean> = listOf(),
+    val connectedValues: List<String> = listOf(),      //visibitily boyicha berilgan qiymatlar
+    val connectedIds: List<String> = listOf(),         //boglangan id lar
+    val operators: List<String> = listOf(),
     val type: ComponentEnum,
     val enteredValue : String = "",
     val isVisible : Boolean = true
