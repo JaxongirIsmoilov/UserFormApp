@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,9 +26,13 @@ fun SelectorItem(
     question: String,
     list: List<String>,
     componentData: ComponentData,
-    deleteComp: (ComponentData) -> Unit,
+    deleteComp: (String) -> Unit,
 ) {
     val selectedItem = remember { mutableStateOf<String?>(null) }
+
+    Log.d("TTT", "SelectorItem: ${componentData.isVisible}")
+
+
     Column(
         modifier = Modifier
             .then(
@@ -44,16 +49,12 @@ fun SelectorItem(
                 text = question,
                 fontSize = 22.sp,
             )
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = {
-                deleteComp(componentData)
-            }) {
-
-            }
         }
         Spacer(modifier = Modifier.size(16.dp))
         list.forEach {
-            CheckBoxItem(title = it)
+            CheckBoxItem(title = it){
+                deleteComp(it)
+            }
             Spacer(modifier = Modifier.height(8.dp))
         }
     }

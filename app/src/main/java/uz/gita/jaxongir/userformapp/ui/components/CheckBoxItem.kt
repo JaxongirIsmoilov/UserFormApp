@@ -21,7 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CheckBoxItem(title: String) {
+fun CheckBoxItem(
+    title: String,
+    onEdit:() -> Unit
+) {
     var checkedState = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
@@ -31,6 +34,7 @@ fun CheckBoxItem(title: String) {
             .background(Color(0x33C4C4C4))
             .clickable {
                 checkedState.value = !checkedState.value
+                onEdit()
             }
             .padding(horizontal = 16.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically

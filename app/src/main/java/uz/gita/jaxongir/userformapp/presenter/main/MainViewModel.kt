@@ -63,7 +63,6 @@ class MainViewModel @Inject constructor(
                         findingCheckedComponent(item)
                         when (intent.componentData.operators[index]) {
                             "Equal" -> {
-                                myLog("equal")
                                 if (!(uiState.value.checkedComponent?.enteredValue == intent.componentData.connectedValues[index] && isVisible)) {
                                     isVisible = false
                                     appRepository.updateComponent(
@@ -194,7 +193,6 @@ class MainViewModel @Inject constructor(
 
                             "Less" -> {
                                 if (intent.componentData.textFieldType == TextFieldType.Number) {
-                                    myLog("less")
                                     if ((uiState.value.checkedComponent?.enteredValue?.toInt()
                                             ?: 0) <= intent.componentData.connectedValues[index].toInt() && isVisible
                                     ) {

@@ -47,6 +47,7 @@ fun InputField(
                 value = newContentForOther,
                 onValueChange = {
                     newContentForOther = it
+                    onEdit(it)
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 label = { Text(text = componentData.content) },
@@ -74,6 +75,7 @@ fun InputField(
                             newContentForNumber = maxValue.toString()
                         }
                     }
+                    onEdit(newContentForNumber)
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text(text = componentData.content) },
@@ -92,6 +94,7 @@ fun InputField(
                     if (it.length <= maxLength) {
                         newContentForText = it
                     }
+                    onEdit(newContentForText)
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 label = { Text(text = componentData.content) },
@@ -108,6 +111,7 @@ fun InputField(
                 value = newContentForOther,
                 onValueChange = {
                     newContentForOther = it
+                    onEdit(newContentForOther)
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 label = { Text(text = componentData.content) },

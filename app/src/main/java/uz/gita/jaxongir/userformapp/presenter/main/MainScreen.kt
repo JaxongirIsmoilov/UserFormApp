@@ -2,6 +2,7 @@ package uz.gita.jaxongir.userformapp.presenter.main
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -110,7 +111,6 @@ fun MainScreenContent(
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
-                myLog("list size screen:${uiState.value.components.size}")
                 if (uiState.value.components.isEmpty()) {
                     Text(
                         text = "There is no components yet!",
@@ -143,24 +143,22 @@ fun MainScreenContent(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
                                                 onSelectionChanged = {
-                                                    onEventDispatchers.invoke(
-                                                        MainContract.Intent.UpdateComponent(
-                                                            data.copy(enteredValue = it)
-                                                        )
-                                                    )
-                                                    if (data.operators.isNotEmpty()) {
-                                                        onEventDispatchers.invoke(
-                                                            MainContract.Intent.CheckedComponent(
-                                                                data
-                                                            )
-                                                        )
-                                                    }
-
                                                 },
                                                 content = data.content,
                                                 componentData = data
                                             ) {
-
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.UpdateComponent(
+                                                        data.copy(enteredValue = it)
+                                                    )
+                                                )
+                                                if (data.operators.isNotEmpty()) {
+                                                    onEventDispatchers.invoke(
+                                                        MainContract.Intent.CheckedComponent(
+                                                            data
+                                                        )
+                                                    )
+                                                }
                                             }
 
                                         }
@@ -173,6 +171,7 @@ fun MainScreenContent(
                                                     data
                                                 )
                                             )
+                                            Log.d("TTT", "MainScreenContent: chizildim")
                                             SelectorItem(
                                                 question = data.content,
                                                 list = data.variants,

@@ -11,7 +11,6 @@ import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
-import uz.gita.jaxongir.userformapp.utills.myLog
 import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
@@ -31,7 +30,6 @@ class AppRepositoryImpl @Inject constructor(
                             == password
                         ) {
                             pref.saveId(it.id)
-                            myLog(pref.getId())
                             trySend(Result.success(Unit))
                         }
                     }
@@ -50,7 +48,7 @@ class AppRepositoryImpl @Inject constructor(
                 .get()
                 .addOnSuccessListener {
                     it.documents.forEach {
-                        Log.d("AJAX", "getComponentsByUserId: ${it.data?.getOrDefault("conditions", "[]")}")
+                        Log.d("TTT", "getComponentsByUserId: ishaldim")
 
                         resultList.add(
                             ComponentData(
@@ -119,7 +117,6 @@ class AppRepositoryImpl @Inject constructor(
                                     .toString() == "true"
                             )
                         )
-                        myLog("result size:${resultList}")
                     }
 
                     trySend(Result.success(resultList))
@@ -156,5 +153,4 @@ class AppRepositoryImpl @Inject constructor(
 
         awaitClose()
     }
-
 }

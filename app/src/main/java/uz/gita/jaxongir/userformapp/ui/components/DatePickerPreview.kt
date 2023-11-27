@@ -45,7 +45,7 @@ import java.time.format.DateTimeFormatter
 fun DatePickerPreview(
     componentData: ComponentData,
     content: String,
-    deleteComp: (ComponentData) -> Unit = {}
+    deleteComp: () -> Unit = {}
 ) {
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
