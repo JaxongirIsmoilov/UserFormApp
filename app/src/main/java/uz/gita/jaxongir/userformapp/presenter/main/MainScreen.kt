@@ -148,6 +148,7 @@ fun MainScreenContent(
                                                         )
                                                     )
                                                     if (data.operators.isNotEmpty()) {
+                                                        myLog("spinner compo")
                                                         onEventDispatchers.invoke(
                                                             MainContract.Intent.CheckedComponent(
                                                                 data
@@ -194,15 +195,20 @@ fun MainScreenContent(
 
                                     ComponentEnum.SampleText -> {
                                         item {
-                                            onEventDispatchers.invoke(
-                                                MainContract.Intent.CheckedComponent(
-                                                    data
+                                            myLog("sample text")
+                                            if (data.operators.isNotEmpty()) {
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.CheckedComponent(
+                                                        data
+                                                    )
                                                 )
-                                            )
+                                            }
+
                                             Row(
                                                 modifier = Modifier
                                                     .then(
-                                                        if(data.isVisible) Modifier.fillMaxWidth()
+                                                        if (data.isVisible) Modifier
+                                                            .fillMaxWidth()
                                                             .clip(RoundedCornerShape(12.dp))
                                                             .border(
                                                                 1.dp,
@@ -215,8 +221,7 @@ fun MainScreenContent(
                                                                 vertical = 5.dp
                                                             )
                                                         else Modifier.size(0.dp)
-                                                    )
-                                                    ,
+                                                    ),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
                                                 Text(
@@ -242,21 +247,32 @@ fun MainScreenContent(
                                                 mutableStateOf(data.enteredValue)
                                             }
 
-                                            InputField(onEdit = {
-                                                onEventDispatchers.invoke(
-                                                    MainContract.Intent.UpdateComponent(
-                                                        data.copy(enteredValue = it)
-                                                    )
-                                                )
-                                                if (data.operators.isNotEmpty()) {
-                                                    onEventDispatchers.invoke(
-                                                        MainContract.Intent.CheckedComponent(
-                                                            data
-                                                        )
+                                            Column(modifier = Modifier.fillMaxWidth()) {
+                                                Spacer(modifier = Modifier.size(10.dp))
+                                                if (data.isRequired) {
+                                                    Text(
+                                                        text = "This Field is required",
+                                                        fontWeight = FontWeight(600)
                                                     )
                                                 }
+                                                Spacer(modifier = Modifier.size(10.dp))
+                                                InputField(onEdit = {
+                                                    onEventDispatchers.invoke(
+                                                        MainContract.Intent.UpdateComponent(
+                                                            data.copy(enteredValue = it)
+                                                        )
+                                                    )
+                                                    if (data.operators.isNotEmpty()) {
+                                                        onEventDispatchers.invoke(
+                                                            MainContract.Intent.CheckedComponent(
+                                                                data
+                                                            )
+                                                        )
+                                                    }
 
-                                            }, componentData = data)
+                                                }, componentData = data)
+                                            }
+
                                         }
                                     }
 

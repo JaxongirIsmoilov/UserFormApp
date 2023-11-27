@@ -22,6 +22,7 @@ data class ComponentData(
     val connectedIds: List<String> = listOf(),         //boglangan id lar
     val operators: List<String> = listOf(),
     val type: ComponentEnum,
-    val enteredValue : String = "",
-    val isVisible : Boolean = true
+    val enteredValue: String = "",
+    val isVisible: Boolean = true,
+    val isRequired: Boolean = false
 )

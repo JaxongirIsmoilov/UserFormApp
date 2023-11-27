@@ -1,6 +1,5 @@
 package uz.gita.jaxongir.userformapp.data.repository
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -105,7 +104,7 @@ class AppRepositoryImpl @Inject constructor(
                                     it.data?.getOrDefault(
                                         "operators",
                                         ""
-                                    ).toString(), object : TypeToken<List<String>>(){}.type
+                                    ).toString(), object : TypeToken<List<String>>() {}.type
                                 ),
                                 type = converter.fromJson(
                                     it.data?.getOrDefault("type", "").toString(),
@@ -113,6 +112,8 @@ class AppRepositoryImpl @Inject constructor(
                                 ),
                                 enteredValue = it.data?.getOrDefault("enteredValue", "").toString(),
                                 isVisible = it.data?.getOrDefault("visible", "true")
+                                    .toString() == "true",
+                                isRequired = it.data?.getOrDefault("isRequired", false)
                                     .toString() == "true"
                             )
                         )
