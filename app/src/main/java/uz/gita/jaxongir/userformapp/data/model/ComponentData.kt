@@ -18,7 +18,9 @@ data class ComponentData(
     val isMulti: Boolean,
     val variants: List<String> = listOf(),
     val selected: List<Boolean> = listOf(),
-    val conditions: List<Conditions> = listOf(),
+    val connectedValues: List<String> = listOf(),      //visibitily boyicha berilgan qiymatlar
+    val connectedIds: List<String> = listOf(),         //boglangan id lar
+    val operators: List<String> = listOf(),
     val type: ComponentEnum,
     val enteredValue : String = "",
     val isVisible : Boolean = true

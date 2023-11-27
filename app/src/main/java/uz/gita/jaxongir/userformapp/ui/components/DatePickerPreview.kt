@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 package uz.gita.jaxongir.userformapp.ui.components
 
 import android.os.Build
@@ -20,10 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -70,9 +61,11 @@ fun DatePickerPreview(
 
     val dateDialogState = rememberMaterialDialogState()
 
-    Column(modifier = Modifier.then(
-        if (componentData.isVisible) Modifier.fillMaxWidth() else Modifier.size(0.dp)
-    )) {
+    Column(
+        modifier = Modifier.then(
+            if (componentData.isVisible) Modifier.fillMaxWidth() else Modifier.size(0.dp)
+        )
+    ) {
         Text(text = content, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(8.dp))
         Row {
@@ -122,21 +115,26 @@ fun DatePickerPreview(
 fun DatePickerPreviewNew() {
     DatePickerPreview(
         ComponentData(
-            "",
-            "",
-            0,
-            "",
-            "",
-            TextFieldType.Text,
-            0,
-            0,
-            0,
-            0,
-            0,
-            false,
-            listOf(),
-            listOf(),
-            listOf(),
-            ComponentEnum.SampleText
-        ), "Hello", {})
+            id = "",
+            userId = "",
+            locId = 0,
+            idEnteredByUser = "",
+            content = "",
+            textFieldType = TextFieldType.Text,
+            maxLines = 0,
+            maxLength = 0,
+            minLength = 0,
+            maxValue = 0,
+            minValue = 0,
+            isMulti = false,
+            variants = listOf(),
+            selected = listOf(),
+            connectedValues = listOf(),
+            connectedIds = listOf(),
+            operators = listOf(),
+            type = ComponentEnum.Dater,
+            enteredValue = "",
+            isVisible = false
+        ), ""
+    )
 }

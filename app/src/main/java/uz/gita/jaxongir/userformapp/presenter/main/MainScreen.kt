@@ -148,7 +148,7 @@ fun MainScreenContent(
                                                             data.copy(enteredValue = it)
                                                         )
                                                     )
-                                                    if(data.conditions.isNotEmpty()) {
+                                                    if (data.operators.isNotEmpty()) {
                                                         onEventDispatchers.invoke(
                                                             MainContract.Intent.CheckedComponent(
                                                                 data
@@ -183,7 +183,7 @@ fun MainScreenContent(
                                                         data.copy(enteredValue = "asdfds")
                                                     )
                                                 )
-                                                if(data.conditions.isNotEmpty()) {
+                                                if (data.operators.isNotEmpty()) {
                                                     onEventDispatchers.invoke(
                                                         MainContract.Intent.CheckedComponent(
                                                             data
@@ -246,7 +246,7 @@ fun MainScreenContent(
                                                         data.copy(enteredValue = it)
                                                     )
                                                 )
-                                                if(data.conditions.isNotEmpty()) {
+                                                if (data.operators.isNotEmpty()) {
                                                     onEventDispatchers.invoke(
                                                         MainContract.Intent.CheckedComponent(
                                                             data
@@ -274,7 +274,7 @@ fun MainScreenContent(
                                                         data.copy(enteredValue = "asdfdsa")
                                                     )
                                                 )
-                                                if(data.conditions.isNotEmpty()) {
+                                                if (data.operators.isNotEmpty()) {
                                                     onEventDispatchers.invoke(
                                                         MainContract.Intent.CheckedComponent(
                                                             data
