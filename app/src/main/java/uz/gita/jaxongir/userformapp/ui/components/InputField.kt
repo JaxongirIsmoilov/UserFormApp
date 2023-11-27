@@ -66,16 +66,20 @@ fun InputField(
                     currentValue = input
                     if (input.isEmpty()) {
                         newContentForNumber = ""
+                        onEdit("0")
                     } else {
                         if (input.toInt() < minValue) {
                             newContentForNumber = minValue.toString()
+                            onEdit(newContentForNumber)
                         } else if (input.toInt() in minValue..maxValue) {
                             newContentForNumber = input
+                            onEdit(newContentForNumber)
                         } else {
                             newContentForNumber = maxValue.toString()
+                            onEdit(newContentForNumber)
                         }
                     }
-                    onEdit(newContentForNumber)
+
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text(text = componentData.content) },

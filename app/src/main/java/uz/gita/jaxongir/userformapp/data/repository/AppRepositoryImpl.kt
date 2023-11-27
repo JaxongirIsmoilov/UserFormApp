@@ -3,6 +3,7 @@ package uz.gita.jaxongir.userformapp.data.repository
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -48,8 +49,6 @@ class AppRepositoryImpl @Inject constructor(
                 .get()
                 .addOnSuccessListener {
                     it.documents.forEach {
-                        Log.d("TTT", "getComponentsByUserId: ishaldim")
-
                         resultList.add(
                             ComponentData(
                                 id = it.id,
@@ -106,8 +105,8 @@ class AppRepositoryImpl @Inject constructor(
                                     it.data?.getOrDefault(
                                         "operators",
                                         ""
-                                    ).toString(), Array<String>::class.java
-                                ).asList(),
+                                    ).toString(), object : TypeToken<List<String>>(){}.type
+                                ),
                                 type = converter.fromJson(
                                     it.data?.getOrDefault("type", "").toString(),
                                     ComponentEnum::class.java

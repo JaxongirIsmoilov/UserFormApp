@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.main
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -63,6 +64,7 @@ class MainViewModel @Inject constructor(
                         findingCheckedComponent(item)
                         when (intent.componentData.operators[index]) {
                             "Equal" -> {
+                                Log.d("AJAX", "onEventDispatcher: Equal")
                                 if (!(uiState.value.checkedComponent?.enteredValue == intent.componentData.connectedValues[index] && isVisible)) {
                                     isVisible = false
                                     appRepository.updateComponent(
@@ -89,8 +91,7 @@ class MainViewModel @Inject constructor(
                                                 }.collect()
                                         }
                                     }.collect()
-                                }
-                                else {
+                                } else {
                                     appRepository.updateComponent(
                                         intent.componentData.copy(
                                             isVisible = true
@@ -119,6 +120,8 @@ class MainViewModel @Inject constructor(
                             }
 
                             "Not equal" -> {
+                                Log.d("AJAX", "onEventDispatcher: Not equal")
+
                                 if (!(uiState.value.checkedComponent?.enteredValue != intent.componentData.connectedValues[index] && isVisible)) {
                                     myLog("not equal")
                                     isVisible = false
@@ -147,15 +150,43 @@ class MainViewModel @Inject constructor(
                                                 }.collect()
                                         }
                                     }.collect()
+                                } else {
+                                    appRepository.updateComponent(
+                                        intent.componentData.copy(
+                                            isVisible = true
+                                        )
+                                    ).onEach {
+                                        it.onSuccess {
+                                            appRepository.getComponentsByUserId(pref.getId())
+                                                .onEach {
+                                                    it.onSuccess { components ->
+                                                        val sortedList = components.sortedBy {
+                                                            it.locId
+                                                        }
+                                                        uiState.update { it.copy(components = sortedList) }
+                                                    }
+
+                                                    it.onFailure {
+                                                        // error message
+                                                    }
+
+                                                    uiState.update { it.copy(loading = false) }
+
+                                                }.collect()
+                                        }
+                                    }.collect()
                                 }
                             }
 
                             "More" -> {
-                                if (intent.componentData.textFieldType == TextFieldType.Number) {
+
+                                if (uiState.value.checkedComponent?.textFieldType == TextFieldType.Number) {
+
+
                                     if (!((uiState.value.checkedComponent?.enteredValue?.toInt()
                                             ?: 0) >= intent.componentData.connectedValues[index].toInt() && isVisible)
                                     ) {
-                                        myLog("more")
+
                                         isVisible = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
@@ -183,10 +214,36 @@ class MainViewModel @Inject constructor(
                                                         }.collect()
                                                 }
                                         }.collect()
+                                    } else {
+                                        appRepository.updateComponent(
+                                            intent.componentData.copy(
+                                                isVisible = true
+                                            )
+                                        ).onEach {
+                                            it.onSuccess {
+                                                appRepository.getComponentsByUserId(pref.getId())
+                                                    .onEach {
+                                                        it.onSuccess { components ->
+                                                            val sortedList = components.sortedBy {
+                                                                it.locId
+                                                            }
+                                                            uiState.update { it.copy(components = sortedList) }
+                                                        }
+
+                                                        it.onFailure {
+                                                            // error message
+                                                        }
+
+                                                        uiState.update { it.copy(loading = false) }
+
+                                                    }.collect()
+                                            }
+                                        }.collect()
                                     }
                                 } else {
-                                    if ((uiState.value.checkedComponent?.enteredValue?.length
+                                    if (!((uiState.value.checkedComponent?.enteredValue?.length
                                             ?: 0) >= intent.componentData.connectedValues[index].length && isVisible
+                                                )
                                     ) {
                                         isVisible = false
                                         appRepository.updateComponent(
@@ -212,16 +269,42 @@ class MainViewModel @Inject constructor(
                                                     }.collect()
                                             }
                                         }.collect()
+                                    } else {
+                                        appRepository.updateComponent(
+                                            intent.componentData.copy(
+                                                isVisible = true
+                                            )
+                                        ).onEach {
+                                            it.onSuccess {
+                                                appRepository.getComponentsByUserId(pref.getId())
+                                                    .onEach {
+                                                        it.onSuccess { components ->
+                                                            val sortedList = components.sortedBy {
+                                                                it.locId
+                                                            }
+                                                            uiState.update { it.copy(components = sortedList) }
+                                                        }
+
+                                                        it.onFailure {
+                                                            // error message
+                                                        }
+
+                                                        uiState.update { it.copy(loading = false) }
+
+                                                    }.collect()
+                                            }
+                                        }.collect()
                                     }
                                 }
 
                             }
 
                             "Less" -> {
-                                if (intent.componentData.textFieldType == TextFieldType.Number) {
-                                    if ((uiState.value.checkedComponent?.enteredValue?.toInt()
+                                Log.d("AJAX", "onEventDispatcher: Less")
+                                if (uiState.value.checkedComponent?.textFieldType == TextFieldType.Number) {
+                                    if (!((uiState.value.checkedComponent?.enteredValue?.toInt()
                                             ?: 0) <= intent.componentData.connectedValues[index].toInt() && isVisible
-                                    ) {
+)                                    ) {
                                         isVisible = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
@@ -248,11 +331,36 @@ class MainViewModel @Inject constructor(
                                                     }.collect()
                                             }
                                         }.collect()
+                                    } else {
+                                        appRepository.updateComponent(
+                                            intent.componentData.copy(
+                                                isVisible = true
+                                            )
+                                        ).onEach {
+                                            it.onSuccess {
+                                                appRepository.getComponentsByUserId(pref.getId())
+                                                    .onEach {
+                                                        it.onSuccess { components ->
+                                                            val sortedList = components.sortedBy {
+                                                                it.locId
+                                                            }
+                                                            uiState.update { it.copy(components = sortedList) }
+                                                        }
+
+                                                        it.onFailure {
+                                                            // error message
+                                                        }
+
+                                                        uiState.update { it.copy(loading = false) }
+
+                                                    }.collect()
+                                            }
+                                        }.collect()
                                     }
                                 } else {
-                                    if ((uiState.value.checkedComponent?.enteredValue?.length
+                                    if (!((uiState.value.checkedComponent?.enteredValue?.length
                                             ?: 0) <= intent.componentData.connectedValues[index].length && isVisible
-                                    ) {
+)                                    ) {
                                         isVisible = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
@@ -264,6 +372,31 @@ class MainViewModel @Inject constructor(
                                                     .onEach {
                                                         it.onSuccess { components ->
 
+                                                            val sortedList = components.sortedBy {
+                                                                it.locId
+                                                            }
+                                                            uiState.update { it.copy(components = sortedList) }
+                                                        }
+
+                                                        it.onFailure {
+                                                            // error message
+                                                        }
+
+                                                        uiState.update { it.copy(loading = false) }
+
+                                                    }.collect()
+                                            }
+                                        }.collect()
+                                    } else {
+                                        appRepository.updateComponent(
+                                            intent.componentData.copy(
+                                                isVisible = true
+                                            )
+                                        ).onEach {
+                                            it.onSuccess {
+                                                appRepository.getComponentsByUserId(pref.getId())
+                                                    .onEach {
+                                                        it.onSuccess { components ->
                                                             val sortedList = components.sortedBy {
                                                                 it.locId
                                                             }
@@ -319,6 +452,7 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
     private fun findingCheckedComponent(componentId: String) {
         myLog("checking value : $componentId")
         uiState.value.components.forEach { data ->
