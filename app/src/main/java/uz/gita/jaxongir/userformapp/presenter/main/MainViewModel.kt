@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
-import uz.gita.jaxongir.userformapp.utills.myLog
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,7 +38,6 @@ class MainViewModel @Inject constructor(
                     }
 
                     it.onFailure {
-                        myLog("failrue viewmodle")
                     }
 
                     uiState.update { it.copy(loading = false) }
@@ -314,7 +312,6 @@ class MainViewModel @Inject constructor(
                         }
 
                         it.onFailure {
-                            myLog("failrue viewmodle")
                         }
 
                         uiState.update { it.copy(loading = false) }

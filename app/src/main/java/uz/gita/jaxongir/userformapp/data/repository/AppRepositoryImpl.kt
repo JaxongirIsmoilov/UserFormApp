@@ -1,19 +1,18 @@
 package uz.gita.jaxongir.userformapp.data.repository
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOn
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.data.model.Conditions
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
-import uz.gita.jaxongir.userformapp.utills.myLog
 import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
@@ -33,7 +32,6 @@ class AppRepositoryImpl @Inject constructor(
                             == password
                         ) {
                             pref.saveId(it.id)
-                            myLog(pref.getId())
                             trySend(Result.success(Unit))
                         }
                     }
@@ -52,8 +50,6 @@ class AppRepositoryImpl @Inject constructor(
                 .get()
                 .addOnSuccessListener {
                     it.documents.forEach {
-                        Log.d("AJAX", "getComponentsByUserId: ${it.data?.getOrDefault("conditions", "[]")}")
-
                         resultList.add(
                             ComponentData(
                                 id = it.id,
@@ -94,16 +90,21 @@ class AppRepositoryImpl @Inject constructor(
                                     it.data?.getOrDefault("selected", "[]").toString(),
                                     Array<Boolean>::class.java
                                 ).asList(),
-                                conditions = converter.fromJson<List<Conditions>>(it.data?.getOrDefault("conditions", "[]").toString(), object : TypeToken<List<Conditions>>() {}.type),
+                                conditions = converter.fromJson<List<Conditions>>(
+                                    it.data?.getOrDefault(
+                                        "conditions",
+                                        "[]"
+                                    ).toString(), object : TypeToken<List<Conditions>>() {}.type
+                                ),
                                 type = converter.fromJson(
                                     it.data?.getOrDefault("type", "").toString(),
                                     ComponentEnum::class.java
                                 ),
                                 enteredValue = it.data?.getOrDefault("enteredValue", "").toString(),
-                                isVisible = it.data?.getOrDefault("visible", "true").toString() == "true"
+                                isVisible = it.data?.getOrDefault("visible", "true")
+                                    .toString() == "true"
                             )
                         )
-                        myLog("result size:${resultList}")
                     }
 
                     trySend(Result.success(resultList))
@@ -115,7 +116,7 @@ class AppRepositoryImpl @Inject constructor(
             awaitClose()
         }
 
-    override fun updateComponent(componentData: ComponentData): Flow<Result<Unit>> = callbackFlow{
+    override fun updateComponent(componentData: ComponentData): Flow<Result<Unit>> = callbackFlow {
         firestore.collection("Components")
             .document(componentData.id)
             .set(componentData)
