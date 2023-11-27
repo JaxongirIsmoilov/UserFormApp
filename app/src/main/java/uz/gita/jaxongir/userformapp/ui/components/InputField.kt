@@ -54,7 +54,7 @@ fun InputField(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFFF3951),
                     unfocusedBorderColor = Color(0xFFFF7686)
-                )
+                ), singleLine = true
             )
         }
 
@@ -63,18 +63,17 @@ fun InputField(
                 value = newContentForNumber,
                 onValueChange = { input ->
                     currentValue = input
-                    if (input.isEmpty()){
+                    if (input.isEmpty()) {
                         newContentForNumber = ""
-                    }else{
+                    } else {
                         if (input.toInt() < minValue) {
                             newContentForNumber = minValue.toString()
-                        }else if (input.toInt() in minValue .. maxValue) {
+                        } else if (input.toInt() in minValue..maxValue) {
                             newContentForNumber = input
                         } else {
                             newContentForNumber = maxValue.toString()
                         }
                     }
-
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text(text = componentData.content) },
@@ -82,7 +81,7 @@ fun InputField(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFFF3951),
                     unfocusedBorderColor = Color(0xFFFF7686)
-                )
+                ), singleLine = true
             )
         }
 
@@ -90,7 +89,7 @@ fun InputField(
             OutlinedTextField(
                 value = newContentForText,
                 onValueChange = {
-                    if (it.length <= maxLength){
+                    if (it.length <= maxLength) {
                         newContentForText = it
                     }
                 },
@@ -100,7 +99,7 @@ fun InputField(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFFF3951),
                     unfocusedBorderColor = Color(0xFFFF7686)
-                )
+                ), singleLine = true
             )
         }
 
@@ -116,7 +115,7 @@ fun InputField(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFFF3951),
                     unfocusedBorderColor = Color(0xFFFF7686)
-                )
+                ), singleLine = true
             )
         }
     }
