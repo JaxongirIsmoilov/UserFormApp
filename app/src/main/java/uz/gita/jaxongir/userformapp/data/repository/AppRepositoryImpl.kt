@@ -3,14 +3,16 @@ package uz.gita.jaxongir.userformapp.data.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.dao.Dao
-import uz.gita.jaxongir.userformapp.data.local.room.entity.ComponentEntity
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
@@ -21,7 +23,7 @@ class AppRepositoryImpl @Inject constructor(
     private val pref: MyPref,
     private val dao: Dao
 ) : AppRepository {
-
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     override fun getDraftedItems(): List<FormEntity> {
         return dao.getAllDrafts(true)
@@ -31,13 +33,14 @@ class AppRepositoryImpl @Inject constructor(
         return dao.getAllSubmitteds(true)
     }
 
-    override suspend fun addAsDraft(list: List<ComponentEntity>) {
+    override suspend fun addAsDraft(list: List<ComponentData>) {
         dao.insertDatas(list)
     }
 
-    override suspend fun addAsSaved(list: List<ComponentEntity>) {
+    override suspend fun addAsSaved(list: List<ComponentData>) {
         dao.insertDatas(list)
     }
+
     override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
         firestore.collection("Users")
             .whereEqualTo("userName", name)
@@ -138,6 +141,10 @@ class AppRepositoryImpl @Inject constructor(
                                     .toString() == "true"
                             )
                         )
+                    }
+
+                    coroutineScope.launch {
+                        dao.insertDatas(resultList)
                     }
 
                     trySend(Result.success(resultList))

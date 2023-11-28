@@ -1,8 +1,5 @@
-package uz.gita.jaxongir.userformapp.presenter.detailsscreen
+package uz.gita.jaxongir.userformapp.presenter.submitteddetails
 
-import android.content.Context
-import android.widget.Toast
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,18 +10,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
-import uz.gita.jaxongir.userformapp.presenter.main.MainContract
-import java.util.prefs.AbstractPreferences
 import javax.inject.Inject
 
 
 @HiltViewModel
-class DetailsViewModelImpl @Inject constructor(
+class SubmittedDetailsViewModelImpl @Inject constructor(
     private val direction: DetailsDirection,
     private val repository: AppRepository,
     private val pref: MyPref
-) : DetailsContract.ViewModel, ViewModel() {
-    override val uiState = MutableStateFlow(DetailsContract.UIState())
+) : SubmittedDetailsContract.ViewModel, ViewModel() {
+    override val uiState = MutableStateFlow(SubmittedDetailsContract.UIState())
 
 
     init {
@@ -34,11 +29,11 @@ class DetailsViewModelImpl @Inject constructor(
         viewModelScope.launch {
             uiState.update { it.copy(loading = true) }
             repository.getComponentsByUserId(pref.getId())
-                .onEach {
-                    it.onSuccess { components ->
+                .onEach { result ->
+                    result.onSuccess { components ->
                         uiState.update { it.copy(submittedDetails = components) }
                     }
-                    it.onFailure {
+                    result.onFailure {
 
                     }
                     uiState.update { it.copy(loading = false) }
@@ -48,9 +43,9 @@ class DetailsViewModelImpl @Inject constructor(
     }
 
 
-    override fun onEventDispatcher(intent: DetailsContract.Intent) {
+    override fun onEventDispatcher(intent: SubmittedDetailsContract.Intent) {
         when (intent) {
-            DetailsContract.Intent.BackToSubmits -> {
+            SubmittedDetailsContract.Intent.BackToSubmits -> {
                 viewModelScope.launch {
                    direction.back()
                 }

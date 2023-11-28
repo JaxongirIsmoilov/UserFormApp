@@ -45,6 +45,7 @@ import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
@@ -138,7 +139,6 @@ fun MainScreenContent(
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
-
                                             SampleSpinnerPreview(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
@@ -322,14 +322,38 @@ fun MainScreenContent(
                     .fillMaxWidth()
                     .height(80.dp)
             ) {
-                Button(onClick = {}) {
+                Spacer(modifier = Modifier.weight(1f))
+                Button(onClick = {
+                    onEventDispatchers.invoke(
+                        MainContract.Intent.ClickAsDraft(
+                            FormEntity(
+                                id = 0,
+                                uiState.value.components,
+                                isDraft = true,
+                                isSubmitted = false
+                            )
+                        )
+                    )
+                }) {
                     Text(text = "Save As Draft")
                 }
+                Spacer(modifier = Modifier.weight(1f))
                 Button(onClick = {
-
+                    onEventDispatchers.invoke(
+                        MainContract.Intent.ClickAsSaved(
+                            FormEntity(
+                                id = 0,
+                                listComponents = uiState.value.components,
+                                isDraft = false,
+                                isSubmitted = true
+                            )
+                        )
+                    )
                 }) {
                     Text(text = "Save as Saved")
                 }
+                Spacer(modifier = Modifier.weight(1f))
+
             }
         }
 

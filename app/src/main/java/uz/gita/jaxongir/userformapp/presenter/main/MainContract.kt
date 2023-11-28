@@ -1,6 +1,7 @@
 package uz.gita.jaxongir.userformapp.presenter.main
 
 import kotlinx.coroutines.flow.StateFlow
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
 interface MainContract {
@@ -27,8 +28,8 @@ interface MainContract {
 
         object Load : Intent
 
-        data class ClickAsSaved(val list: List<ComponentData>) : Intent
-        data class ClickAsDraft(val list: List<ComponentData>) : Intent
+        data class ClickAsSaved(val entity: FormEntity) : Intent
+        data class ClickAsDraft(val entity: FormEntity) : Intent
     }
 
 }
