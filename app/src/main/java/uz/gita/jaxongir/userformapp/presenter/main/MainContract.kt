@@ -20,7 +20,6 @@ interface MainContract {
     )
 
     interface Intent {
-        object Logout : Intent
         object LoadList : Intent
 
         data class CheckedComponent(val componentData: ComponentData) : Intent
