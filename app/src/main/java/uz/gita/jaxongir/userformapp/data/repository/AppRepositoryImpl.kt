@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
@@ -31,16 +30,19 @@ class AppRepositoryImpl @Inject constructor(
 
     override fun getSavedComponents(): Flow<Result<List<FormEntity>>> = callbackFlow {
         trySend(Result.success(dao.getAllDrafts()))
+        awaitClose()
     }
 
     override suspend fun addAsDraft(formEntity: FormEntity): Flow<Result<String>> = callbackFlow {
         dao.insertDatas(formEntity)
         trySend(Result.success("Success as draft"))
+        awaitClose()
     }
 
     override suspend fun addAsSaved(formEntity: FormEntity): Flow<Result<String>> = callbackFlow {
         dao.insertDatas(formEntity)
         trySend(Result.success("Success as saved"))
+        awaitClose()
     }
 
     override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
