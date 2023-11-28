@@ -3,6 +3,7 @@ package uz.gita.jaxongir.userformapp.presenter.main
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -187,11 +188,6 @@ fun MainScreenContent(
                                                         )
                                                     }
                                                 ) {
-                                                    onEventDispatchers.invoke(
-                                                        MainContract.Intent.UpdateComponent(
-                                                            data.copy(enteredValue = "")
-                                                        )
-                                                    )
                                                     if (data.operators.isNotEmpty()) {
                                                         onEventDispatchers.invoke(
                                                             MainContract.Intent.CheckedComponent(
@@ -345,6 +341,7 @@ fun MainScreenContent(
                                     }
                                     Spacer(modifier = Modifier.weight(1f))
                                     Button(onClick = {
+
                                         onEventDispatchers.invoke(
                                             MainContract.Intent.ClickAsSaved(
                                                 FormEntity(

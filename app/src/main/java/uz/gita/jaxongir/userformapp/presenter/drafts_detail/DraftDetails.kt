@@ -130,8 +130,6 @@ fun DraftDetailsContent(
 
                                     ComponentEnum.SampleText -> {
                                         item {
-
-
                                             Row(
                                                 modifier = Modifier
                                                     .then(
@@ -204,10 +202,6 @@ fun DraftDetailsContent(
                                                 componentData = data,
                                                 content = data.content
                                             ) {
-
-                                                if (data.operators.isNotEmpty()) {
-
-                                                }
                                             }
                                         }
                                     }

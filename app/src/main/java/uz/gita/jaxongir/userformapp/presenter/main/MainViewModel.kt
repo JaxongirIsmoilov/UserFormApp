@@ -60,7 +60,9 @@ class MainViewModel @Inject constructor(
 
             is MainContract.Intent.ClickAsDraft -> {
                 viewModelScope.launch {
-                    appRepository.addAsDraft(intent.entity)
+                    appRepository.addAsDraft(intent.entity).onEach {
+
+                    }.launchIn(viewModelScope)
                     Toast.makeText(intent.context, "Saved as Draft", Toast.LENGTH_SHORT).show()
                     mainDirection.back()
 
@@ -70,7 +72,9 @@ class MainViewModel @Inject constructor(
             is MainContract.Intent.ClickAsSaved -> {
                 viewModelScope.launch {
                     Toast.makeText(intent.context, "Saved as Submitted", Toast.LENGTH_SHORT).show()
-                    appRepository.addAsSaved(intent.entity)
+                    appRepository.addAsSaved(intent.entity).onEach {
+
+                    }.launchIn(viewModelScope)
                     mainDirection.back()
                 }
             }
