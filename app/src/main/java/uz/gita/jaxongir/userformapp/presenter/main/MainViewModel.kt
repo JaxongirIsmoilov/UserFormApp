@@ -454,11 +454,15 @@ class MainViewModel @Inject constructor(
 
 
             is MainContract.Intent.ClickAsDraft -> {
-                appRepository.addAsDraft(intent.list)
+                viewModelScope.launch {
+                    appRepository.addAsDraft(intent.list)
+                }
             }
 
             is MainContract.Intent.ClickAsSaved -> {
-                appRepository.addAsSaved(intent.list)
+                viewModelScope.launch {
+                    appRepository.addAsSaved(intent.list)
+                }
             }
         }
     }
