@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.drafts_detail
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -23,10 +24,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,20 +47,22 @@ import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
+import uz.gita.jaxongir.userformapp.utills.myLog2
 
 class DraftDetails(private val list: List<ComponentData>) : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     override fun Content() {
         val vm: DraftScreenContract.ViewModel = getViewModel<DraftDetailsViewModelImpl>()
-        DraftDetailsContent(list, vm::onEventDispatcher)
+        DraftDetailsContent(vm.uiState.collectAsState(), vm::onEventDispatcher)
+        vm.onEventDispatcher(DraftScreenContract.Intent.UpdateList(list))
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DraftDetailsContent(
-    list: List<ComponentData>,
+    uiState: State<DraftScreenContract.UiState>,
     onEventDispatchers: (DraftScreenContract.Intent) -> Unit,
 ) {
     val context = LocalContext.current
@@ -71,7 +73,7 @@ fun DraftDetailsContent(
         ) {
 
             Box(modifier = Modifier.fillMaxSize()) {
-                if (list.isEmpty()) {
+                if (uiState.value.list.isEmpty()) {
                     Text(
                         text = "There is no components yet!",
                         fontSize = 22.sp,
@@ -106,16 +108,18 @@ fun DraftDetailsContent(
                             Spacer(modifier = Modifier.weight(1f))
                         }
 
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 10.dp)) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 10.dp)
+                        ) {
                             LazyColumn(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight()
                                     .padding(top = 10.dp)
                             ) {
-                                list.forEach { data ->
+                                uiState.value.list.forEach { data ->
                                     when (data.type) {
                                         ComponentEnum.Spinner -> {
                                             item {
@@ -123,8 +127,10 @@ fun DraftDetailsContent(
                                                     list = data.variants ?: listOf(),
                                                     preselected = data.selectedSpinnerText ?: "",
                                                     onSelectionChanged = {
-                                                        DraftScreenContract.Intent.UpdateComponent(
-                                                            data.copy(selectedSpinnerText = it)
+                                                        onEventDispatchers.invoke(
+                                                            DraftScreenContract.Intent.UpdateComponent(
+                                                                data.copy(selectedSpinnerText = it)
+                                                            )
                                                         )
                                                     },
                                                     content = data.content,
@@ -141,7 +147,13 @@ fun DraftDetailsContent(
                                                         question = data.content,
                                                         list = data.variants,
                                                         componentData = data,
-                                                        onSaveStates = {},
+                                                        onSaveStates = {
+                                                            onEventDispatchers.invoke(
+                                                                DraftScreenContract.Intent.UpdateComponent(
+                                                                    data.copy(selected = it)
+                                                                )
+                                                            )
+                                                        },
                                                         deleteComp = {},
                                                         isEnable = true, isInDraft = true
                                                     )
@@ -187,9 +199,6 @@ fun DraftDetailsContent(
                                         ComponentEnum.Input -> {
                                             item {
 
-                                                var inputVal by remember {
-                                                    mutableStateOf(data.enteredValue)
-                                                }
 
                                                 Column(modifier = Modifier.fillMaxWidth()) {
                                                     Spacer(modifier = Modifier.size(10.dp))
@@ -207,9 +216,12 @@ fun DraftDetailsContent(
                                                     Spacer(modifier = Modifier.size(10.dp))
                                                     InputField(
                                                         onEdit = {
-                                                            DraftScreenContract.Intent.UpdateComponent(
-                                                                data.copy(
-                                                                    enteredValue = it
+                                                            myLog2("onEdit")
+                                                            onEventDispatchers.invoke(
+                                                                DraftScreenContract.Intent.UpdateComponent(
+                                                                    data.copy(
+                                                                        enteredValue = it
+                                                                    )
                                                                 )
                                                             )
                                                         },
@@ -254,7 +266,7 @@ fun DraftDetailsContent(
                                                     DraftScreenContract.Intent.SaveAsDraft(
                                                         FormEntity(
                                                             id = 0,
-                                                            list,
+                                                            uiState.value.list,
                                                             isDraft = true,
                                                             isSubmitted = false
                                                         ), context = context
@@ -274,7 +286,7 @@ fun DraftDetailsContent(
                                                     DraftScreenContract.Intent.SaveAsSaved(
                                                         FormEntity(
                                                             id = 0,
-                                                            listComponents = list,
+                                                            listComponents = uiState.value.list,
                                                             isDraft = false,
                                                             isSubmitted = true
                                                         ), context
@@ -298,9 +310,10 @@ fun DraftDetailsContent(
 }
 
 
+@SuppressLint("UnrememberedMutableState")
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun DraftDetailsPreview() {
-    DraftDetailsContent(listOf(), onEventDispatchers = {})
+    DraftDetailsContent(mutableStateOf(DraftScreenContract.UiState()), onEventDispatchers = {})
 }

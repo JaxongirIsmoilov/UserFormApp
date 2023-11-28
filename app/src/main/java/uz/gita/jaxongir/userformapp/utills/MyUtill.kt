@@ -7,5 +7,5 @@ fun myLog(message: String) {
 }
 
 fun myLog2(message: String) {
-//    Log.d("TTT", message)
+    Log.d("DDD", message)
 }

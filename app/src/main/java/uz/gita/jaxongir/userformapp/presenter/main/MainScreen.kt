@@ -3,6 +3,7 @@ package uz.gita.jaxongir.userformapp.presenter.main
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -70,6 +71,9 @@ fun MainScreenContent(
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(color = Color(0xFFFF3951))
+    var shouldShowError by remember {
+        mutableStateOf(false)
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -93,8 +97,6 @@ fun MainScreenContent(
                         .padding(start = 16.dp),
                     color = Color.White
                 )
-
-
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
@@ -128,6 +130,7 @@ fun MainScreenContent(
                                             SampleSpinnerPreview(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
+
                                                 onSelectionChanged = {
                                                     onEventDispatchers.invoke(
                                                         MainContract.Intent.UpdateComponent(
@@ -237,9 +240,6 @@ fun MainScreenContent(
                                                     data
                                                 )
                                             )
-                                            var inputVal by remember {
-                                                mutableStateOf(data.enteredValue)
-                                            }
 
                                             Column(modifier = Modifier.fillMaxWidth()) {
                                                 Spacer(modifier = Modifier.size(10.dp))
@@ -247,12 +247,17 @@ fun MainScreenContent(
                                                     "DDD",
                                                     "MainScreenContent: ${data.isRequired}"
                                                 )
-                                                if (data.isRequired) {
-                                                    Text(
-                                                        text = "This Field is required",
-                                                        fontWeight = FontWeight(600),
-                                                        color = Color(0xFFff7686)
-                                                    )
+                                                if (data.isRequired ) {
+                                                    if(data.enteredValue==""){
+                                                        shouldShowError=true
+                                                    }else{
+                                                        Text(
+                                                            text = "This Field is required",
+                                                            fontWeight = FontWeight(600),
+                                                            color = Color(0xFFff7686)
+                                                        )
+                                                    }
+
                                                 }
                                                 Spacer(modifier = Modifier.size(10.dp))
                                                 InputField(onEdit = {
@@ -338,16 +343,21 @@ fun MainScreenContent(
                                                 0xFFFA1466
                                             )
                                         ), onClick = {
-                                            onEventDispatchers.invoke(
-                                                MainContract.Intent.ClickAsSaved(
-                                                    FormEntity(
-                                                        id = 0,
-                                                        listComponents = uiState.value.components,
-                                                        isDraft = false,
-                                                        isSubmitted = true
-                                                    ), context
+                                            if(!shouldShowError){
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.ClickAsSaved(
+                                                        FormEntity(
+                                                            id = 0,
+                                                            listComponents = uiState.value.components,
+                                                            isDraft = false,
+                                                            isSubmitted = true
+                                                        ), context
+                                                    )
                                                 )
-                                            )
+                                            } else{
+                                                Toast.makeText(context, "Check required fields", Toast.LENGTH_SHORT).show()
+                                            }
+
                                         }) {
                                         Text(text = "Save as Saved")
                                     }
