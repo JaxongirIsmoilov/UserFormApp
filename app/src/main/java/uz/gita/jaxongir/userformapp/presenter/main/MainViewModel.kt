@@ -51,13 +51,6 @@ class MainViewModel @Inject constructor(
 
     override fun onEventDispatcher(intent: MainContract.Intent) {
         when (intent) {
-            MainContract.Intent.Logout -> {
-                viewModelScope.launch {
-                    pref.clearData()
-                    mainDirection.moveToLogin()
-                }
-            }
-
             is MainContract.Intent.ClickAsDraft -> {
                 viewModelScope.launch {
                     appRepository.addAsDraft(intent.entity)
