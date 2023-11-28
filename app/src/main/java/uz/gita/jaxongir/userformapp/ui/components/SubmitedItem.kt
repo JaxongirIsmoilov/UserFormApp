@@ -36,7 +36,7 @@ fun SubmitedItem(
             .fillMaxWidth()
             .background(Color(0xFFF6F2F7))
             .border(1.dp, Color(0xFFFF3951), RoundedCornerShape(12.dp))
-            .height(100.dp)
+            .height(130.dp)
     ) {
         Text(
             text = "Submited form:${count+1}",
@@ -53,8 +53,8 @@ fun SubmitedItem(
         )
 
         Text(
-            text = "Date:",
-            modifier = Modifier.padding(start = 260.dp),
+            text = "Date:                             ",
+            modifier = Modifier.padding(start = 260.dp).padding(bottom = 20.dp),
             fontWeight = FontWeight.Bold
         )
     }
