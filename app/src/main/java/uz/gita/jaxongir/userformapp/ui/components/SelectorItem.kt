@@ -1,6 +1,5 @@
 package uz.gita.jaxongir.userformapp.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -27,11 +24,12 @@ import uz.gita.jaxongir.userformapp.data.model.ComponentData
 fun SelectorItem(
     question: String,
     list: List<String>,
+    onSaveStates: (List<Boolean>) -> Unit,
     componentData: ComponentData,
     deleteComp: (String) -> Unit,
 ) {
     val selectedItem = remember { mutableStateOf<String?>(null) }
-
+    val listSem = arrayListOf<Boolean>()
 
     Column(
         modifier = Modifier
@@ -51,7 +49,7 @@ fun SelectorItem(
                 fontSize = 22.sp,
             )
             Spacer(modifier = Modifier.weight(1f))
-            if (componentData.isRequired){
+            if (componentData.isRequired) {
                 Text(
                     text = "This Field is required",
                     fontWeight = FontWeight(600),
@@ -61,8 +59,9 @@ fun SelectorItem(
         }
         Spacer(modifier = Modifier.size(16.dp))
         list.forEach {
-            CheckBoxItem(title = it){
-                deleteComp(it)
+            CheckBoxItem(title = it, { deleteComp(it) }) {
+                listSem.add(it)
+
             }
             Spacer(modifier = Modifier.height(8.dp))
         }

@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -69,6 +70,7 @@ fun MainScreenContent(
     uiState: State<MainContract.UIState>,
     onEventDispatchers: (MainContract.Intent) -> Unit,
 ) {
+    val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(color = Color(0xFFFF3951))
     Box(modifier = Modifier.fillMaxSize()) {
@@ -176,11 +178,18 @@ fun MainScreenContent(
                                                 SelectorItem(
                                                     question = data.content,
                                                     list = data.variants,
-                                                    componentData = data
+                                                    componentData = data,
+                                                    onSaveStates = {
+                                                        onEventDispatchers.invoke(
+                                                            MainContract.Intent.UpdateComponent(
+                                                                componentData = data.copy(selected = it)
+                                                            )
+                                                        )
+                                                    }
                                                 ) {
                                                     onEventDispatchers.invoke(
                                                         MainContract.Intent.UpdateComponent(
-                                                            data.copy(enteredValue = "asdfds")
+                                                            data.copy(enteredValue = "")
                                                         )
                                                     )
                                                     if (data.operators.isNotEmpty()) {
@@ -313,48 +322,51 @@ fun MainScreenContent(
                             }
                         }
                     }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp)
+                            .align(Alignment.BottomCenter)
+                    ) {
+                        Spacer(modifier = Modifier.weight(1f))
+                        Button(onClick = {
+                            onEventDispatchers.invoke(
+                                MainContract.Intent.ClickAsDraft(
+                                    FormEntity(
+                                        id = 0,
+                                        uiState.value.components,
+                                        isDraft = true,
+                                        isSubmitted = false
+                                    ), context
+                                )
+                            )
+                        }) {
+                            Text(text = "Save As Draft")
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        Button(onClick = {
+                            onEventDispatchers.invoke(
+                                MainContract.Intent.ClickAsSaved(
+                                    FormEntity(
+                                        id = 0,
+                                        listComponents = uiState.value.components,
+                                        isDraft = false,
+                                        isSubmitted = true
+                                    ), context
+                                )
+                            )
+                        }) {
+                            Text(text = "Save as Saved")
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+
+                    }
                 }
+
             }
 
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-            ) {
-                Spacer(modifier = Modifier.weight(1f))
-                Button(onClick = {
-                    onEventDispatchers.invoke(
-                        MainContract.Intent.ClickAsDraft(
-                            FormEntity(
-                                id = 0,
-                                uiState.value.components,
-                                isDraft = true,
-                                isSubmitted = false
-                            )
-                        )
-                    )
-                }) {
-                    Text(text = "Save As Draft")
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                Button(onClick = {
-                    onEventDispatchers.invoke(
-                        MainContract.Intent.ClickAsSaved(
-                            FormEntity(
-                                id = 0,
-                                listComponents = uiState.value.components,
-                                isDraft = false,
-                                isSubmitted = true
-                            )
-                        )
-                    )
-                }) {
-                    Text(text = "Save as Saved")
-                }
-                Spacer(modifier = Modifier.weight(1f))
-
-            }
         }
 
 

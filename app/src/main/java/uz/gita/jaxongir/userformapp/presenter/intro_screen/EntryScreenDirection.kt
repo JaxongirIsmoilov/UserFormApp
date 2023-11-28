@@ -2,6 +2,7 @@ package uz.gita.jaxongir.userformapp.presenter.intro_screen
 
 import uz.gita.jaxongir.userformapp.presenter.drafts_list.DraftScreen
 import uz.gita.jaxongir.userformapp.presenter.main.MainScreen
+import uz.gita.jaxongir.userformapp.presenter.submitedScreen.SubmitedScreen
 import uz.gita.jaxongir.userformapp.utills.navigation.AppNavigator
 import javax.inject.Inject
 
@@ -10,6 +11,7 @@ interface EntryScreenDirection {
     suspend fun moveToSubmitScreen()
     suspend fun moveToDraftScreen()
 }
+
 class EntryScreenDirectionImpl @Inject constructor(
     private val appNavigator: AppNavigator
 ) : EntryScreenDirection {
@@ -18,7 +20,7 @@ class EntryScreenDirectionImpl @Inject constructor(
     }
 
     override suspend fun moveToSubmitScreen() {
-//        appNavigator.addScreen()
+        appNavigator.addScreen(SubmitedScreen())
     }
 
     override suspend fun moveToDraftScreen() {

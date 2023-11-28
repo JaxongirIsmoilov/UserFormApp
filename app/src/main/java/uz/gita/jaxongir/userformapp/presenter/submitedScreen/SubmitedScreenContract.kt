@@ -1,7 +1,7 @@
 package uz.gita.jaxongir.userformapp.presenter.submitedScreen
 
 import kotlinx.coroutines.flow.StateFlow
-import uz.gita.jaxongir.userformapp.data.model.ComponentData
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 
 interface SubmitedScreenContract {
 
@@ -13,7 +13,7 @@ interface SubmitedScreenContract {
 
 
     data class UIState(
-        val list: List<ComponentData> = listOf()
+        val list: List<FormEntity> = listOf()
     )
 
 

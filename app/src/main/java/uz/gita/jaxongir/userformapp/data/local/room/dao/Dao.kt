@@ -11,7 +11,7 @@ import uz.gita.jaxongir.userformapp.data.model.ComponentData
 @Dao
 interface Dao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertDatas(list: List<ComponentData>)
+    suspend fun insertDatas(entity: FormEntity)
 
 
     @Query("select * from formentity where isDraft = :isDraft order by id asc ")

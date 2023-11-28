@@ -4,11 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
-import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import javax.inject.Inject
 
@@ -17,14 +14,14 @@ import javax.inject.Inject
 class SubmitedScreenViewModelImpl @Inject constructor(
     private val direction: SubmitedScreenDirection,
     private val appRepository: AppRepository,
-    private val pref: MyPref
 ) : ViewModel(),
     SubmitedScreenContract.ViewModel {
     override val uiState =
-        MutableStateFlow<SubmitedScreenContract.UIState>(SubmitedScreenContract.UIState())
+        MutableStateFlow(SubmitedScreenContract.UIState())
 
     init {
-        uiState.update { it.copy() }
+        val list = appRepository.getDraftedItems()
+        uiState.update { it.copy(list) }
     }
 
 

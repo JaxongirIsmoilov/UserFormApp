@@ -1,6 +1,7 @@
 package uz.gita.jaxongir.userformapp.presenter.main
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,6 +55,22 @@ class MainViewModel @Inject constructor(
                 viewModelScope.launch {
                     pref.clearData()
                     mainDirection.moveToLogin()
+                }
+            }
+
+            is MainContract.Intent.ClickAsDraft -> {
+                viewModelScope.launch {
+                    appRepository.addAsDraft(intent.entity)
+                    Toast.makeText(intent.context, "Saved as Draft", Toast.LENGTH_SHORT).show()
+                    mainDirection
+
+                }
+            }
+
+            is MainContract.Intent.ClickAsSaved -> {
+                viewModelScope.launch {
+                    Toast.makeText(intent.context, "Saved as Submitted", Toast.LENGTH_SHORT).show()
+                    appRepository.addAsSaved(intent.entity)
                 }
             }
 
@@ -453,17 +470,6 @@ class MainViewModel @Inject constructor(
             }
 
 
-            is MainContract.Intent.ClickAsDraft -> {
-                viewModelScope.launch {
-                    appRepository.addAsDraft(intent.list)
-                }
-            }
-
-            is MainContract.Intent.ClickAsSaved -> {
-                viewModelScope.launch {
-                    appRepository.addAsSaved(intent.list)
-                }
-            }
         }
     }
 

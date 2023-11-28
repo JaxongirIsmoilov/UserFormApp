@@ -33,12 +33,12 @@ class AppRepositoryImpl @Inject constructor(
         return dao.getAllSubmitteds(true)
     }
 
-    override suspend fun addAsDraft(list: List<ComponentData>) {
-        dao.insertDatas(list)
+    override suspend fun addAsDraft(entity: FormEntity) {
+        dao.insertDatas(entity)
     }
 
-    override suspend fun addAsSaved(list: List<ComponentData>) {
-        dao.insertDatas(list)
+    override suspend fun addAsSaved(entity: FormEntity) {
+        dao.insertDatas(entity)
     }
 
     override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
@@ -141,10 +141,6 @@ class AppRepositoryImpl @Inject constructor(
                                     .toString() == "true"
                             )
                         )
-                    }
-
-                    coroutineScope.launch {
-                        dao.insertDatas(resultList)
                     }
 
                     trySend(Result.success(resultList))

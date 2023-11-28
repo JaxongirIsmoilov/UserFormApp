@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.main
 
+import android.content.Context
 import kotlinx.coroutines.flow.StateFlow
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
@@ -28,8 +29,8 @@ interface MainContract {
 
         object Load : Intent
 
-        data class ClickAsSaved(val entity: FormEntity) : Intent
-        data class ClickAsDraft(val entity: FormEntity) : Intent
+        data class ClickAsSaved(val entity: FormEntity, val context: Context) : Intent
+        data class ClickAsDraft(val entity: FormEntity, val context:Context) : Intent
     }
 
 }

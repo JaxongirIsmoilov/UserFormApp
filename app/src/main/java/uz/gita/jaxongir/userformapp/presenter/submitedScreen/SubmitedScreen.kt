@@ -39,25 +39,12 @@ class SubmitedScreen : AndroidScreen() {
     }
 }
 
-data class User(val id: Int, val name: String, val age: Int)
-
 @Composable
 fun SubmitedScreenContent(
     uiState: State<SubmitedScreenContract.UIState>,
     onEventDispatcher: (SubmitedScreenContract.Intent) -> Unit
 ) {
-    val list = listOf(
-        User(1, "", 1),
-        User(1, "", 1),
-        User(1, "", 1),
-        User(1, "", 1),
-    )
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(content = {
-            items(uiState.value.list) {
-
-            }
-        }, modifier = Modifier.padding(top = 30.dp))
 
         Icon(
             painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
@@ -68,6 +55,13 @@ fun SubmitedScreenContent(
                     onEventDispatcher.invoke(SubmitedScreenContract.Intent.Back)
                 }, tint = Color(0xFFFF3951)
         )
+
+        LazyColumn(content = {
+            items(uiState.value.list) {
+
+            }
+        }, modifier = Modifier.padding(top = 30.dp))
+
 
     }
 
