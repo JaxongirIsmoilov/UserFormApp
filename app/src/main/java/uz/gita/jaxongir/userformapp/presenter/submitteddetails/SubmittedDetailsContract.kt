@@ -1,9 +1,9 @@
-package uz.gita.jaxongir.userformapp.presenter.detailsscreen
+package uz.gita.jaxongir.userformapp.presenter.submitteddetails
 
 import kotlinx.coroutines.flow.StateFlow
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
-interface DetailsContract {
+interface SubmittedDetailsContract {
 
     interface ViewModel{
         val uiState: StateFlow<UIState>

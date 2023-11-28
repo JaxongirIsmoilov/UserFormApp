@@ -1,4 +1,4 @@
-package uz.gita.jaxongir.userformapp.presenter.detailsscreen
+package uz.gita.jaxongir.userformapp.presenter.submitteddetails
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,8 +36,8 @@ class DetailsScreen:AndroidScreen() {
 
 @Composable
 fun DetailsScreenContent(
- uiState: State<DetailsContract.UIState>,
- onEventDispatchers:(DetailsContract.Intent) -> Unit
+    uiState: State<SubmittedDetailsContract.UIState>,
+    onEventDispatchers:(SubmittedDetailsContract.Intent) -> Unit
 ){
     Column(modifier = Modifier.fillMaxSize()) {
         Box(
@@ -63,7 +63,7 @@ fun DetailsScreenContent(
                 modifier = Modifier
                     .align(Alignment.CenterEnd),
                 onClick = {
-                    onEventDispatchers.invoke(DetailsContract.Intent.BackToSubmits)
+                    onEventDispatchers.invoke(SubmittedDetailsContract.Intent.BackToSubmits)
                 }
             ) {
                 Icon(
