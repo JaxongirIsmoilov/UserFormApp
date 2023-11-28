@@ -21,6 +21,23 @@ class AppRepositoryImpl @Inject constructor(
     private val pref: MyPref,
     private val dao: Dao
 ) : AppRepository {
+
+
+    override fun getDraftedItems(): List<FormEntity> {
+        return dao.getAllDrafts(true)
+    }
+
+    override fun getSavedComponents(): List<FormEntity> {
+        return dao.getAllSubmitteds(true)
+    }
+
+    override suspend fun addAsDraft(list: List<ComponentEntity>) {
+        dao.insertDatas(list)
+    }
+
+    override suspend fun addAsSaved(list: List<ComponentEntity>) {
+        dao.insertDatas(list)
+    }
     override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
         firestore.collection("Users")
             .whereEqualTo("userName", name)
@@ -158,19 +175,5 @@ class AppRepositoryImpl @Inject constructor(
         awaitClose()
     }
 
-    override fun getDraftedItems(): List<FormEntity> {
-        return dao.getAllDrafts(true)
-    }
 
-    override fun getSavedComponents(): List<FormEntity> {
-        return dao.getAllSubmitteds(true)
-    }
-
-    override suspend fun addAsDraft(list: List<ComponentEntity>) {
-        dao.insertDatas(list)
-    }
-
-    override suspend fun addAsSaved(list: List<ComponentEntity>) {
-        dao.insertDatas(list)
-    }
 }
