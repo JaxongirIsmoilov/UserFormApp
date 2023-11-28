@@ -12,7 +12,6 @@ interface LoginContract {
 
     data class UIState(
         val loading: Boolean = false,
-        val components: List<ComponentData> = emptyList()
     )
 
     interface Intent {
