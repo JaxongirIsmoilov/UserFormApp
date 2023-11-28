@@ -222,6 +222,10 @@ fun DraftDetailsContent(
 
 }
 
+
+
+
+
 @Preview(showBackground = true)
 @Composable
 fun DraftDetailsPreview() {
