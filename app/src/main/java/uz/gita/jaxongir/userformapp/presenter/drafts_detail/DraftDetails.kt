@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -34,7 +36,7 @@ class DraftDetails(private val componentData: ComponentData) : AndroidScreen() {
     @Composable
     override fun Content() {
         val vm:DraftScreenContract.ViewModel = getViewModel<DraftDetailsViewModelImpl>()
-        DraftDetailsContent(componentData, vm::onEventDispatcher)
+        DraftDetailsContent(componentData,  vm::onEventDispatcher)
     }
 }
 
@@ -112,7 +114,32 @@ fun DraftDetailsContent(
 
             LazyColumn(modifier = Modifier.padding(top = 16.dp)){
 
+                item {
+                   Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)){
 
+                       Button(
+                           onClick = {
+                                     onEventDispatchers.invoke(DraftScreenContract.Intent.Draft(data))
+                                     },
+                           modifier = Modifier
+                               .background(Color.White),
+                           colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFA1466))
+                       ) {
+                           Text(text = "Save as draft", color = Color(0xFFFFFFFF))
+                       }
+
+                       Spacer(modifier = Modifier.weight(1f))
+
+                       Button(
+                           onClick = { onEventDispatchers.invoke(DraftScreenContract.Intent.Submit(data)) },
+                           modifier = Modifier
+                               .background(Color.White),
+                           colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFA1466))
+                       ) {
+                           Text(text = "Save as submit", color = Color(0xFFFFFFFF))
+                       }
+                   }
+                }
             }
         }
 
@@ -122,5 +149,5 @@ fun DraftDetailsContent(
 @Preview(showBackground = true)
 @Composable
 fun DraftDetailsPreview(){
-    //DraftDetailsContent(onEventDispatchers = {}, data = ComponentData())
+   // DraftDetailsContent(onEventDispatchers = {})
 }
