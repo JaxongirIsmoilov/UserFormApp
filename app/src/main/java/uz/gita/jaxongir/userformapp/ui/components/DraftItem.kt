@@ -23,12 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import uz.gita.jaxongir.userformapp.data.model.ComponentData
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 
 @Composable
 fun DraftItem(
-    componentData: ComponentData,
-    onClick: (ComponentData) -> Unit
+    entity: FormEntity,
+    onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -38,14 +38,14 @@ fun DraftItem(
             .background(Color(0xFFF6F2F7))
             .border(2.dp, Color(0xFFFF3951), RoundedCornerShape(10.dp))
             .clickable {
-                onClick(componentData)
+                onClick()
             }
             .padding(start = 16.dp, top = 16.dp, end = 16.dp),
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Draft FormID:",
+                text = "Draft ID:${entity.id}",
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(bottom = 16.dp),
@@ -57,7 +57,7 @@ fun DraftItem(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "List:Size", modifier = Modifier
+                text = "List size:${entity.listComponents.size}", modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(bottom = 16.dp),
                 style = TextStyle(
