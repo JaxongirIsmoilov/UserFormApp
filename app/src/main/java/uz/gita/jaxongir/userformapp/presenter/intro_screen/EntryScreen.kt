@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -43,7 +45,6 @@ class EntryScreen : AndroidScreen() {
         )
     }
 }
-
 @Composable
 fun EntryScreenContent(
     uiState: State<EntryScreenContract.UIState>,
@@ -68,7 +69,24 @@ fun EntryScreenContent(
                     .padding(start = 16.dp),
                 color = Color.White
             )
+
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd),
+                onClick = {
+                    onEventDispatchers.invoke(EntryScreenContract.Intent.Logout)
+                }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_logout),
+                    contentDescription = null,
+                    modifier = Modifier.size(36.dp),
+                    tint = Color.White
+                )
+            }
+
         }
+
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier
