@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -314,7 +315,25 @@ fun MainScreenContent(
                     }
                 }
             }
+
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+            ) {
+                Button(onClick = {}) {
+                    Text(text = "Save As Draft")
+                }
+                Button(onClick = {
+
+                }) {
+                    Text(text = "Save as Saved")
+                }
+            }
         }
+
+
     }
 }
 

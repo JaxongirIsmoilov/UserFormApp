@@ -303,7 +303,8 @@ class MainViewModel @Inject constructor(
                                 if (uiState.value.checkedComponent?.textFieldType == TextFieldType.Number) {
                                     if (!((uiState.value.checkedComponent?.enteredValue?.toInt()
                                             ?: 0) <= intent.componentData.connectedValues[index].toInt() && isVisible
-)                                    ) {
+                                                )
+                                    ) {
                                         isVisible = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
@@ -359,7 +360,8 @@ class MainViewModel @Inject constructor(
                                 } else {
                                     if (!((uiState.value.checkedComponent?.enteredValue?.length
                                             ?: 0) <= intent.componentData.connectedValues[index].length && isVisible
-)                                    ) {
+                                                )
+                                    ) {
                                         isVisible = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
@@ -448,6 +450,15 @@ class MainViewModel @Inject constructor(
                                 }
                         }.collect()
                 }
+            }
+
+
+            is MainContract.Intent.ClickAsDraft -> {
+                appRepository.addAsDraft(intent.list)
+            }
+
+            is MainContract.Intent.ClickAsSaved -> {
+                appRepository.addAsSaved(intent.list)
             }
         }
     }
