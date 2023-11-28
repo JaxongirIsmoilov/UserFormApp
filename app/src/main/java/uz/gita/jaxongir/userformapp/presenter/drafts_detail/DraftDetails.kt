@@ -3,17 +3,23 @@ package uz.gita.jaxongir.userformapp.presenter.drafts_detail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -21,12 +27,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
+import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
+import uz.gita.jaxongir.userformapp.presenter.main.MainContract
 
 class DraftDetails(private val componentData: ComponentData) : AndroidScreen() {
     @Composable
     override fun Content() {
         DraftDetailsContent()
+
     }
 }
 
@@ -43,31 +52,60 @@ fun DraftDetailsContent() {
                     .background(color = Color(0xFFFF3951))
                     .height(70.dp)
             ) {
-                Text(
-                    text = "User: Name",
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                        fontStyle = FontStyle.Normal,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(start = 16.dp),
-                    color = Color.White
-                )
 
-                Text(
-                    text = "Drafts",
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                        fontStyle = FontStyle.Normal,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(end = 16.dp),
-                    color = Color.White
-                )
+                Row (modifier = Modifier.fillMaxSize()){
+                    IconButton(
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(start = 16.dp),
+                        onClick = {
+                            //
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(36.dp),
+                            tint = Color.White
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.size(8.dp))
+
+                    Text(
+
+                        text = "User: Name",
+                        style = TextStyle(
+                            fontSize = 24.sp,
+                            fontStyle = FontStyle.Normal,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(start = 16.dp),
+                        color = Color.White
+                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    IconButton(
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(end = 16.dp),
+                        onClick = {
+                            // for submit
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_submit),
+                            contentDescription = null,
+                            modifier = Modifier.size(36.dp),
+                            tint = Color.White
+                        )
+                    }
+                }
+
+
 
             }
 
