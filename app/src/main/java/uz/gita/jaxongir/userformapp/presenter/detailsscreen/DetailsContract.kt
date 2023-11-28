@@ -18,6 +18,9 @@ interface DetailsContract {
     }
 
     data class UIState(
+        val loading: Boolean = false,
+        val userName:String = "User",
+        val userId:String = "",
         val submittedDetails: List<ComponentData> = emptyList()
     )
 
