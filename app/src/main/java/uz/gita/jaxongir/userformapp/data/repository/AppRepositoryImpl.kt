@@ -25,20 +25,22 @@ class AppRepositoryImpl @Inject constructor(
 ) : AppRepository {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    override fun getDraftedItems(): List<FormEntity> {
-        return dao.getAllDrafts(true)
+    override fun getDraftedItems(): Flow<Result<List<FormEntity>>> = callbackFlow {
+        trySend(Result.success(dao.getAllDrafts()))
     }
 
-    override fun getSavedComponents(): List<FormEntity> {
-        return dao.getAllSubmitteds(true)
+    override fun getSavedComponents(): Flow<Result<List<FormEntity>>> = callbackFlow {
+        trySend(Result.success(dao.getAllDrafts()))
     }
 
-    override suspend fun addAsDraft(entity: FormEntity) {
-        dao.insertDatas(entity)
+    override suspend fun addAsDraft(formEntity: FormEntity): Flow<Result<String>> = callbackFlow {
+        dao.insertDatas(formEntity)
+        trySend(Result.success("Success as draft"))
     }
 
-    override suspend fun addAsSaved(entity: FormEntity) {
-        dao.insertDatas(entity)
+    override suspend fun addAsSaved(formEntity: FormEntity): Flow<Result<String>> = callbackFlow {
+        dao.insertDatas(formEntity)
+        trySend(Result.success("Success as saved"))
     }
 
     override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
@@ -142,6 +144,7 @@ class AppRepositoryImpl @Inject constructor(
                             )
                         )
                     }
+
 
                     trySend(Result.success(resultList))
                 }

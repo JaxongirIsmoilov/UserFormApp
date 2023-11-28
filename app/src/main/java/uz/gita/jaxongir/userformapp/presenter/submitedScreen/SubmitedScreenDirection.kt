@@ -5,7 +5,6 @@ import javax.inject.Inject
 
 interface SubmitedScreenDirection {
     suspend fun back()
-
 }
 
 

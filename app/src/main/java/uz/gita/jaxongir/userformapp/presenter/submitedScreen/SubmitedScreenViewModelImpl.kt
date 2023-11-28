@@ -20,7 +20,7 @@ class SubmitedScreenViewModelImpl @Inject constructor(
         MutableStateFlow(SubmitedScreenContract.UIState())
 
     init {
-        val list = appRepository.getDraftedItems()
+        val list = appRepository.getSavedComponents()
         uiState.update { it.copy(list) }
     }
 

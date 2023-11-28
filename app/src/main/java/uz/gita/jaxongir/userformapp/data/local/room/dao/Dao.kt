@@ -15,11 +15,11 @@ interface Dao {
 
 
     @Query("select * from formentity where isDraft = :isDraft order by id asc ")
-    fun getAllDrafts(isDraft: Boolean = true): List<FormEntity>
+    suspend fun getAllDrafts(isDraft: Boolean = true): List<FormEntity>
 
 
     @Query("select * from formentity where isSubmitted = :isSubmitted order by id asc ")
-    fun getAllSubmitteds(isSubmitted: Boolean = true): List<FormEntity>
+   suspend fun getAllSubmitteds(isSubmitted: Boolean = true): List<FormEntity>
 
 
 }
