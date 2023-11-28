@@ -14,10 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +41,9 @@ import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
+import uz.gita.jaxongir.userformapp.presenter.main.MainContract
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
@@ -60,6 +64,7 @@ fun DraftDetailsContent(
     list: List<ComponentData>,
     onEventDispatchers: (DraftScreenContract.Intent) -> Unit,
 ) {
+    val context = LocalContext.current
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -75,12 +80,12 @@ fun DraftDetailsContent(
                     )
 
                 } else {
-                    Column(modifier = Modifier.padding(horizontal = 15.dp)) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.background(Color(0xFFFF3159))
                         ) {
-                            Spacer(modifier = Modifier.width(16.dp))
+                            Spacer(modifier = Modifier.size(16.dp))
                             IconButton(
                                 onClick = {
                                     onEventDispatchers.invoke(DraftScreenContract.Intent.Back)
@@ -93,7 +98,7 @@ fun DraftDetailsContent(
                                     tint = Color.White
                                 )
                             }
-                            Spacer(modifier = Modifier.width(32.dp))
+                            Spacer(modifier = Modifier.weight(1f))
                             Text(
                                 text = "Draft's",
                                 fontWeight = FontWeight.Black,
@@ -114,32 +119,25 @@ fun DraftDetailsContent(
                                             SampleSpinnerPreview(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
-                                                onSelectionChanged = {
-
-
-                                                },
+                                                onSelectionChanged = {},
                                                 content = data.content,
-                                                componentData = data
-                                            ) {
-                                            }
+                                                componentData = data, {}, true
+                                            )
 
                                         }
                                     }
 
                                     ComponentEnum.Selector -> {
                                         item {
-
                                             Column {
                                                 SelectorItem(
                                                     question = data.content,
                                                     list = data.variants,
                                                     componentData = data,
-                                                    onSaveStates = {
-
-                                                    }
-                                                ) {
-
-                                                }
+                                                    onSaveStates = {},
+                                                    deleteComp = {},
+                                                    isEnable = true
+                                                )
                                             }
                                         }
                                     }
@@ -201,11 +199,7 @@ fun DraftDetailsContent(
                                                 Spacer(modifier = Modifier.size(10.dp))
                                                 InputField(onEdit = {
 
-                                                    if (data.operators.isNotEmpty()) {
-
-                                                    }
-
-                                                }, componentData = data)
+                                                }, componentData = data, isEnable = true)
                                             }
 
                                         }
@@ -213,16 +207,69 @@ fun DraftDetailsContent(
 
                                     ComponentEnum.Dater -> {
                                         item {
-
                                             DatePickerPreview(
                                                 componentData = data,
-                                                content = data.content
+                                                content = data.content, isEnable = true
                                             ) {
                                             }
                                         }
                                     }
+
+
                                 }
                             }
+                            item {
+                                Row(
+                                    modifier = Modifier
+                                        .padding(top = 10.dp)
+                                        .fillMaxWidth()
+                                        .height(80.dp)
+                                        .align(Alignment.CenterHorizontally)
+                                ) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Button(
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(
+                                                0xFFFA1466
+                                            )
+                                        ), onClick = {
+                                            onEventDispatchers.invoke(
+                                                DraftScreenContract.Intent.SaveAsDraft(
+                                                    FormEntity(
+                                                        id = 0,
+                                                        list,
+                                                        isDraft = true,
+                                                        isSubmitted = false
+                                                    ), context = context
+                                                )
+                                            )
+                                        }) {
+                                        Text(text = "Save As Draft")
+                                    }
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Button(
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(
+                                                0xFFFA1466
+                                            )
+                                        ), onClick = {
+                                            onEventDispatchers.invoke(
+                                                DraftScreenContract.Intent.SaveAsSaved(
+                                                    FormEntity(
+                                                        id = 0,
+                                                        listComponents = list,
+                                                        isDraft = false,
+                                                        isSubmitted = true
+                                                    ), context
+                                                )
+                                            )
+                                        }) {
+                                        Text(text = "Save as Saved")
+                                    }
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
+                            }
+
                         }
                     }
                 }

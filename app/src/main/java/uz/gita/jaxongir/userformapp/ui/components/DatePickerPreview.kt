@@ -45,6 +45,7 @@ import java.time.format.DateTimeFormatter
 fun DatePickerPreview(
     componentData: ComponentData,
     content: String,
+    isEnable: Boolean,
     deleteComp: () -> Unit = {}
 ) {
     var pickedDate by remember {
@@ -85,12 +86,13 @@ fun DatePickerPreview(
                     tint = Color(0xFFFF7686),
                     modifier = Modifier
                         .clickable {
-                            dateDialogState.show()
+                            if (isEnable) {
+                                dateDialogState.show()
+                            }
                         }
                         .width(36.dp))
             }
         }
-
     }
 
     MaterialDialog(
@@ -135,6 +137,6 @@ fun DatePickerPreviewNew() {
             type = ComponentEnum.Dater,
             enteredValue = "",
             isVisible = false
-        ), ""
+        ), "", false
     )
 }

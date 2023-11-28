@@ -20,8 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -35,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,7 +42,6 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
@@ -112,11 +108,11 @@ fun MainScreenContent(
                 } else {
                     Column(modifier = Modifier.padding(horizontal = 15.dp)) {
                         Text(
-                            text = "Components",
+                            text = "Fill these sheets",
                             modifier = Modifier
                                 .padding(top = 15.dp)
                                 .align(Alignment.CenterHorizontally),
-                            fontWeight = FontWeight.Black,
+                            fontWeight = FontWeight.Normal,
                             fontSize = 25.sp
                         )
                         LazyColumn(
@@ -148,9 +144,8 @@ fun MainScreenContent(
                                                     }
                                                 },
                                                 content = data.content,
-                                                componentData = data
-                                            ) {
-                                            }
+                                                componentData = data, {}, true
+                                            )
 
                                         }
                                     }
@@ -173,21 +168,21 @@ fun MainScreenContent(
                                                                 componentData = data.copy(selected = it)
                                                             )
                                                         )
-                                                    }
-                                                ) {
-                                                    onEventDispatchers.invoke(
-                                                        MainContract.Intent.UpdateComponent(
-                                                            data.copy(enteredValue = "")
-                                                        )
-                                                    )
-                                                    if (data.operators.isNotEmpty()) {
+                                                    }, deleteComp = {
                                                         onEventDispatchers.invoke(
-                                                            MainContract.Intent.CheckedComponent(
-                                                                data
+                                                            MainContract.Intent.UpdateComponent(
+                                                                data.copy(enteredValue = "")
                                                             )
                                                         )
-                                                    }
-                                                }
+                                                        if (data.operators.isNotEmpty()) {
+                                                            onEventDispatchers.invoke(
+                                                                MainContract.Intent.CheckedComponent(
+                                                                    data
+                                                                )
+                                                            )
+                                                        }
+                                                    }, isEnable = true
+                                                )
                                             }
                                         }
                                     }
@@ -274,7 +269,7 @@ fun MainScreenContent(
                                                         )
                                                     }
 
-                                                }, componentData = data)
+                                                }, componentData = data, isEnable = true)
                                             }
 
                                         }
@@ -289,7 +284,7 @@ fun MainScreenContent(
                                             )
                                             DatePickerPreview(
                                                 componentData = data,
-                                                content = data.content
+                                                content = data.content, isEnable = true
                                             ) {
                                                 onEventDispatchers.invoke(
                                                     MainContract.Intent.UpdateComponent(

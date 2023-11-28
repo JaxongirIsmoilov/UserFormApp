@@ -1,7 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.submitteddetails
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -40,7 +39,6 @@ import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
-import uz.gita.jaxongir.userformapp.utills.myLog
 
 class DetailsScreen(val list: List<ComponentData>) : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -101,40 +99,32 @@ fun DetailsScreenContent(
                                             SampleSpinnerPreview(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
-                                                onSelectionChanged = {
-
-
-                                                },
+                                                onSelectionChanged = {},
                                                 content = data.content,
-                                                componentData = data
-                                            ) {
-                                            }
+                                                componentData = data,
+                                               deleteComp =  {}, false
+                                            )
 
                                         }
                                     }
 
                                     ComponentEnum.Selector -> {
                                         item {
-
                                             Column {
                                                 SelectorItem(
                                                     question = data.content,
                                                     list = data.variants,
+                                                    onSaveStates = {},
                                                     componentData = data,
-                                                    onSaveStates = {
-
-                                                    }
-                                                ) {
-
-                                                }
+                                                    {},
+                                                    isEnable = false
+                                                )
                                             }
                                         }
                                     }
 
                                     ComponentEnum.SampleText -> {
                                         item {
-
-
                                             Row(
                                                 modifier = Modifier
                                                     .then(
@@ -169,17 +159,12 @@ fun DetailsScreenContent(
 
                                     ComponentEnum.Input -> {
                                         item {
-
                                             var inputVal by remember {
                                                 mutableStateOf(data.enteredValue)
                                             }
 
                                             Column(modifier = Modifier.fillMaxWidth()) {
                                                 Spacer(modifier = Modifier.size(10.dp))
-                                                Log.d(
-                                                    "DDD",
-                                                    "MainScreenContent: ${data.isRequired}"
-                                                )
                                                 if (data.isRequired) {
                                                     Text(
                                                         text = "This Field is required",
@@ -188,13 +173,11 @@ fun DetailsScreenContent(
                                                     )
                                                 }
                                                 Spacer(modifier = Modifier.size(10.dp))
-                                                InputField(onEdit = {
-
-                                                    if (data.operators.isNotEmpty()) {
-
-                                                    }
-
-                                                }, componentData = data)
+                                                InputField(
+                                                    onEdit = { },
+                                                    componentData = data,
+                                                    isEnable = false
+                                                )
                                             }
 
                                         }
@@ -205,12 +188,9 @@ fun DetailsScreenContent(
 
                                             DatePickerPreview(
                                                 componentData = data,
-                                                content = data.content
+                                                content = data.content,
+                                                isEnable = false
                                             ) {
-
-                                                if (data.operators.isNotEmpty()) {
-
-                                                }
                                             }
                                         }
                                     }
