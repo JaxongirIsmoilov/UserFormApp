@@ -9,7 +9,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -20,10 +23,13 @@ import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 
 @Composable
 fun SubmitedItem(
-    id: Int,
-    itemCount: Int,
     formEntity: FormEntity
 ) {
+
+    var count by remember {
+        mutableStateOf(listOf<String>())
+    }
+
     Card(
         modifier = Modifier
             .padding(horizontal = 10.dp)
@@ -33,14 +39,14 @@ fun SubmitedItem(
             .height(100.dp)
     ) {
         Text(
-            text = "Submited form:${id}",
+            text = "Submited form:${count+1}",
             modifier = Modifier
                 .padding(start = 20.dp)
                 .padding(top = 20.dp), fontWeight = FontWeight.Bold
         )
 
         Text(
-            text = "Items count:      ${itemCount}",
+            text = "Items count:      [${formEntity.listComponents.size}]",
             modifier = Modifier
                 .padding(start = 20.dp)
                 .padding(top = 20.dp), fontWeight = FontWeight.Bold
@@ -59,5 +65,5 @@ fun SubmitedItem(
 @Composable
 @Preview(showBackground = true)
 fun SubmitedItemPreview() {
-    SubmitedItem(1, 7, FormEntity(1, listOf(), true, true))
+    SubmitedItem(  FormEntity(1, listOf(), true, true))
 }
