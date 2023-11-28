@@ -1,6 +1,5 @@
 package uz.gita.jaxongir.userformapp.presenter.main
 
-import uz.gita.jaxongir.userformapp.presenter.login.LoginScreen
 import uz.gita.jaxongir.userformapp.utills.navigation.AppNavigator
 import javax.inject.Inject
 import javax.inject.Singleton

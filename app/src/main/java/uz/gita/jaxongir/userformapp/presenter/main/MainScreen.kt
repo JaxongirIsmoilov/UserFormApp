@@ -250,14 +250,12 @@ fun MainScreenContent(
                                                 if (data.isRequired ) {
                                                     if(data.enteredValue==""){
                                                         shouldShowError=true
-                                                    }else{
+                                                    }
                                                         Text(
                                                             text = "This Field is required",
                                                             fontWeight = FontWeight(600),
                                                             color = Color(0xFFff7686)
                                                         )
-                                                    }
-
                                                 }
                                                 Spacer(modifier = Modifier.size(10.dp))
                                                 InputField(onEdit = {
