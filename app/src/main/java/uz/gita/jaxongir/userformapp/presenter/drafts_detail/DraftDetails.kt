@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -236,6 +238,25 @@ fun DraftDetailsContent(
                                     }
                                 }
                             }
+                        }
+                    }
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Button(
+                            onClick = {  },
+                            modifier = Modifier
+                                .background(Color.White),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFA1466))
+                        ) {
+                            Text(text = "Cancel", color = Color(0xFFFFFFFF))
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        Button(
+                            onClick = {  },
+                            modifier = Modifier
+                                .background(Color.White),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFA1466))
+                        ) {
+                            Text(text = "Delete", color = Color(0xFFFFFFFF))
                         }
                     }
                 }
