@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
@@ -35,16 +36,21 @@ fun SubmitedItem(
             text = "Submited form:${id}",
             modifier = Modifier
                 .padding(start = 20.dp)
-                .padding(top = 20.dp)
+                .padding(top = 20.dp), fontWeight = FontWeight.Bold
         )
+
         Text(
             text = "Items count:      ${itemCount}",
             modifier = Modifier
                 .padding(start = 20.dp)
-                .padding(top = 20.dp)
+                .padding(top = 20.dp), fontWeight = FontWeight.Bold
         )
 
-        Text(text = "Date:", modifier = Modifier.padding(start = 260.dp))
+        Text(
+            text = "Date:",
+            modifier = Modifier.padding(start = 260.dp),
+            fontWeight = FontWeight.Bold
+        )
     }
 
 }
