@@ -10,6 +10,7 @@ import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.dao.Dao
+import uz.gita.jaxongir.userformapp.data.local.room.entity.ComponentEntity
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
@@ -158,11 +159,18 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     override fun getDraftedItems(): List<FormEntity> {
-        return listOf()
+        return dao.getAllDrafts(true)
     }
 
     override fun getSavedComponents(): List<FormEntity> {
+        return dao.getAllSubmitteds(true)
+    }
 
-        return listOf()
+    override suspend fun addAsDraft(list: List<ComponentEntity>) {
+        dao.insertDatas(list)
+    }
+
+    override suspend fun addAsSaved(list: List<ComponentEntity>) {
+        dao.insertDatas(list)
     }
 }

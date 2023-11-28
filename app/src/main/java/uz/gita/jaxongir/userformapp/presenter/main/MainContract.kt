@@ -1,8 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.main
 
 import kotlinx.coroutines.flow.StateFlow
-import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
-import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
 interface MainContract {
@@ -25,9 +23,12 @@ interface MainContract {
 
         data class CheckedComponent(val componentData: ComponentData) : Intent
 
-        data class UpdateComponent(val componentData: ComponentData): Intent
+        data class UpdateComponent(val componentData: ComponentData) : Intent
 
-        object Load: Intent
+        object Load : Intent
+
+        data class ClickAsSaved(val list: List<ComponentData>) : Intent
+        data class ClickAsDraft(val list: List<ComponentData>) : Intent
     }
 
 }
