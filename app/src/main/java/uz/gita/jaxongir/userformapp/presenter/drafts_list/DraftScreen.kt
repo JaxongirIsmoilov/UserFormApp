@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import uz.gita.jaxongir.userformapp.R
+import uz.gita.jaxongir.userformapp.ui.components.DraftItem
 
 class DraftScreen : AndroidScreen() {
     @Composable
@@ -52,7 +53,6 @@ fun DraftsScreenComponent(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp)
                 .background(color = MaterialTheme.colorScheme.primary)
                 .height(70.dp)
         ) {
@@ -79,7 +79,8 @@ fun DraftsScreenComponent(
                     fontWeight = FontWeight.Bold
                 ),
                 modifier = Modifier
-                    .padding(start = 16.dp),
+                    .padding(start = 16.dp)
+                    .align(Alignment.Center),
                 color = Color.White
             )
         }
@@ -89,13 +90,13 @@ fun DraftsScreenComponent(
                 .background(color = Color.White)
         ) {
             items(uiState.value.drafts.size) {
-//                DraftItem(uiState.value.drafts[it]) {
-//                    onEventDispatcher.invoke(
-//                        DraftContract.Intent.DraftDetails(
-//                            uiState.value.drafts[it]
-//                        )
-//                    )
-//                }
+                DraftItem(uiState.value.drafts[it]) {
+                    onEventDispatcher.invoke(
+                        DraftContract.Intent.DraftDetails(
+                            uiState.value.drafts[it]
+                        )
+                    )
+                }
             }
 
         }
