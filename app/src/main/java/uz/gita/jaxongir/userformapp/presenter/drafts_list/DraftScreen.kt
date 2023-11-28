@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -89,16 +90,11 @@ fun DraftsScreenComponent(
                 .fillMaxSize()
                 .background(color = Color.White)
         ) {
-            items(uiState.value.drafts.size) {
-//                DraftItem(uiState.value.drafts[it]) {
-//                    onEventDispatcher.invoke(
-//                        DraftContract.Intent.DraftDetails(
-//                            uiState.value.drafts[it]
-//                        )
-//                    )
-//                }
+            items(uiState.value.list) {
+                DraftItem(entity = it) {
+                    onEventDispatcher.invoke(DraftContract.Intent.ClickItem(it.listComponents))
+                }
             }
-
         }
     }
 }

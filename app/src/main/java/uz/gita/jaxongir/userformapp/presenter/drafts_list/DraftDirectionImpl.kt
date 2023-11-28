@@ -12,7 +12,7 @@ class DraftDirectionImpl @Inject constructor(
         appNavigator.back()
     }
 
-    override suspend fun draftDetails(component: ComponentData) {
-        appNavigator.addScreen(DraftDetails(component))
+    override suspend fun draftDetails(list: List<ComponentData>) {
+        appNavigator.addScreen(DraftDetails(list))
     }
 }

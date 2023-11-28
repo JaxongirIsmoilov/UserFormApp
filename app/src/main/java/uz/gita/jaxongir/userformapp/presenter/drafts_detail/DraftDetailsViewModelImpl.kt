@@ -12,13 +12,7 @@ class DraftDetailsViewModelImpl @Inject constructor() : ViewModel(), DraftScreen
 
             }
 
-            is DraftScreenContract.Intent.Draft -> {
 
-            }
-
-            is DraftScreenContract.Intent.Submit -> {
-
-            }
         }
     }
 }

@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import uz.gita.jaxongir.userformapp.R
-import uz.gita.jaxongir.userformapp.ui.components.SubmitedItem
+import uz.gita.jaxongir.userformapp.ui.components.SelectedItem
 
 
 class SubmitedScreen : AndroidScreen() {
@@ -80,7 +80,9 @@ fun SubmitedScreenContent(
 
         LazyColumn(content = {
             items(uiState.value.list) {
-                SubmitedItem(formEntity = it)
+                SelectedItem(entity = it) {
+                    onEventDispatcher.invoke(SubmitedScreenContract.Intent.ClickItem(it.listComponents))
+                }
             }
         }, modifier = Modifier.padding(top = 66.dp))
 

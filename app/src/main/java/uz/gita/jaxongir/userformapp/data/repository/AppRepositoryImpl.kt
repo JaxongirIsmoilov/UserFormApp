@@ -26,6 +26,7 @@ class AppRepositoryImpl @Inject constructor(
 
     override fun getDraftedItems(): Flow<Result<List<FormEntity>>> = callbackFlow {
         trySend(Result.success(dao.getAllDrafts()))
+        awaitClose()
     }
 
     override fun getSavedComponents(): Flow<Result<List<FormEntity>>> = callbackFlow {
