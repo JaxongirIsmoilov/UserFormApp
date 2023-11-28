@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -27,20 +26,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.hilt.getViewModel
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
-import uz.gita.jaxongir.userformapp.presenter.main.MainContract
 
 class DraftDetails(private val componentData: ComponentData) : AndroidScreen() {
     @Composable
     override fun Content() {
-        DraftDetailsContent()
-
+        val vm:DraftScreenContract.ViewModel = getViewModel<DraftDetailsViewModelImpl>()
+        DraftDetailsContent(componentData, vm::onEventDispatcher)
     }
 }
 
 @Composable
-fun DraftDetailsContent() {
+fun DraftDetailsContent(
+    data:ComponentData,
+    onEventDispatchers: (DraftScreenContract.Intent) -> Unit,
+    ) {
     Box(modifier = Modifier.fillMaxSize()){
         Column(
             modifier = Modifier
@@ -59,7 +61,7 @@ fun DraftDetailsContent() {
                             .align(Alignment.CenterVertically)
                             .padding(start = 16.dp),
                         onClick = {
-                            //
+                            onEventDispatchers.invoke(DraftScreenContract.Intent.Back)
                         }
                     ) {
                         Icon(
@@ -73,7 +75,6 @@ fun DraftDetailsContent() {
                     Spacer(modifier = Modifier.size(8.dp))
 
                     Text(
-
                         text = "User: Name",
                         style = TextStyle(
                             fontSize = 24.sp,
@@ -93,7 +94,7 @@ fun DraftDetailsContent() {
                             .align(Alignment.CenterVertically)
                             .padding(end = 16.dp),
                         onClick = {
-                            // for submit
+                            onEventDispatchers.invoke(DraftScreenContract.Intent.Submit(data))
                         }
                     ) {
                         Icon(
@@ -121,5 +122,5 @@ fun DraftDetailsContent() {
 @Preview(showBackground = true)
 @Composable
 fun DraftDetailsPreview(){
-    DraftDetailsContent()
+    //DraftDetailsContent(onEventDispatchers = {}, data = ComponentData())
 }
