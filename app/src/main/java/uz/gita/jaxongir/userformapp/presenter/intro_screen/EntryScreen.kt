@@ -69,6 +69,7 @@ fun EntryScreenContent(
                     .padding(start = 16.dp),
                 color = Color.White
             )
+
             IconButton(
                 modifier = Modifier
                     .align(Alignment.CenterEnd),

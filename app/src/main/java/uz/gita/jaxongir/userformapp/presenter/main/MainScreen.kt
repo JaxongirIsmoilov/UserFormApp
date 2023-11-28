@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -316,52 +317,53 @@ fun MainScreenContent(
                                         .align(Alignment.CenterHorizontally)
                                 ) {
                                     Spacer(modifier = Modifier.weight(1f))
-                                    Button(onClick = {
-                                        onEventDispatchers.invoke(
-                                            MainContract.Intent.ClickAsDraft(
-                                                FormEntity(
-                                                    id = 0,
-                                                    uiState.value.components,
-                                                    isDraft = true,
-                                                    isSubmitted = false
-                                                ), context
+                                    Button(
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(
+                                                0xFFFA1466
                                             )
-                                        )
-                                    }) {
+                                        ), onClick = {
+                                            onEventDispatchers.invoke(
+                                                MainContract.Intent.ClickAsDraft(
+                                                    FormEntity(
+                                                        id = 0,
+                                                        uiState.value.components,
+                                                        isDraft = true,
+                                                        isSubmitted = false
+                                                    ), context
+                                                )
+                                            )
+                                        }) {
                                         Text(text = "Save As Draft")
                                     }
                                     Spacer(modifier = Modifier.weight(1f))
-                                    Button(onClick = {
-                                        onEventDispatchers.invoke(
-                                            MainContract.Intent.ClickAsSaved(
-                                                FormEntity(
-                                                    id = 0,
-                                                    listComponents = uiState.value.components,
-                                                    isDraft = false,
-                                                    isSubmitted = true
-                                                ), context
+                                    Button(
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(
+                                                0xFFFA1466
                                             )
-                                        )
-                                    }) {
+                                        ), onClick = {
+                                            onEventDispatchers.invoke(
+                                                MainContract.Intent.ClickAsSaved(
+                                                    FormEntity(
+                                                        id = 0,
+                                                        listComponents = uiState.value.components,
+                                                        isDraft = false,
+                                                        isSubmitted = true
+                                                    ), context
+                                                )
+                                            )
+                                        }) {
                                         Text(text = "Save as Saved")
                                     }
                                     Spacer(modifier = Modifier.weight(1f))
-
                                 }
                             }
-                            }
                         }
-
-
+                    }
                 }
-
-
             }
-
-
         }
-
-
     }
 }
 
