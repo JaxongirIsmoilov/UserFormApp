@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import uz.gita.jaxongir.userformapp.presenter.detailsscreen.DetailsDirection
+import uz.gita.jaxongir.userformapp.presenter.detailsscreen.DetailsDirectionImpl
 import uz.gita.jaxongir.userformapp.presenter.drafts_detail.DraftDetailsDirection
 import uz.gita.jaxongir.userformapp.presenter.drafts_detail.DraftDetailsDirectionImpl
 import uz.gita.jaxongir.userformapp.presenter.drafts_list.DraftDirection
@@ -43,6 +45,9 @@ interface DirectionModule {
 
     @Binds
     fun bindSubmitedDirection(impl: SubmitedScreenDirectionImpl): SubmitedScreenDirection
+
+    @Binds
+    fun bindSubmitedDetailsDirection(impl: DetailsDirectionImpl): DetailsDirection
 
 
 }
