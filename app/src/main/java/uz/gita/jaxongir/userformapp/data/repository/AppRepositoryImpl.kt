@@ -9,13 +9,16 @@ import kotlinx.coroutines.flow.callbackFlow
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
+import uz.gita.jaxongir.userformapp.data.local.room.dao.Dao
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val pref: MyPref
+    private val pref: MyPref,
+    private val dao: Dao
 ) : AppRepository {
     override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
         firestore.collection("Users")
@@ -152,5 +155,14 @@ class AppRepositoryImpl @Inject constructor(
             .addOnFailureListener { trySend(false) }
 
         awaitClose()
+    }
+
+    override fun getDraftedItems(): List<FormEntity> {
+        return listOf()
+    }
+
+    override fun getSavedComponents(): List<FormEntity> {
+
+        return listOf()
     }
 }

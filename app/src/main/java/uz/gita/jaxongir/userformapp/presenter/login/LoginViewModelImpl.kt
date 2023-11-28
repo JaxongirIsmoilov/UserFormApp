@@ -31,7 +31,7 @@ class LoginViewModelImpl @Inject constructor(
                             it.onSuccess {
                                 pref.saveUserName(intent.name)
                                 pref.setLogin(true)
-                                loginDirection.moveToMain()
+                                loginDirection.moveToEntryScreen()
                             }
                             it.onFailure {
                                 Toast.makeText(
