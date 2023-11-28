@@ -42,6 +42,12 @@ class SubmitedScreenViewModelImpl @Inject constructor(
                     direction.back()
                 }
             }
+
+            is SubmitedScreenContract.Intent.ClickItem -> {
+                viewModelScope.launch {
+                    direction.moveToComponenetDetailScreen(intent.list)
+                }
+            }
         }
     }
 

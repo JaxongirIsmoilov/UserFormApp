@@ -2,6 +2,7 @@ package uz.gita.jaxongir.userformapp.presenter.submitedScreen
 
 import kotlinx.coroutines.flow.StateFlow
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
+import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
 interface SubmitedScreenContract {
 
@@ -19,5 +20,6 @@ interface SubmitedScreenContract {
 
     interface Intent {
         object Back : Intent
+        data class ClickItem(val list: List<ComponentData>):Intent
     }
 }

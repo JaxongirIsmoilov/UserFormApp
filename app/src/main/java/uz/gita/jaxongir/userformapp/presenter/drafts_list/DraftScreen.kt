@@ -90,13 +90,13 @@ fun DraftsScreenComponent(
                 .background(color = Color.White)
         ) {
             items(uiState.value.drafts.size) {
-                DraftItem(uiState.value.drafts[it]) {
-                    onEventDispatcher.invoke(
-                        DraftContract.Intent.DraftDetails(
-                            uiState.value.drafts[it]
-                        )
-                    )
-                }
+//                DraftItem(uiState.value.drafts[it]) {
+//                    onEventDispatcher.invoke(
+//                        DraftContract.Intent.DraftDetails(
+//                            uiState.value.drafts[it]
+//                        )
+//                    )
+//                }
             }
 
         }

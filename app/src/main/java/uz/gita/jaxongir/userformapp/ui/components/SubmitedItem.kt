@@ -23,7 +23,8 @@ import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 
 @Composable
 fun SubmitedItem(
-    formEntity: FormEntity
+    formEntity: FormEntity,
+    onClick: () -> Unit
 ) {
 
     var count by remember {
@@ -32,14 +33,14 @@ fun SubmitedItem(
 
     Card(
         modifier = Modifier
-            .padding(horizontal = 10.dp)
+            .padding(horizontal = 10.dp, vertical = 10.dp)
             .fillMaxWidth()
             .background(Color(0xFFF6F2F7))
             .border(1.dp, Color(0xFFFF3951), RoundedCornerShape(12.dp))
             .height(75.dp)
     ) {
         Text(
-            text = "Submited form:${count+1}",
+            text = "Submited form:${count + 1}",
             modifier = Modifier
                 .padding(start = 20.dp)
                 .padding(top = 20.dp), fontWeight = FontWeight.Bold
@@ -65,5 +66,7 @@ fun SubmitedItem(
 @Composable
 @Preview(showBackground = true)
 fun SubmitedItemPreview() {
-    SubmitedItem(  FormEntity(1, listOf(), true, true))
+    SubmitedItem(FormEntity(1, listOf(), true, true)) {
+
+    }
 }

@@ -80,7 +80,7 @@ fun SubmitedScreenContent(
 
         LazyColumn(content = {
             items(uiState.value.list) {
-
+                SubmitedItem(formEntity = it)
             }
         }, modifier = Modifier.padding(top = 66.dp))
 
