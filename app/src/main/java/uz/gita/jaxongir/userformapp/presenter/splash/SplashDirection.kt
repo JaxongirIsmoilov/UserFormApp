@@ -1,5 +1,7 @@
 package uz.gita.jaxongir.userformapp.presenter.splash
 
+import uz.gita.jaxongir.userformapp.presenter.intro_screen.EntryPreview
+import uz.gita.jaxongir.userformapp.presenter.intro_screen.EntryScreen
 import uz.gita.jaxongir.userformapp.presenter.login.LoginScreen
 import uz.gita.jaxongir.userformapp.presenter.main.MainScreen
 import uz.gita.jaxongir.userformapp.utills.navigation.AppNavigator
@@ -8,7 +10,7 @@ import javax.inject.Singleton
 
 interface SplashDirection {
     suspend fun moveToLogin()
-    suspend fun moveToMain()
+    suspend fun moveToEntry()
 }
 
 
@@ -20,8 +22,8 @@ class SplashDirectionImpl @Inject constructor(
         appNavigator.replaceScreen(LoginScreen())
     }
 
-    override suspend fun moveToMain() {
-        appNavigator.replaceScreen(MainScreen())
+    override suspend fun moveToEntry() {
+        appNavigator.replaceScreen(EntryScreen())
     }
 
 }
