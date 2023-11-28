@@ -30,16 +30,16 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             uiState.update { it.copy(loading = true) }
             appRepository.getComponentsByUserId(pref.getId())
-                .onEach {
+                .onEach { it ->
                     it.onSuccess { components ->
-                        val sortedList = components.sortedBy {
-                            it.locId
+                        val sortedList = components.sortedBy { componentData ->
+                            componentData.locId
                         }
                         uiState.update { it.copy(components = sortedList) }
                     }
 
                     it.onFailure {
-                        myLog("failrue viewmodle")
+
                     }
 
                     uiState.update { it.copy(loading = false) }
@@ -58,15 +58,13 @@ class MainViewModel @Inject constructor(
             }
 
             is MainContract.Intent.CheckedComponent -> {
-                var isVisible: Boolean = true
                 viewModelScope.launch {
                     intent.componentData.connectedIds.forEachIndexed { index, item ->
                         findingCheckedComponent(item)
                         when (intent.componentData.operators[index]) {
+
                             "Equal" -> {
-                                Log.d("AJAX", "onEventDispatcher: Equal")
-                                if (!(uiState.value.checkedComponent?.enteredValue == intent.componentData.connectedValues[index] && isVisible)) {
-                                    isVisible = false
+                                if (uiState.value.checkedComponent?.enteredValue != intent.componentData.connectedValues[index]) {
                                     appRepository.updateComponent(
                                         intent.componentData.copy(
                                             isVisible = false
@@ -83,7 +81,6 @@ class MainViewModel @Inject constructor(
                                                     }
 
                                                     it.onFailure {
-                                                        // error message
                                                     }
 
                                                     uiState.update { it.copy(loading = false) }
@@ -99,15 +96,15 @@ class MainViewModel @Inject constructor(
                                     ).onEach {
                                         it.onSuccess {
                                             appRepository.getComponentsByUserId(pref.getId())
-                                                .onEach {
-                                                    it.onSuccess { components ->
+                                                .onEach { result ->
+                                                    result.onSuccess { components ->
                                                         val sortedList = components.sortedBy {
                                                             it.locId
                                                         }
                                                         uiState.update { it.copy(components = sortedList) }
                                                     }
 
-                                                    it.onFailure {
+                                                    result.onFailure {
                                                         // error message
                                                     }
 
@@ -120,11 +117,7 @@ class MainViewModel @Inject constructor(
                             }
 
                             "Not" -> {
-                                Log.d("AJAX", "onEventDispatcher: Not equal")
-
-                                if (!(uiState.value.checkedComponent?.enteredValue != intent.componentData.connectedValues[index] && isVisible)) {
-                                    myLog("not equal")
-                                    isVisible = false
+                                if (uiState.value.checkedComponent?.enteredValue == intent.componentData.connectedValues[index]) {
                                     appRepository.updateComponent(
                                         intent.componentData.copy(
                                             isVisible = false
@@ -179,15 +172,12 @@ class MainViewModel @Inject constructor(
                             }
 
                             "More" -> {
-
                                 if (uiState.value.checkedComponent?.textFieldType == TextFieldType.Number) {
 
 
                                     if (!((uiState.value.checkedComponent?.enteredValue?.toInt()
-                                            ?: 0) >= intent.componentData.connectedValues[index].toInt() && isVisible)
+                                            ?: 0) >= intent.componentData.connectedValues[index].toInt() /*&& isVisible*/)
                                     ) {
-
-                                        isVisible = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = false
@@ -215,6 +205,7 @@ class MainViewModel @Inject constructor(
                                                 }
                                         }.collect()
                                     } else {
+
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = true
@@ -242,10 +233,9 @@ class MainViewModel @Inject constructor(
                                     }
                                 } else {
                                     if (!((uiState.value.checkedComponent?.enteredValue?.length
-                                            ?: 0) >= intent.componentData.connectedValues[index].length && isVisible
+                                            ?: 0) >= intent.componentData.connectedValues[index].length /*&& isVisible*/
                                                 )
                                     ) {
-                                        isVisible = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = false
@@ -270,6 +260,7 @@ class MainViewModel @Inject constructor(
                                             }
                                         }.collect()
                                     } else {
+
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = true
@@ -300,12 +291,11 @@ class MainViewModel @Inject constructor(
                             }
 
                             "Less" -> {
-                                Log.d("AJAX", "onEventDispatcher: Less")
                                 if (uiState.value.checkedComponent?.textFieldType == TextFieldType.Number) {
                                     if (!((uiState.value.checkedComponent?.enteredValue?.toInt()
-                                            ?: 0) <= intent.componentData.connectedValues[index].toInt() && isVisible
-)                                    ) {
-                                        isVisible = false
+                                            ?: 0) <= intent.componentData.connectedValues[index].toInt() /*&& isVisible*/
+                                                )
+                                    ) {
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = false
@@ -359,9 +349,9 @@ class MainViewModel @Inject constructor(
                                     }
                                 } else {
                                     if (!((uiState.value.checkedComponent?.enteredValue?.length
-                                            ?: 0) <= intent.componentData.connectedValues[index].length && isVisible
-)                                    ) {
-                                        isVisible = false
+                                            ?: 0) <= intent.componentData.connectedValues[index].length /*&& isVisible*/
+                                                )
+                                    ) {
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = false
@@ -438,7 +428,6 @@ class MainViewModel @Inject constructor(
                                         }
 
                                         it.onFailure {
-                                            // error message
                                         }
 
                                         uiState.update { it.copy(loading = false) }
@@ -454,10 +443,10 @@ class MainViewModel @Inject constructor(
     }
 
     private fun findingCheckedComponent(componentId: String) {
-        myLog("checking value : $componentId")
         uiState.value.components.forEach { data ->
-            if (data.idEnteredByUser == componentId) {
-                myLog("check data inside of if $data")
+            Log.d("TAG", "findingCheckedComponent: ${data.idEnteredByUser}\t$componentId\t${componentId == data.idEnteredByUser}")
+            if (data.idEnteredByUser.length == componentId.length) {
+                Log.d("TAG", "findingCheckedComponent: check data inside of if $data")
                 uiState.update { it.copy(checkedComponent = data) }
             }
         }

@@ -137,6 +137,11 @@ fun MainScreenContent(
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
+                                            onEventDispatchers.invoke(
+                                                MainContract.Intent.CheckedComponent(
+                                                    data
+                                                )
+                                            )
 
                                             SampleSpinnerPreview(
                                                 list = data.variants ?: listOf(),
@@ -147,13 +152,11 @@ fun MainScreenContent(
                                                             data.copy(enteredValue = it)
                                                         )
                                                     )
-                                                    if (data.operators.isNotEmpty()) {
                                                         onEventDispatchers.invoke(
                                                             MainContract.Intent.CheckedComponent(
                                                                 data
                                                             )
                                                         )
-                                                    }
                                                 },
                                                 content = data.content,
                                                 componentData = data
@@ -170,7 +173,6 @@ fun MainScreenContent(
                                                     data
                                                 )
                                             )
-                                            Log.d("TTT", "MainScreenContent: chizildim")
                                             SelectorItem(
                                                 question = data.content,
                                                 list = data.variants,
@@ -181,13 +183,12 @@ fun MainScreenContent(
                                                         data.copy(enteredValue = "asdfds")
                                                     )
                                                 )
-                                                if (data.operators.isNotEmpty()) {
                                                     onEventDispatchers.invoke(
                                                         MainContract.Intent.CheckedComponent(
                                                             data
                                                         )
                                                     )
-                                                }
+
                                             }
                                         }
                                     }
@@ -202,7 +203,8 @@ fun MainScreenContent(
                                             Row(
                                                 modifier = Modifier
                                                     .then(
-                                                        if(data.isVisible) Modifier.fillMaxWidth()
+                                                        if(data.isVisible) Modifier
+                                                            .fillMaxWidth()
                                                             .clip(RoundedCornerShape(12.dp))
                                                             .border(
                                                                 1.dp,
@@ -238,6 +240,7 @@ fun MainScreenContent(
                                                     data
                                                 )
                                             )
+
                                             var inputVal by remember {
                                                 mutableStateOf(data.enteredValue)
                                             }
@@ -248,13 +251,11 @@ fun MainScreenContent(
                                                         data.copy(enteredValue = it)
                                                     )
                                                 )
-                                                if (data.operators.isNotEmpty()) {
                                                     onEventDispatchers.invoke(
                                                         MainContract.Intent.CheckedComponent(
                                                             data
                                                         )
                                                     )
-                                                }
 
                                             }, componentData = data)
                                         }

@@ -111,7 +111,7 @@ class AppRepositoryImpl @Inject constructor(
                                     it.data?.getOrDefault("type", "").toString(),
                                     ComponentEnum::class.java
                                 ),
-                                enteredValue = it.data?.getOrDefault("enteredValue", "").toString(),
+                                enteredValue = it.data?.getOrDefault("enteredValue", "0").toString(),
                                 isVisible = it.data?.getOrDefault("visible", "true")
                                     .toString() == "true"
                             )
