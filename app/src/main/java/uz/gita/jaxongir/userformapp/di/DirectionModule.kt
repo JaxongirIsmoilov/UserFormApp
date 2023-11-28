@@ -16,6 +16,8 @@ import uz.gita.jaxongir.userformapp.presenter.main.MainDirection
 import uz.gita.jaxongir.userformapp.presenter.main.MainDirectionImpl
 import uz.gita.jaxongir.userformapp.presenter.splash.SplashDirection
 import uz.gita.jaxongir.userformapp.presenter.splash.SplashDirectionImpl
+import uz.gita.jaxongir.userformapp.presenter.submitedScreen.SubmitedScreenDirection
+import uz.gita.jaxongir.userformapp.presenter.submitedScreen.SubmitedScreenDirectionImpl
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -38,6 +40,9 @@ interface DirectionModule {
 
     @Binds
     fun bindsMainDirection(impl: MainDirectionImpl): MainDirection
+
+    @Binds
+    fun bindSubmitedDirection(impl: SubmitedScreenDirectionImpl): SubmitedScreenDirection
 
 
 }
