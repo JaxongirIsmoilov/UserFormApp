@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +19,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,8 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -62,6 +60,31 @@ fun DraftDetailsContent(
     onEventDispatchers: (DraftScreenContract.Intent) -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .background(Color(0xFFFF3951))
+                .height(56.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = "Draft Details",
+                modifier = Modifier.align(Alignment.Center),
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp
+
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
+                contentDescription = "backHome", modifier = Modifier
+                    .padding(start = 20.dp)
+                    .padding(top = 10.dp)
+                    .size(30.dp)
+                    .clickable {
+                        onEventDispatchers.invoke(DraftScreenContract.Intent.Back)
+                    }, tint = Color.White
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -226,8 +249,9 @@ fun DraftDetailsContent(
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun DraftDetailsPreview() {
-    //DraftDetailsContent(onEventDispatchers = {}, data = ComponentData())
+    DraftDetailsContent(emptyList(),onEventDispatchers = {})
 }

@@ -43,7 +43,6 @@ class EntryScreen : AndroidScreen() {
         )
     }
 }
-
 @Composable
 fun EntryScreenContent(
     uiState: State<EntryScreenContract.UIState>,

@@ -2,6 +2,7 @@ package uz.gita.jaxongir.userformapp.presenter.drafts_list
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -23,8 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,36 +50,27 @@ fun DraftsScreenComponent(
     Column {
         Box(
             modifier = Modifier
+                .background(Color(0xFFFF3951))
+                .height(56.dp)
                 .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.primary)
-                .height(70.dp)
         ) {
-            IconButton(
-                modifier = Modifier
-                    .align(Alignment.CenterStart),
-                onClick = {
-
-                }
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
-                    contentDescription = null,
-                    modifier = Modifier.size(36.dp),
-                    tint = Color.White
-                )
-            }
-
             Text(
-                text = "My Drafts:",
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    fontStyle = FontStyle.Normal,
-                    fontWeight = FontWeight.Bold
-                ),
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .align(Alignment.Center),
-                color = Color.White
+                text = "Drafts",
+                modifier = Modifier.align(Alignment.Center),
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp
+
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
+                contentDescription = "backHome", modifier = Modifier
+                    .padding(start = 20.dp)
+                    .padding(top = 10.dp)
+                    .size(30.dp)
+                    .clickable {
+                        onEventDispatcher.invoke(DraftContract.Intent.BackToMain)
+                    }, tint = Color.White
             )
         }
         LazyColumn(
