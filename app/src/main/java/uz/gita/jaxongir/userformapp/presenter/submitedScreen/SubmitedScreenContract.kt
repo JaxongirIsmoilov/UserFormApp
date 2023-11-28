@@ -16,6 +16,7 @@ interface SubmitedScreenContract {
         val list: List<ComponentData> = listOf()
     )
 
+
     interface Intent {
         object Back : Intent
     }
