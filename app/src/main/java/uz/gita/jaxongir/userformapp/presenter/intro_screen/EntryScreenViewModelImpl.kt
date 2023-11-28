@@ -41,6 +41,14 @@ class EntryScreenViewModelImpl @Inject constructor(
                     direction.moveToSubmitScreen()
                 }
             }
+
+            EntryScreenContract.Intent.Logout->{
+                viewModelScope.launch {
+                    pref.clearData()
+                    direction.moveToLogin()
+                }
+
+            }
         }
     }
 

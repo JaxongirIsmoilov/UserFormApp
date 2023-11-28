@@ -97,20 +97,7 @@ fun MainScreenContent(
                     color = Color.White
                 )
 
-                IconButton(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd),
-                    onClick = {
-                        onEventDispatchers.invoke(MainContract.Intent.Logout)
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_logout),
-                        contentDescription = null,
-                        modifier = Modifier.size(36.dp),
-                        tint = Color.White
-                    )
-                }
+
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
