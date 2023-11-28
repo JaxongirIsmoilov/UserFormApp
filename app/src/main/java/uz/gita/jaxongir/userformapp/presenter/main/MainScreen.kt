@@ -135,7 +135,7 @@ fun MainScreenContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-                                .padding(top = 55.dp)
+                                .padding(top = 10.dp)
                         ) {
                             uiState.value.components.forEach { data ->
                                 when (data.type) {
@@ -320,49 +320,54 @@ fun MainScreenContent(
                                     }
                                 }
                             }
-                        }
-                    }
+                            item {
+                                Row(
+                                    modifier = Modifier
+                                        .padding(top = 10.dp)
+                                        .fillMaxWidth()
+                                        .height(80.dp)
+                                        .align(Alignment.CenterHorizontally)
+                                ) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Button(onClick = {
+                                        onEventDispatchers.invoke(
+                                            MainContract.Intent.ClickAsDraft(
+                                                FormEntity(
+                                                    id = 0,
+                                                    uiState.value.components,
+                                                    isDraft = true,
+                                                    isSubmitted = false
+                                                ), context
+                                            )
+                                        )
+                                    }) {
+                                        Text(text = "Save As Draft")
+                                    }
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Button(onClick = {
+                                        onEventDispatchers.invoke(
+                                            MainContract.Intent.ClickAsSaved(
+                                                FormEntity(
+                                                    id = 0,
+                                                    listComponents = uiState.value.components,
+                                                    isDraft = false,
+                                                    isSubmitted = true
+                                                ), context
+                                            )
+                                        )
+                                    }) {
+                                        Text(text = "Save as Saved")
+                                    }
+                                    Spacer(modifier = Modifier.weight(1f))
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(80.dp)
-                            .align(Alignment.BottomCenter)
-                    ) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        Button(onClick = {
-                            onEventDispatchers.invoke(
-                                MainContract.Intent.ClickAsDraft(
-                                    FormEntity(
-                                        id = 0,
-                                        uiState.value.components,
-                                        isDraft = true,
-                                        isSubmitted = false
-                                    ), context
-                                )
-                            )
-                        }) {
-                            Text(text = "Save As Draft")
+                                }
+                            }
+                            }
                         }
-                        Spacer(modifier = Modifier.weight(1f))
-                        Button(onClick = {
-                            onEventDispatchers.invoke(
-                                MainContract.Intent.ClickAsSaved(
-                                    FormEntity(
-                                        id = 0,
-                                        listComponents = uiState.value.components,
-                                        isDraft = false,
-                                        isSubmitted = true
-                                    ), context
-                                )
-                            )
-                        }) {
-                            Text(text = "Save as Saved")
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
 
-                    }
+
                 }
+
 
             }
 

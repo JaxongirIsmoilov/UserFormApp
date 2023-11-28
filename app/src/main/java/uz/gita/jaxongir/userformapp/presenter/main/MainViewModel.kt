@@ -62,7 +62,7 @@ class MainViewModel @Inject constructor(
                 viewModelScope.launch {
                     appRepository.addAsDraft(intent.entity)
                     Toast.makeText(intent.context, "Saved as Draft", Toast.LENGTH_SHORT).show()
-                    mainDirection
+                    mainDirection.back()
 
                 }
             }
@@ -71,6 +71,7 @@ class MainViewModel @Inject constructor(
                 viewModelScope.launch {
                     Toast.makeText(intent.context, "Saved as Submitted", Toast.LENGTH_SHORT).show()
                     appRepository.addAsSaved(intent.entity)
+                    mainDirection.back()
                 }
             }
 
@@ -448,7 +449,6 @@ class MainViewModel @Inject constructor(
                                 appRepository.getComponentsByUserId(pref.getId())
                                     .onEach {
                                         it.onSuccess { components ->
-
                                             val sortedList = components.sortedBy {
                                                 it.locId
                                             }
