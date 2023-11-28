@@ -143,7 +143,8 @@ class AppRepositoryImpl @Inject constructor(
                                 isVisible = it.data?.getOrDefault("visible", "true")
                                     .toString() == "true",
                                 isRequired = it.data?.getOrDefault("required", false)
-                                    .toString() == "true"
+                                    .toString() == "true",
+                                selectedSpinnerText = it.data?.getOrDefault("selectedSpinnerText", "").toString()
                             )
                         )
                     }

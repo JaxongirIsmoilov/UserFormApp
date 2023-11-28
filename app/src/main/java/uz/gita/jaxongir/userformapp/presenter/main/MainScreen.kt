@@ -131,7 +131,7 @@ fun MainScreenContent(
                                                 onSelectionChanged = {
                                                     onEventDispatchers.invoke(
                                                         MainContract.Intent.UpdateComponent(
-                                                            data.copy(enteredValue = it)
+                                                            data.copy(selectedSpinnerText = it)
                                                         )
                                                     )
                                                     if (data.operators.isNotEmpty()) {
@@ -144,7 +144,7 @@ fun MainScreenContent(
                                                     }
                                                 },
                                                 content = data.content,
-                                                componentData = data, {}, true
+                                                componentData = data, {}, true, isDraft = false
                                             )
 
                                         }
@@ -181,7 +181,7 @@ fun MainScreenContent(
                                                                 )
                                                             )
                                                         }
-                                                    }, isEnable = true
+                                                    }, isEnable = true, isInDraft = false
                                                 )
                                             }
                                         }
@@ -269,7 +269,7 @@ fun MainScreenContent(
                                                         )
                                                     }
 
-                                                }, componentData = data, isEnable = true)
+                                                }, componentData = data, isEnable = true, isInDraft = false)
                                             }
 
                                         }

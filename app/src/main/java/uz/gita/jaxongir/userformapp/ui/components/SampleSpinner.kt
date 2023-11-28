@@ -37,7 +37,8 @@ fun SampleSpinnerPreview(
     content: String,
     componentData: ComponentData,
     deleteComp: (String) -> Unit,
-    isEnable: Boolean
+    isEnable: Boolean,
+    isDraft: Boolean
 ) {
 
     var selected by remember { mutableStateOf(preselected) }

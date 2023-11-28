@@ -12,8 +12,9 @@ interface DraftScreenContract {
 
     interface Intent {
         object Back : Intent
-        data class SaveAsDraft(val entity: FormEntity, val context: Context):Intent
-        data class SaveAsSaved(val entity: FormEntity, val context: Context):Intent
+        data class SaveAsDraft(val entity: FormEntity, val context: Context) : Intent
+        data class SaveAsSaved(val entity: FormEntity, val context: Context) : Intent
+        data class UpdateComponent(val componentData: ComponentData):Intent
 
 
     }

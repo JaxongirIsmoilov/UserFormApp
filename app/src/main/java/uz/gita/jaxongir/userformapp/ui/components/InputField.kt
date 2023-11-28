@@ -21,25 +21,26 @@ import uz.gita.jaxongir.userformapp.data.model.ComponentData
 fun InputField(
     onEdit: (String) -> Unit,
     componentData: ComponentData,
-    isEnable: Boolean
+    isEnable: Boolean,
+    isInDraft: Boolean
 ) {
     val maxLength = if (componentData.maxLength == 0) Integer.MAX_VALUE else componentData.maxLength
     val minLength = if (componentData.minLength == 0) Integer.MIN_VALUE else componentData.minLength
     val maxValue = if (componentData.maxValue == 0) Integer.MAX_VALUE else componentData.maxValue
     val minValue = if (componentData.minValue == 0) Integer.MIN_VALUE else componentData.minValue
     var newContentForNumber by remember {
-        mutableStateOf(componentData.enteredValue)
+        mutableStateOf(if (isInDraft) componentData.enteredValue else "0")
     }
     var newContentForOther by remember {
-        mutableStateOf(componentData.enteredValue)
+        mutableStateOf(if (isInDraft) componentData.enteredValue else "0")
     }
 
     var newContentForText by remember {
-        mutableStateOf(componentData.enteredValue)
+        mutableStateOf(if (isInDraft) componentData.enteredValue else "")
     }
 
     var currentValue by remember {
-        mutableStateOf(componentData.enteredValue)
+        mutableStateOf(if (isInDraft) componentData.enteredValue else "0")
     }
 
     when (componentData.textFieldType) {

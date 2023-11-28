@@ -30,6 +30,7 @@ data class ComponentEntity(
     val enteredValue: String = "",
     val isVisible: Boolean = true,
     val isRequired: Boolean,
+    val selectedSpinnerText: String
 ) {
     fun toData(): ComponentData = ComponentData(
         id = id,
@@ -53,5 +54,6 @@ data class ComponentEntity(
         enteredValue = "",
         isVisible = isVisible,
         isRequired = isRequired,
+        selectedSpinnerText=selectedSpinnerText
     )
 }

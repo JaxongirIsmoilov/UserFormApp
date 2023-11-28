@@ -25,4 +25,5 @@ data class ComponentData(
     val enteredValue: String = "",
     val isVisible: Boolean = true,
     val isRequired: Boolean = false,
+    val selectedSpinnerText:String
 )

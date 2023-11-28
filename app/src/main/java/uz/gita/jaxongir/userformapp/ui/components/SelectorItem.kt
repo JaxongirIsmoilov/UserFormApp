@@ -27,7 +27,8 @@ fun SelectorItem(
     onSaveStates: (List<Boolean>) -> Unit,
     componentData: ComponentData,
     deleteComp: (String) -> Unit,
-    isEnable:Boolean
+    isEnable: Boolean,
+    isInDraft: Boolean
 ) {
     val selectedItem = remember { mutableStateOf<String?>(null) }
     val listSem = arrayListOf<Boolean>()
@@ -62,7 +63,7 @@ fun SelectorItem(
         list.forEach {
             CheckBoxItem(title = it, { deleteComp(it) }, isEnable) {
                 listSem.add(it)
-
+                onSaveStates.invoke(listSem)
             }
             Spacer(modifier = Modifier.height(8.dp))
         }

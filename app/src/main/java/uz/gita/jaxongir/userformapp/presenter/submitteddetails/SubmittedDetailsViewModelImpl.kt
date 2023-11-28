@@ -24,7 +24,6 @@ class SubmittedDetailsViewModelImpl @Inject constructor(
 
     init {
         uiState.update { it.copy(userName = pref.getUserName()) }
-
         viewModelScope.launch {
             uiState.update { it.copy(loading = true) }
             repository.getComponentsByUserId(pref.getId())

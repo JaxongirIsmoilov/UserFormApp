@@ -102,7 +102,7 @@ fun DetailsScreenContent(
                                                 onSelectionChanged = {},
                                                 content = data.content,
                                                 componentData = data,
-                                               deleteComp =  {}, false
+                                                deleteComp = {}, false, isDraft = true
                                             )
 
                                         }
@@ -117,7 +117,7 @@ fun DetailsScreenContent(
                                                     onSaveStates = {},
                                                     componentData = data,
                                                     {},
-                                                    isEnable = false
+                                                    isEnable = false, true
                                                 )
                                             }
                                         }
@@ -176,7 +176,7 @@ fun DetailsScreenContent(
                                                 InputField(
                                                     onEdit = { },
                                                     componentData = data,
-                                                    isEnable = false
+                                                    isEnable = false, isInDraft = true
                                                 )
                                             }
 
