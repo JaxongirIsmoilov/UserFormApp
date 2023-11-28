@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,23 +20,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
+import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
 @Composable
 fun DraftItem(
-    entity: FormEntity,
-    onClick: () -> Unit
+    componentData: ComponentData,
+    onClick: (ComponentData) -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(84.dp)
             .padding(12.dp)
-            .border(2.dp, Color.Gray, RoundedCornerShape(10.dp))
+            .background(Color(0xFFF6F2F7))
+            .border(2.dp, Color(0xFFFF3951), RoundedCornerShape(10.dp))
             .clickable {
-                onClick()
+                onClick(componentData)
             }
             .padding(start = 16.dp, top = 16.dp, end = 16.dp),
     ) {
@@ -77,7 +80,11 @@ fun DraftItem(
                 )
             )
         }
-
     }
+}
 
+@Preview(showBackground = true)
+@Composable
+fun DraftItemPreview() {
+    //DraftItem(onClick = {})
 }
