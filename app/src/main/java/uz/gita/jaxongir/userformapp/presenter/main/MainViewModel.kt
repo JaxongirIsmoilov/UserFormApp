@@ -284,7 +284,6 @@ class MainViewModel @Inject constructor(
                                                             }
                                                             uiState.update { it.copy(components = sortedList) }
                                                         }
-
                                                         it.onFailure {
                                                             // error message
                                                         }
