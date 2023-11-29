@@ -34,3 +34,34 @@ data class ComponentData(
     val rowId: String = "",
     val backgroundColor: Color = Color.Transparent
 )
+
+val defaultData = ComponentData(
+    "1",
+    "userID",
+    1L,
+    "",
+    "Content",
+    TextFieldType.Text,
+    1,
+    122,
+    2,
+    11,
+    1,
+    true,
+    emptyList<String>(),
+    emptyList<Boolean>(),
+    emptyList<String>(),
+    emptyList<String>(),
+    emptyList<String>(),
+    ComponentEnum.Input,
+    "",
+    true,
+    false,
+    "",
+    "",
+    1,
+    1,
+    "",
+    "",
+    Color.Transparent
+)
