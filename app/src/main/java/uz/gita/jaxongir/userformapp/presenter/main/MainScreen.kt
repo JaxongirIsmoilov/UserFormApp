@@ -316,7 +316,7 @@ fun MainScreenContent(
                                         }
                                     }
 
-                                    ComponentEnum.Row -> {
+                                    ComponentEnum.LazyRow -> {
                                         item {
                                             Row (modifier = Modifier.fillMaxWidth()){
 

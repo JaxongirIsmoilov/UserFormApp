@@ -6,5 +6,5 @@ enum class ComponentEnum(val content: String) {
     SampleText("SampleText"),
     Input("Input"),
     Dater("Dater"),
-    Row("Row")
+    LazyRow("LazyRow")
 }

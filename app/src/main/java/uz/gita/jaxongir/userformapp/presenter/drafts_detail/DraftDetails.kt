@@ -136,8 +136,8 @@ fun DraftDetailsContent(
                                         ComponentEnum.Spinner -> {
                                             item {
                                                 SampleSpinnerPreview(
-                                                    list = data.variants ?: listOf(),
-                                                    preselected = data.selectedSpinnerText ?: "",
+                                                    list = data.variants ,
+                                                    preselected = data.selectedSpinnerText ,
                                                     onSelectionChanged = {
                                                         onEventDispatchers.invoke(
                                                             DraftScreenContract.Intent.UpdateComponent(
@@ -263,6 +263,7 @@ fun DraftDetailsContent(
                                         }
 
 
+                                        else -> {}
                                     }
                                 }
                                 item {
