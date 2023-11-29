@@ -20,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import uz.gita.jaxongir.userformapp.presenter.splash.SplashScreen
+import uz.gita.jaxongir.userformapp.ui.components.MyRow
 import uz.gita.jaxongir.userformapp.ui.theme.UserFormAppTheme
 import uz.gita.jaxongir.userformapp.utills.navigation.AppNavigationHandler
 import javax.inject.Inject
@@ -34,14 +35,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             UserFormAppTheme {
-                val systemUiController = rememberSystemUiController()
-                systemUiController.setStatusBarColor(color = Color(0xFFFF7686))
-                Navigator(screen = SplashScreen()) { navigate ->
-                    handler.uiNavigator
-                        .onEach { it.invoke(navigate) }
-                        .launchIn(lifecycleScope)
-                    CurrentScreen()
-                }
+
+                MyRow()
+
+//                val systemUiController = rememberSystemUiController()
+//                systemUiController.setStatusBarColor(color = Color(0xFFFF7686))
+//                Navigator(screen = SplashScreen()) { navigate ->
+//                    handler.uiNavigator
+//                        .onEach { it.invoke(navigate) }
+//                        .launchIn(lifecycleScope)
+//                    CurrentScreen()
+//                }
             }
         }
     }
