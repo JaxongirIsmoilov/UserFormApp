@@ -5,5 +5,6 @@ enum class ComponentEnum(val content: String) {
     Selector("Selector"),
     SampleText("SampleText"),
     Input("Input"),
-    Dater("Dater")
+    Dater("Dater"),
+    Row("Row")
 }

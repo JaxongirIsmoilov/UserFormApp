@@ -27,7 +27,7 @@ fun InputField(
     val maxValue = if (componentData.maxValue == 0) Integer.MAX_VALUE else componentData.maxValue
     val minValue = if (componentData.minValue == 0) Integer.MIN_VALUE else componentData.minValue
     var newContentForNumber by remember {
-        mutableStateOf("")
+        mutableStateOf("0")
     }
     var newContentForOther by remember {
         mutableStateOf("")

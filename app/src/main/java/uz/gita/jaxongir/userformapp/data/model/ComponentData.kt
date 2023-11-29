@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.data.model
 
+import androidx.compose.ui.graphics.Color
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 
@@ -18,11 +19,17 @@ data class ComponentData(
     val isMulti: Boolean,
     val variants: List<String> = listOf(),
     val selected: List<Boolean> = listOf(),
-    val connectedValues: List<String> = listOf(),      //visibitily boyicha berilgan qiymatlar
-    val connectedIds: List<String> = listOf(),         //boglangan id lar
+    val connectedValues: List<String> = listOf(),
+    val connectedIds: List<String> = listOf(),
     val operators: List<String> = listOf(),
     val type: ComponentEnum,
     val enteredValue: String = "",
     val isVisible: Boolean = true,
-    val isRequired: Boolean = false
+    val isRequired: Boolean = false,
+    val imgUri : String = "",
+    val ratioX : Int,
+    val ratioY : Int,
+    val customHeight : String,
+    val rowId: String = "",
+    val backgroundColor: Color = Color.Transparent
 )

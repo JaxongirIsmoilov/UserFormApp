@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.data.repository
 
+import androidx.compose.ui.graphics.Color
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -110,11 +111,17 @@ class AppRepositoryImpl @Inject constructor(
                                     it.data?.getOrDefault("type", "").toString(),
                                     ComponentEnum::class.java
                                 ),
-                                enteredValue = it.data?.getOrDefault("enteredValue", "").toString(),
+                                enteredValue = it.data?.getOrDefault("enteredValue", "0").toString(),
                                 isVisible = it.data?.getOrDefault("visible", "true")
                                     .toString() == "true",
                                 isRequired = it.data?.getOrDefault("required", false)
-                                    .toString() == "true"
+                                    .toString() == "true",
+                                imgUri = it.data?.getOrDefault("imgUri", "").toString(),
+                                ratioX = Integer.parseInt(it.data?.getOrDefault("ratioX", "0").toString()),
+                                ratioY = Integer.parseInt(it.data?.getOrDefault("ratioY", "0").toString()),
+                                customHeight = it.data?.getOrDefault("customHeight", "0").toString(),
+                                backgroundColor = converter.fromJson(it.data?.getOrDefault("backgroundColor", "${Color.Transparent}").toString(), Color::class.java),
+                                rowId = it.data?.getOrDefault("rowId", "0").toString()
                             )
                         )
                     }

@@ -1,6 +1,5 @@
 package uz.gita.jaxongir.userformapp.presenter.main
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,15 +57,18 @@ class MainViewModel @Inject constructor(
             }
 
             is MainContract.Intent.CheckedComponent -> {
-                var isVisible: Boolean = true
+                var isVisibleEqual: Boolean = true
+                var isVisibleNot = true
+                var isVisibleMore = true
+                var isVisibleLess = true
                 viewModelScope.launch {
                     intent.componentData.connectedIds.forEachIndexed { index, item ->
                         findingCheckedComponent(item)
                         when (intent.componentData.operators[index]) {
                             "Equal" -> {
-                                Log.d("AJAX", "onEventDispatcher: Equal")
-                                if (!(uiState.value.checkedComponent?.enteredValue == intent.componentData.connectedValues[index] && isVisible)) {
-                                    isVisible = false
+
+                                if (!(uiState.value.checkedComponent?.enteredValue == intent.componentData.connectedValues[index] || isVisibleEqual)) {
+                                    isVisibleEqual = false
                                     appRepository.updateComponent(
                                         intent.componentData.copy(
                                             isVisible = false
@@ -120,11 +122,11 @@ class MainViewModel @Inject constructor(
                             }
 
                             "Not" -> {
-                                Log.d("AJAX", "onEventDispatcher: Not equal")
 
-                                if (!(uiState.value.checkedComponent?.enteredValue != intent.componentData.connectedValues[index] && isVisible)) {
+
+                                if (!(uiState.value.checkedComponent?.enteredValue != intent.componentData.connectedValues[index] || isVisibleNot)) {
                                     myLog("not equal")
-                                    isVisible = false
+                                    isVisibleNot = false
                                     appRepository.updateComponent(
                                         intent.componentData.copy(
                                             isVisible = false
@@ -184,10 +186,10 @@ class MainViewModel @Inject constructor(
 
 
                                     if (!((uiState.value.checkedComponent?.enteredValue?.toInt()
-                                            ?: 0) >= intent.componentData.connectedValues[index].toInt() && isVisible)
+                                            ?: 0) >= intent.componentData.connectedValues[index].toInt() || isVisibleMore)
                                     ) {
 
-                                        isVisible = false
+                                        isVisibleMore = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = false
@@ -242,10 +244,10 @@ class MainViewModel @Inject constructor(
                                     }
                                 } else {
                                     if (!((uiState.value.checkedComponent?.enteredValue?.length
-                                            ?: 0) >= intent.componentData.connectedValues[index].length && isVisible
+                                            ?: 0) >= intent.componentData.connectedValues[index].length || isVisibleMore
                                                 )
                                     ) {
-                                        isVisible = false
+                                        isVisibleMore = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = false
@@ -300,12 +302,14 @@ class MainViewModel @Inject constructor(
                             }
 
                             "Less" -> {
-                                Log.d("AJAX", "onEventDispatcher: Less")
+
                                 if (uiState.value.checkedComponent?.textFieldType == TextFieldType.Number) {
+                                    myLog("Entered Value : ${uiState.value.checkedComponent!!.enteredValue}")
+                                    myLog("Connected Value : ${intent.componentData.connectedValues[index]}")
                                     if (!((uiState.value.checkedComponent?.enteredValue?.toInt()
-                                            ?: 0) <= intent.componentData.connectedValues[index].toInt() && isVisible
+                                            ?: 0) <= intent.componentData.connectedValues[index].toInt() || isVisibleLess
 )                                    ) {
-                                        isVisible = false
+                                        isVisibleLess = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = false
@@ -359,9 +363,9 @@ class MainViewModel @Inject constructor(
                                     }
                                 } else {
                                     if (!((uiState.value.checkedComponent?.enteredValue?.length
-                                            ?: 0) <= intent.componentData.connectedValues[index].length && isVisible
+                                            ?: 0) <= intent.componentData.connectedValues[index].length || isVisibleLess
 )                                    ) {
-                                        isVisible = false
+                                        isVisibleLess = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = false
@@ -450,18 +454,22 @@ class MainViewModel @Inject constructor(
                         }.collect()
                 }
             }
+
+            is MainContract.Intent.CheckRowComponent -> {
+                intent.componentData // check row id
+            }
         }
     }
 
     private fun findingCheckedComponent(componentId: String) {
         myLog("checking value : $componentId")
         uiState.value.components.forEach { data ->
+            myLog("Inside For each : ${data.idEnteredByUser}\t ${componentId} , ${data.isVisible}" )
             if (data.idEnteredByUser == componentId) {
-                myLog("check data inside of if $data")
+                myLog("check data inside of if visibility ${data.isVisible}")
                 uiState.update { it.copy(checkedComponent = data) }
             }
         }
     }
-
 
 }

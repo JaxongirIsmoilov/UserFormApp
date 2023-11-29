@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.delay
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
@@ -137,7 +138,6 @@ fun MainScreenContent(
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
-
                                             SampleSpinnerPreview(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
@@ -148,7 +148,7 @@ fun MainScreenContent(
                                                         )
                                                     )
                                                     if (data.operators.isNotEmpty()) {
-                                                        myLog("spinner compo")
+//                                                        myLog("spinner compo")
                                                         onEventDispatchers.invoke(
                                                             MainContract.Intent.CheckedComponent(
                                                                 data
@@ -196,7 +196,7 @@ fun MainScreenContent(
 
                                     ComponentEnum.SampleText -> {
                                         item {
-                                            myLog("sample text")
+//                                            myLog("sample text")
                                             if (data.operators.isNotEmpty()) {
                                                 onEventDispatchers.invoke(
                                                     MainContract.Intent.CheckedComponent(
@@ -305,6 +305,14 @@ fun MainScreenContent(
                                                         )
                                                     )
                                                 }
+                                            }
+                                        }
+                                    }
+
+                                    ComponentEnum.Row -> {
+                                        item {
+                                            Row (modifier = Modifier.fillMaxWidth()){
+
                                             }
                                         }
                                     }
