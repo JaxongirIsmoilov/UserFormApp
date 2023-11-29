@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.StateFlow
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
 interface SubmittedDetailsContract {
-
     interface ViewModel{
         val uiState: StateFlow<UIState>
         fun onEventDispatcher(intent: Intent)

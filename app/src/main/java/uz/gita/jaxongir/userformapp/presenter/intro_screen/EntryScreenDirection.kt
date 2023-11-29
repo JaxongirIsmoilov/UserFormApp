@@ -34,7 +34,6 @@ class EntryScreenDirectionImpl @Inject constructor(
 
     override suspend fun moveToLogin() {
         appNavigator.replaceScreen(LoginScreen())
-
     }
 
 }

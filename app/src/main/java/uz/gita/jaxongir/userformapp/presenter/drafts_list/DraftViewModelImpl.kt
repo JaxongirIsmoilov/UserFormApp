@@ -42,8 +42,6 @@ class DraftViewModelImpl @Inject constructor(
                     direction.draftDetails(intent.list)
                 }
             }
-
-
         }
     }
 }

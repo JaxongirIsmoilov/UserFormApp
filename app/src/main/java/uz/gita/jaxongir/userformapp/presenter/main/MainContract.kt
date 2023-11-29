@@ -8,7 +8,7 @@ import uz.gita.jaxongir.userformapp.data.model.ComponentData
 interface MainContract {
     interface ViewModel {
         val uiState: StateFlow<UIState>
-        fun onEventDispatcher(intent: Intent)
+     fun onEventDispatcher(intent: Intent)
     }
 
     data class UIState(

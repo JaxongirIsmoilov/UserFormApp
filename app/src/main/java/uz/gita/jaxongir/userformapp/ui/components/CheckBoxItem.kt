@@ -28,7 +28,7 @@ fun CheckBoxItem(
     state: Boolean,
     checkedStates: (Boolean) -> Unit,
 
-) {
+    ) {
     var checkedState = remember { mutableStateOf(state) }
     Row(
         modifier = Modifier
@@ -43,12 +43,13 @@ fun CheckBoxItem(
             .padding(horizontal = 16.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        checkedStates.invoke(checkedState.value)
         Checkbox(
             checked = checkedState.value,
             onCheckedChange = {
                 if (isEnable) {
                     checkedState.value = it
-                    checkedStates.invoke(it)
+
                 }
 
             },

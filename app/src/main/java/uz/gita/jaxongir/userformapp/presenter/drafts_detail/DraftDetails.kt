@@ -160,10 +160,8 @@ fun DraftDetailsContent(
                                                         list = data.variants,
                                                         componentData = data,
                                                         onSaveStates = { list ->
-                                                            list.forEach { state ->
-                                                                if (state) {
-                                                                    shouldShowError = false
-                                                                }
+                                                            if (!list.contains(true)) {
+                                                                shouldShowError = true
                                                             }
                                                             onEventDispatchers.invoke(
                                                                 DraftScreenContract.Intent.UpdateComponent(
@@ -281,17 +279,19 @@ fun DraftDetailsContent(
                                                     0xFFFA1466
                                                 )
                                             ), onClick = {
-                                                onEventDispatchers.invoke(
-                                                    DraftScreenContract.Intent.SaveAsDraft(
-                                                        FormEntity(
-                                                            id = 0,
-                                                            uiState.value.list,
-                                                            isDraft = true,
-                                                            isSubmitted = false,
-                                                            myPref.getId()
-                                                        ), context = context
+                                                if (!shouldShowError) {
+                                                    onEventDispatchers.invoke(
+                                                        DraftScreenContract.Intent.SaveAsDraft(
+                                                            FormEntity(
+                                                                id = 0,
+                                                                uiState.value.list,
+                                                                isDraft = true,
+                                                                isSubmitted = false,
+                                                                myPref.getId()
+                                                            ), context = context
+                                                        )
                                                     )
-                                                )
+                                                }
                                             }) {
                                             Text(text = "Save As Draft")
                                         }

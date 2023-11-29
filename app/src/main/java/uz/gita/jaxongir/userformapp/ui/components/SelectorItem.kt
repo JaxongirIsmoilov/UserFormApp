@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
+import uz.gita.jaxongir.userformapp.utills.myLog2
 
 @Composable
 fun SelectorItem(
@@ -61,10 +62,11 @@ fun SelectorItem(
         }
         Spacer(modifier = Modifier.size(16.dp))
         list.forEachIndexed { index, s ->
+            myLog2("seletecteds size: ${list.size}")
             CheckBoxItem(
                 title = s,
                 { deleteComp(s) },
-                state = false, isEnable = isEnable
+                state = if (isInDraft) componentData.selected[index] else false , isEnable = isEnable
             ) {
                 listSem.add(it)
                 onSaveStates.invoke(listSem)

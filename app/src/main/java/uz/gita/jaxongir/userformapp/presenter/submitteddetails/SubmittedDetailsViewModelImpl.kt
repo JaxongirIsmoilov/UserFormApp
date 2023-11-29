@@ -12,7 +12,6 @@ import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import javax.inject.Inject
 
-
 @HiltViewModel
 class SubmittedDetailsViewModelImpl @Inject constructor(
     private val direction: DetailsDirection,

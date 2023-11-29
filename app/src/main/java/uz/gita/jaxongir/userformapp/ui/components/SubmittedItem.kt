@@ -42,7 +42,7 @@ fun SelectedItem(
         Row(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Draft FormID: ${entity.id}",
+                text = "Submitted FormID: ${entity.id}",
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(bottom = 16.dp),
