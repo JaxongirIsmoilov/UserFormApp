@@ -26,7 +26,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +44,7 @@ import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
+import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
@@ -48,13 +52,17 @@ import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
 import uz.gita.jaxongir.userformapp.utills.myLog2
+import javax.inject.Inject
 
-class DraftDetails(private val list: List<ComponentData>) : AndroidScreen() {
+class DraftDetails @Inject constructor(
+    private val list: List<ComponentData>,
+    private val myPref: MyPref
+) : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     override fun Content() {
         val vm: DraftScreenContract.ViewModel = getViewModel<DraftDetailsViewModelImpl>()
-        DraftDetailsContent(vm.uiState.collectAsState(), vm::onEventDispatcher)
+        DraftDetailsContent(vm.uiState.collectAsState(), vm::onEventDispatcher, myPref)
         vm.onEventDispatcher(DraftScreenContract.Intent.UpdateList(list))
     }
 }
@@ -64,7 +72,11 @@ class DraftDetails(private val list: List<ComponentData>) : AndroidScreen() {
 fun DraftDetailsContent(
     uiState: State<DraftScreenContract.UiState>,
     onEventDispatchers: (DraftScreenContract.Intent) -> Unit,
+    myPref: MyPref
 ) {
+    var shouldShowError by remember {
+        mutableStateOf(false)
+    }
     val context = LocalContext.current
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -147,10 +159,15 @@ fun DraftDetailsContent(
                                                         question = data.content,
                                                         list = data.variants,
                                                         componentData = data,
-                                                        onSaveStates = {
+                                                        onSaveStates = { list ->
+                                                            list.forEach { state ->
+                                                                if (state) {
+                                                                    shouldShowError = false
+                                                                }
+                                                            }
                                                             onEventDispatchers.invoke(
                                                                 DraftScreenContract.Intent.UpdateComponent(
-                                                                    data.copy(selected = it)
+                                                                    data.copy(selected = list)
                                                                 )
                                                             )
                                                         },
@@ -198,8 +215,6 @@ fun DraftDetailsContent(
 
                                         ComponentEnum.Input -> {
                                             item {
-
-
                                                 Column(modifier = Modifier.fillMaxWidth()) {
                                                     Spacer(modifier = Modifier.size(10.dp))
                                                     Log.d(
@@ -207,6 +222,9 @@ fun DraftDetailsContent(
                                                         "MainScreenContent: ${data.isRequired}"
                                                     )
                                                     if (data.isRequired) {
+                                                        if (data.enteredValue == "") {
+                                                            shouldShowError = true
+                                                        }
                                                         Text(
                                                             text = "This Field is required",
                                                             fontWeight = FontWeight(600),
@@ -268,7 +286,8 @@ fun DraftDetailsContent(
                                                             id = 0,
                                                             uiState.value.list,
                                                             isDraft = true,
-                                                            isSubmitted = false
+                                                            isSubmitted = false,
+                                                            myPref.getId()
                                                         ), context = context
                                                     )
                                                 )
@@ -288,7 +307,8 @@ fun DraftDetailsContent(
                                                             id = 0,
                                                             listComponents = uiState.value.list,
                                                             isDraft = false,
-                                                            isSubmitted = true
+                                                            isSubmitted = true,
+                                                            myPref.getId()
                                                         ), context
                                                     )
                                                 )
@@ -315,5 +335,5 @@ fun DraftDetailsContent(
 @Preview(showBackground = true)
 @Composable
 fun DraftDetailsPreview() {
-    DraftDetailsContent(mutableStateOf(DraftScreenContract.UiState()), onEventDispatchers = {})
+//    DraftDetailsContent(mutableStateOf(DraftScreenContract.UiState()), onEventDispatchers = {})
 }

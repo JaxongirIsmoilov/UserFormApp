@@ -24,13 +24,13 @@ class AppRepositoryImpl @Inject constructor(
 ) : AppRepository {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    override fun getDraftedItems(): Flow<Result<List<FormEntity>>> = callbackFlow {
-        trySend(Result.success(dao.getAllDrafts()))
+    override fun getDraftedItems(userID: String): Flow<Result<List<FormEntity>>> = callbackFlow {
+        trySend(Result.success(dao.getAllDrafts(true, userID)))
         awaitClose()
     }
 
-    override fun getSavedComponents(): Flow<Result<List<FormEntity>>> = callbackFlow {
-        trySend(Result.success(dao.getAllDrafts()))
+    override fun getSavedComponents(userID: String): Flow<Result<List<FormEntity>>> = callbackFlow {
+        trySend(Result.success(dao.getAllSubmitteds(isSubmitted = true, userId = userID)))
         awaitClose()
     }
 
@@ -144,7 +144,10 @@ class AppRepositoryImpl @Inject constructor(
                                     .toString() == "true",
                                 isRequired = it.data?.getOrDefault("required", false)
                                     .toString() == "true",
-                                selectedSpinnerText = it.data?.getOrDefault("selectedSpinnerText", "").toString()
+                                selectedSpinnerText = it.data?.getOrDefault(
+                                    "selectedSpinnerText",
+                                    ""
+                                ).toString()
                             )
                         )
                     }

@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import javax.inject.Inject
 
@@ -15,12 +16,13 @@ import javax.inject.Inject
 class DraftViewModelImpl @Inject constructor(
     private val direction: DraftDirection,
     private val repository: AppRepository,
+    private val myPref: MyPref
 ) : DraftContract.ViewModel, ViewModel() {
 
     override val uiState = MutableStateFlow(DraftContract.UIState())
 
     init {
-        repository.getDraftedItems().onEach {
+        repository.getDraftedItems(myPref.getId()).onEach {
             it.onSuccess { list ->
                 uiState.update { it.copy(list = list) }
             }
@@ -40,7 +42,6 @@ class DraftViewModelImpl @Inject constructor(
                     direction.draftDetails(intent.list)
                 }
             }
-
 
 
         }

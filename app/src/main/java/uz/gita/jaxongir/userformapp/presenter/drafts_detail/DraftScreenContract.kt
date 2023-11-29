@@ -10,11 +10,14 @@ interface DraftScreenContract {
     interface ViewModel {
         fun onEventDispatcher(intent: Intent)
         val uiState: StateFlow<UiState>
+
+
     }
 
 
     data class UiState(
-        val list: List<ComponentData> = listOf()
+        val list: List<ComponentData> = listOf(),
+        val checkedComponent: ComponentData? = null
     )
 
     interface Intent {
@@ -23,6 +26,7 @@ interface DraftScreenContract {
         data class SaveAsSaved(val entity: FormEntity, val context: Context) : Intent
         data class UpdateComponent(val componentData: ComponentData) : Intent
         data class UpdateList(val list: List<ComponentData>) : Intent
+        data class CheckedComponent(val component: ComponentData) : Intent
 
 
     }
