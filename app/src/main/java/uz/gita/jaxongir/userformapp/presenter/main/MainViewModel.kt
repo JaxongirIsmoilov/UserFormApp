@@ -1,5 +1,7 @@
 package uz.gita.jaxongir.userformapp.presenter.main
 
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,10 +51,24 @@ class MainViewModel @Inject constructor(
 
     override fun onEventDispatcher(intent: MainContract.Intent) {
         when (intent) {
-            MainContract.Intent.Logout -> {
+            is MainContract.Intent.ClickAsDraft -> {
                 viewModelScope.launch {
-                    pref.clearData()
-                    mainDirection.moveToLogin()
+                    appRepository.addAsDraft(intent.entity).onEach {
+
+                    }.launchIn(viewModelScope)
+                    Toast.makeText(intent.context, "Saved as Draft", Toast.LENGTH_SHORT).show()
+                    mainDirection.back()
+
+                }
+            }
+
+            is MainContract.Intent.ClickAsSaved -> {
+                viewModelScope.launch {
+                    Toast.makeText(intent.context, "Saved as Submitted", Toast.LENGTH_SHORT).show()
+                    appRepository.addAsSaved(intent.entity).onEach {
+
+                    }.launchIn(viewModelScope)
+                    mainDirection.back()
                 }
             }
 
@@ -310,6 +326,10 @@ class MainViewModel @Inject constructor(
                                             ?: 0) <= intent.componentData.connectedValues[index].toInt() || isVisibleLess
 )                                    ) {
                                         isVisibleLess = false
+                                            ?: 0) <= intent.componentData.connectedValues[index].toInt() && isVisible
+                                                )
+                                    ) {
+                                        isVisible = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = false
@@ -366,6 +386,10 @@ class MainViewModel @Inject constructor(
                                             ?: 0) <= intent.componentData.connectedValues[index].length || isVisibleLess
 )                                    ) {
                                         isVisibleLess = false
+                                            ?: 0) <= intent.componentData.connectedValues[index].length && isVisible
+                                                )
+                                    ) {
+                                        isVisible = false
                                         appRepository.updateComponent(
                                             intent.componentData.copy(
                                                 isVisible = false
@@ -464,12 +488,12 @@ class MainViewModel @Inject constructor(
     private fun findingCheckedComponent(componentId: String) {
         myLog("checking value : $componentId")
         uiState.value.components.forEach { data ->
-            myLog("Inside For each : ${data.idEnteredByUser}\t ${componentId} , ${data.isVisible}" )
             if (data.idEnteredByUser == componentId) {
-                myLog("check data inside of if visibility ${data.isVisible}")
+                myLog("check data inside of if $data")
                 uiState.update { it.copy(checkedComponent = data) }
             }
         }
     }
+
 
 }

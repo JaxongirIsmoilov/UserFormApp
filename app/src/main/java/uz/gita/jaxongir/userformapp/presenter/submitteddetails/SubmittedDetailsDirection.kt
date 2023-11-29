@@ -1,21 +1,17 @@
-package uz.gita.jaxongir.userformapp.presenter.main
+package uz.gita.jaxongir.userformapp.presenter.submitteddetails
 
 import uz.gita.jaxongir.userformapp.utills.navigation.AppNavigator
 import javax.inject.Inject
-import javax.inject.Singleton
 
-interface MainDirection {
+interface DetailsDirection {
     suspend fun back()
 }
 
-@Singleton
-class MainDirectionImpl @Inject constructor(
+class DetailsDirectionImpl @Inject constructor(
     private val appNavigator: AppNavigator
-) : MainDirection {
-
+): DetailsDirection{
     override suspend fun back() {
         appNavigator.back()
     }
-
 
 }

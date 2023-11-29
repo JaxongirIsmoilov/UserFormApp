@@ -1,6 +1,5 @@
 package uz.gita.jaxongir.userformapp.data.repository
 
-import androidx.compose.ui.graphics.Color
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -16,8 +15,33 @@ import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val pref: MyPref
+    private val pref: MyPref,
+    private val dao: Dao
 ) : AppRepository {
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
+    override fun getDraftedItems(): Flow<Result<List<FormEntity>>> = callbackFlow {
+        trySend(Result.success(dao.getAllDrafts()))
+        awaitClose()
+    }
+
+    override fun getSavedComponents(): Flow<Result<List<FormEntity>>> = callbackFlow {
+        trySend(Result.success(dao.getAllDrafts()))
+        awaitClose()
+    }
+
+    override suspend fun addAsDraft(formEntity: FormEntity): Flow<Result<String>> = callbackFlow {
+        dao.insertDatas(formEntity)
+        trySend(Result.success("Success as draft"))
+        awaitClose()
+    }
+
+    override suspend fun addAsSaved(formEntity: FormEntity): Flow<Result<String>> = callbackFlow {
+        dao.insertDatas(formEntity)
+        trySend(Result.success("Success as saved"))
+        awaitClose()
+    }
+
     override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
         firestore.collection("Users")
             .whereEqualTo("userName", name)

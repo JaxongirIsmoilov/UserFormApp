@@ -3,6 +3,7 @@ package uz.gita.jaxongir.userformapp.presenter.main
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,8 +19,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -32,7 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +46,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
@@ -68,8 +70,12 @@ fun MainScreenContent(
     uiState: State<MainContract.UIState>,
     onEventDispatchers: (MainContract.Intent) -> Unit,
 ) {
+    val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(color = Color(0xFFFF3951))
+    var shouldShowError by remember {
+        mutableStateOf(false)
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -93,21 +99,6 @@ fun MainScreenContent(
                         .padding(start = 16.dp),
                     color = Color.White
                 )
-
-                IconButton(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd),
-                    onClick = {
-                        onEventDispatchers.invoke(MainContract.Intent.Logout)
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_logout),
-                        contentDescription = null,
-                        modifier = Modifier.size(36.dp),
-                        tint = Color.White
-                    )
-                }
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
@@ -121,18 +112,18 @@ fun MainScreenContent(
                 } else {
                     Column(modifier = Modifier.padding(horizontal = 15.dp)) {
                         Text(
-                            text = "Components",
+                            text = "Fill these sheets",
                             modifier = Modifier
                                 .padding(top = 15.dp)
                                 .align(Alignment.CenterHorizontally),
-                            fontWeight = FontWeight.Black,
+                            fontWeight = FontWeight.Normal,
                             fontSize = 25.sp
                         )
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-                                .padding(top = 55.dp)
+                                .padding(top = 10.dp)
                         ) {
                             uiState.value.components.forEach { data ->
                                 when (data.type) {
@@ -141,14 +132,15 @@ fun MainScreenContent(
                                             SampleSpinnerPreview(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
+
                                                 onSelectionChanged = {
                                                     onEventDispatchers.invoke(
                                                         MainContract.Intent.UpdateComponent(
-                                                            data.copy(enteredValue = it)
+                                                            data.copy(selectedSpinnerText = it)
                                                         )
                                                     )
                                                     if (data.operators.isNotEmpty()) {
-//                                                        myLog("spinner compo")
+                                                        myLog("spinner compo")
                                                         onEventDispatchers.invoke(
                                                             MainContract.Intent.CheckedComponent(
                                                                 data
@@ -157,9 +149,8 @@ fun MainScreenContent(
                                                     }
                                                 },
                                                 content = data.content,
-                                                componentData = data
-                                            ) {
-                                            }
+                                                componentData = data, {}, true, isDraft = false
+                                            )
 
                                         }
                                     }
@@ -175,28 +166,35 @@ fun MainScreenContent(
                                                 SelectorItem(
                                                     question = data.content,
                                                     list = data.variants,
-                                                    componentData = data
-                                                ) {
-                                                    onEventDispatchers.invoke(
-                                                        MainContract.Intent.UpdateComponent(
-                                                            data.copy(enteredValue = "asdfds")
-                                                        )
-                                                    )
-                                                    if (data.operators.isNotEmpty()) {
+                                                    componentData = data,
+                                                    onSaveStates = {
                                                         onEventDispatchers.invoke(
-                                                            MainContract.Intent.CheckedComponent(
-                                                                data
+                                                            MainContract.Intent.UpdateComponent(
+                                                                componentData = data.copy(selected = it)
                                                             )
                                                         )
-                                                    }
-                                                }
+                                                    }, deleteComp = {
+                                                        onEventDispatchers.invoke(
+                                                            MainContract.Intent.UpdateComponent(
+                                                                data.copy(enteredValue = "")
+                                                            )
+                                                        )
+                                                        if (data.operators.isNotEmpty()) {
+                                                            onEventDispatchers.invoke(
+                                                                MainContract.Intent.CheckedComponent(
+                                                                    data
+                                                                )
+                                                            )
+                                                        }
+                                                    }, isEnable = true, isInDraft = false
+                                                )
                                             }
                                         }
                                     }
 
                                     ComponentEnum.SampleText -> {
                                         item {
-//                                            myLog("sample text")
+                                            myLog("sample text")
                                             if (data.operators.isNotEmpty()) {
                                                 onEventDispatchers.invoke(
                                                     MainContract.Intent.CheckedComponent(
@@ -244,9 +242,6 @@ fun MainScreenContent(
                                                     data
                                                 )
                                             )
-                                            var inputVal by remember {
-                                                mutableStateOf(data.enteredValue)
-                                            }
 
                                             Column(modifier = Modifier.fillMaxWidth()) {
                                                 Spacer(modifier = Modifier.size(10.dp))
@@ -254,12 +249,15 @@ fun MainScreenContent(
                                                     "DDD",
                                                     "MainScreenContent: ${data.isRequired}"
                                                 )
-                                                if (data.isRequired) {
-                                                    Text(
-                                                        text = "This Field is required",
-                                                        fontWeight = FontWeight(600),
-                                                        color = Color(0xFFff7686)
-                                                    )
+                                                if (data.isRequired ) {
+                                                    if(data.enteredValue==""){
+                                                        shouldShowError=true
+                                                    }
+                                                        Text(
+                                                            text = "This Field is required",
+                                                            fontWeight = FontWeight(600),
+                                                            color = Color(0xFFff7686)
+                                                        )
                                                 }
                                                 Spacer(modifier = Modifier.size(10.dp))
                                                 InputField(onEdit = {
@@ -276,7 +274,7 @@ fun MainScreenContent(
                                                         )
                                                     }
 
-                                                }, componentData = data)
+                                                }, componentData = data, isEnable = true, isInDraft = false)
                                             }
 
                                         }
@@ -291,7 +289,7 @@ fun MainScreenContent(
                                             )
                                             DatePickerPreview(
                                                 componentData = data,
-                                                content = data.content
+                                                content = data.content, isEnable = true
                                             ) {
                                                 onEventDispatchers.invoke(
                                                     MainContract.Intent.UpdateComponent(
@@ -316,6 +314,62 @@ fun MainScreenContent(
                                             }
                                         }
                                     }
+                                }
+                            }
+                            item {
+                                Row(
+                                    modifier = Modifier
+                                        .padding(top = 10.dp)
+                                        .fillMaxWidth()
+                                        .height(80.dp)
+                                        .align(Alignment.CenterHorizontally)
+                                ) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Button(
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(
+                                                0xFFFA1466
+                                            )
+                                        ), onClick = {
+                                            onEventDispatchers.invoke(
+                                                MainContract.Intent.ClickAsDraft(
+                                                    FormEntity(
+                                                        id = 0,
+                                                        uiState.value.components,
+                                                        isDraft = true,
+                                                        isSubmitted = false
+                                                    ), context
+                                                )
+                                            )
+                                        }) {
+                                        Text(text = "Save As Draft")
+                                    }
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Button(
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(
+                                                0xFFFA1466
+                                            )
+                                        ), onClick = {
+                                            if(!shouldShowError){
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.ClickAsSaved(
+                                                        FormEntity(
+                                                            id = 0,
+                                                            listComponents = uiState.value.components,
+                                                            isDraft = false,
+                                                            isSubmitted = true
+                                                        ), context
+                                                    )
+                                                )
+                                            } else{
+                                                Toast.makeText(context, "Check required fields", Toast.LENGTH_SHORT).show()
+                                            }
+
+                                        }) {
+                                        Text(text = "Save as Saved")
+                                    }
+                                    Spacer(modifier = Modifier.weight(1f))
                                 }
                             }
                         }

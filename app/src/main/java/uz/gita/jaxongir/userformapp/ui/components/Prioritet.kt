@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 
 import uz.gita.jaxongir.userformapp.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Priority() {
 
