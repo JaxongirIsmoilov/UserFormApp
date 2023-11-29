@@ -24,10 +24,12 @@ import androidx.compose.ui.unit.sp
 fun CheckBoxItem(
     title: String,
     onEdit: () -> Unit,
-    isEnable:Boolean,
+    isEnable: Boolean,
+    state: Boolean,
     checkedStates: (Boolean) -> Unit,
+
 ) {
-    var checkedState = remember { mutableStateOf(false) }
+    var checkedState = remember { mutableStateOf(state) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -44,7 +46,7 @@ fun CheckBoxItem(
         Checkbox(
             checked = checkedState.value,
             onCheckedChange = {
-                if (isEnable){
+                if (isEnable) {
                     checkedState.value = it
                     checkedStates.invoke(it)
                 }

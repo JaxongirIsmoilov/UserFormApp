@@ -5,8 +5,8 @@ import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
 interface AppRepository {
-    fun getDraftedItems(): Flow<Result<List<FormEntity>>>
-    fun getSavedComponents(): Flow<Result<List<FormEntity>>>
+    fun getDraftedItems(userID: String): Flow<Result<List<FormEntity>>>
+    fun getSavedComponents(userID: String): Flow<Result<List<FormEntity>>>
     suspend fun addAsDraft(entity: FormEntity):Flow<Result<String>>
     suspend fun addAsSaved(entity: FormEntity):Flow<Result<String>>
     fun login(name: String, password: String): Flow<Result<Unit>>

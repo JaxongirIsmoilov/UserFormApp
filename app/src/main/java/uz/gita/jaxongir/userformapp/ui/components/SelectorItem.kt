@@ -60,8 +60,12 @@ fun SelectorItem(
             }
         }
         Spacer(modifier = Modifier.size(16.dp))
-        list.forEach {
-            CheckBoxItem(title = it, { deleteComp(it) }, isEnable) {
+        list.forEachIndexed { index, s ->
+            CheckBoxItem(
+                title = s,
+                { deleteComp(s) },
+                state = false, isEnable = isEnable
+            ) {
                 listSem.add(it)
                 onSaveStates.invoke(listSem)
             }

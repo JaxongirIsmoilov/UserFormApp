@@ -3,12 +3,16 @@ package uz.gita.jaxongir.userformapp.data.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
+import uz.gita.jaxongir.userformapp.data.local.room.dao.Dao
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import javax.inject.Inject
@@ -20,13 +24,13 @@ class AppRepositoryImpl @Inject constructor(
 ) : AppRepository {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    override fun getDraftedItems(): Flow<Result<List<FormEntity>>> = callbackFlow {
-        trySend(Result.success(dao.getAllDrafts()))
+    override fun getDraftedItems(userID: String): Flow<Result<List<FormEntity>>> = callbackFlow {
+        trySend(Result.success(dao.getAllDrafts(true, userID)))
         awaitClose()
     }
 
-    override fun getSavedComponents(): Flow<Result<List<FormEntity>>> = callbackFlow {
-        trySend(Result.success(dao.getAllDrafts()))
+    override fun getSavedComponents(userID: String): Flow<Result<List<FormEntity>>> = callbackFlow {
+        trySend(Result.success(dao.getAllSubmitteds(isSubmitted = true, userId = userID)))
         awaitClose()
     }
 
@@ -135,20 +139,19 @@ class AppRepositoryImpl @Inject constructor(
                                     it.data?.getOrDefault("type", "").toString(),
                                     ComponentEnum::class.java
                                 ),
-                                enteredValue = it.data?.getOrDefault("enteredValue", "0").toString(),
+                                enteredValue = it.data?.getOrDefault("enteredValue", "").toString(),
                                 isVisible = it.data?.getOrDefault("visible", "true")
                                     .toString() == "true",
                                 isRequired = it.data?.getOrDefault("required", false)
                                     .toString() == "true",
-                                imgUri = it.data?.getOrDefault("imgUri", "").toString(),
-                                ratioX = Integer.parseInt(it.data?.getOrDefault("ratioX", "0").toString()),
-                                ratioY = Integer.parseInt(it.data?.getOrDefault("ratioY", "0").toString()),
-                                customHeight = it.data?.getOrDefault("customHeight", "0").toString(),
-                                backgroundColor = converter.fromJson(it.data?.getOrDefault("backgroundColor", "${Color.Transparent}").toString(), Color::class.java),
-                                rowId = it.data?.getOrDefault("rowId", "0").toString()
+                                selectedSpinnerText = it.data?.getOrDefault(
+                                    "selectedSpinnerText",
+                                    ""
+                                ).toString()
                             )
                         )
                     }
+
 
                     trySend(Result.success(resultList))
                 }
@@ -184,4 +187,6 @@ class AppRepositoryImpl @Inject constructor(
 
         awaitClose()
     }
+
+
 }

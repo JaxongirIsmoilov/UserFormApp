@@ -46,20 +46,23 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
+import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
 import uz.gita.jaxongir.userformapp.utills.myLog
+import javax.inject.Inject
 
-class MainScreen : AndroidScreen() {
+class MainScreen @Inject constructor(val myPref: MyPref) : AndroidScreen() {
+
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     override fun Content() {
         val vm: MainContract.ViewModel = getViewModel<MainViewModel>()
         vm.onEventDispatcher(MainContract.Intent.LoadList)
-        MainScreenContent(vm.uiState.collectAsState(), vm::onEventDispatcher)
+        MainScreenContent(vm.uiState.collectAsState(), vm::onEventDispatcher, myPref)
 
     }
 }
@@ -69,6 +72,7 @@ class MainScreen : AndroidScreen() {
 fun MainScreenContent(
     uiState: State<MainContract.UIState>,
     onEventDispatchers: (MainContract.Intent) -> Unit,
+    myPref: MyPref
 ) {
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
@@ -249,32 +253,37 @@ fun MainScreenContent(
                                                     "DDD",
                                                     "MainScreenContent: ${data.isRequired}"
                                                 )
-                                                if (data.isRequired ) {
-                                                    if(data.enteredValue==""){
-                                                        shouldShowError=true
+                                                if (data.isRequired) {
+                                                    if (data.enteredValue == "") {
+                                                        shouldShowError = true
                                                     }
-                                                        Text(
-                                                            text = "This Field is required",
-                                                            fontWeight = FontWeight(600),
-                                                            color = Color(0xFFff7686)
-                                                        )
+                                                    Text(
+                                                        text = "This Field is required",
+                                                        fontWeight = FontWeight(600),
+                                                        color = Color(0xFFff7686)
+                                                    )
                                                 }
                                                 Spacer(modifier = Modifier.size(10.dp))
-                                                InputField(onEdit = {
-                                                    onEventDispatchers.invoke(
-                                                        MainContract.Intent.UpdateComponent(
-                                                            data.copy(enteredValue = it)
-                                                        )
-                                                    )
-                                                    if (data.operators.isNotEmpty()) {
+                                                InputField(
+                                                    onEdit = {
                                                         onEventDispatchers.invoke(
-                                                            MainContract.Intent.CheckedComponent(
-                                                                data
+                                                            MainContract.Intent.UpdateComponent(
+                                                                data.copy(enteredValue = it)
                                                             )
                                                         )
-                                                    }
+                                                        if (data.operators.isNotEmpty()) {
+                                                            onEventDispatchers.invoke(
+                                                                MainContract.Intent.CheckedComponent(
+                                                                    data
+                                                                )
+                                                            )
+                                                        }
 
-                                                }, componentData = data, isEnable = true, isInDraft = false)
+                                                    },
+                                                    componentData = data,
+                                                    isEnable = true,
+                                                    isInDraft = false
+                                                )
                                             }
 
                                         }
@@ -337,7 +346,8 @@ fun MainScreenContent(
                                                         id = 0,
                                                         uiState.value.components,
                                                         isDraft = true,
-                                                        isSubmitted = false
+                                                        isSubmitted = false,
+                                                        myPref.getId()
                                                     ), context
                                                 )
                                             )
@@ -351,19 +361,24 @@ fun MainScreenContent(
                                                 0xFFFA1466
                                             )
                                         ), onClick = {
-                                            if(!shouldShowError){
+                                            if (!shouldShowError) {
                                                 onEventDispatchers.invoke(
                                                     MainContract.Intent.ClickAsSaved(
                                                         FormEntity(
                                                             id = 0,
                                                             listComponents = uiState.value.components,
                                                             isDraft = false,
-                                                            isSubmitted = true
+                                                            isSubmitted = true,
+                                                            myPref.getId()
                                                         ), context
                                                     )
                                                 )
-                                            } else{
-                                                Toast.makeText(context, "Check required fields", Toast.LENGTH_SHORT).show()
+                                            } else {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Check required fields",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                             }
 
                                         }) {
@@ -385,5 +400,5 @@ fun MainScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreenContent(uiState = mutableStateOf(MainContract.UIState())) {}
+//    MainScreenContent(uiState = mutableStateOf(MainContract.UIState())) {}
 }
