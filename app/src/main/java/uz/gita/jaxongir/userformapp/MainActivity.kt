@@ -36,16 +36,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             UserFormAppTheme {
 
-                MyRow()
-
-//                val systemUiController = rememberSystemUiController()
-//                systemUiController.setStatusBarColor(color = Color(0xFFFF7686))
-//                Navigator(screen = SplashScreen()) { navigate ->
-//                    handler.uiNavigator
-//                        .onEach { it.invoke(navigate) }
-//                        .launchIn(lifecycleScope)
-//                    CurrentScreen()
-//                }
+                val systemUiController = rememberSystemUiController()
+                systemUiController.setStatusBarColor(color = Color(0xFFFF7686))
+                Navigator(screen = SplashScreen()) { navigate ->
+                    handler.uiNavigator
+                        .onEach { it.invoke(navigate) }
+                        .launchIn(lifecycleScope)
+                    CurrentScreen()
+                }
             }
         }
     }
