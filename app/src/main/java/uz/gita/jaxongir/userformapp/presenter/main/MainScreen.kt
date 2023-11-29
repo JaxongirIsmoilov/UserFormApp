@@ -107,6 +107,7 @@ fun MainScreenContent(
 
             Box(modifier = Modifier.fillMaxSize()) {
                 if (uiState.value.components.isEmpty()) {
+
                     Text(
                         text = "There is no components yet!",
                         fontSize = 22.sp,
