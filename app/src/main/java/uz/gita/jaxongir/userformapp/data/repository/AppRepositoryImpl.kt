@@ -25,66 +25,25 @@ class AppRepositoryImpl @Inject constructor(
     private val dao: Dao
 ) : AppRepository {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
-
-    override fun getDraftedItems(userID: String): Flow<Result<List<FormEntity>>> = callbackFlow {
-        trySend(Result.success(dao.getAllDrafts(true, userID)))
-        awaitClose()
-    }
-
-    override fun getSavedComponents(userID: String): Flow<Result<List<FormEntity>>> = callbackFlow {
-        trySend(Result.success(dao.getAllSubmitteds(isSubmitted = true, userId = userID)))
-        awaitClose()
-    }
-
-    override suspend fun addAsDraft(formEntity: FormEntity): Flow<Result<String>> = callbackFlow {
-        dao.insertDatas(formEntity)
-        trySend(Result.success("Success as draft"))
-        awaitClose()
-    }
-
-    override suspend fun addAsSaved(formEntity: FormEntity): Flow<Result<String>> = callbackFlow {
-        dao.insertDatas(formEntity)
-        trySend(Result.success("Success as saved"))
-        awaitClose()
-    }
-
-    override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
-        firestore.collection("Users")
-            .whereEqualTo("userName", name)
-            .get()
-            .addOnSuccessListener {
-                if (it.documents.isEmpty()) {
-                    trySend(Result.failure(Exception("There is not such user")))
-                } else {
-                    it.documents.forEach {
-                        if (it.data?.getOrDefault("password", "").toString()
-                            == password
-                        ) {
-                            pref.saveId(it.id)
-                            trySend(Result.success(Unit))
-                        }
-                    }
-
-                }
-            }
-        awaitClose()
-    }
-
-    override fun getComponentsByUserId(userID: String): Flow<Result<List<ComponentData>>> =
+    override fun getAllRowItemsById(rowId: String): Flow<Result<List<ComponentData>>> =
         callbackFlow {
-            val resultList = arrayListOf<ComponentData>()
             val converter = Gson()
+            val componentList = arrayListOf<ComponentData>()
             firestore.collection("Components")
-                .whereEqualTo("userId", userID)
+                .whereEqualTo("rowId", rowId)
                 .get()
                 .addOnSuccessListener {
                     it.documents.forEach {
-                        resultList.add(
+                        componentList.add(
                             ComponentData(
                                 id = it.id,
                                 userId = it.data?.getOrDefault("userId", "null").toString(),
-                                locId = it.data?.getOrDefault("locId", "0").toString().toLong(),
-                                idEnteredByUser = it.data?.getOrDefault("idEnteredByUser", "null")
+                                locId = it.data?.getOrDefault("locId", "0").toString()
+                                    .toLong(),
+                                idEnteredByUser = it.data?.getOrDefault(
+                                    "idEnteredByUser",
+                                    "null"
+                                )
                                     .toString(),
                                 content = it.data?.getOrDefault("content", "null")
                                     .toString(),
@@ -141,7 +100,8 @@ class AppRepositoryImpl @Inject constructor(
                                     it.data?.getOrDefault("type", "").toString(),
                                     ComponentEnum::class.java
                                 ),
-                                enteredValue = it.data?.getOrDefault("enteredValue", "").toString(),
+                                enteredValue = it.data?.getOrDefault("enteredValue", "")
+                                    .toString(),
                                 isVisible = it.data?.getOrDefault("visible", "true")
                                     .toString() == "true",
                                 isRequired = it.data?.getOrDefault("required", false)
@@ -157,9 +117,177 @@ class AppRepositoryImpl @Inject constructor(
                                 ratioY = Integer.parseInt(
                                     it.data?.getOrDefault("ratioY", "0").toString()
                                 ),
-                                customHeight = it.  data?.getOrDefault("customHeight", "0")
+                                customHeight = it.data?.getOrDefault("customHeight", "0")
                                     .toString(),
-                                backgroundColor = it.data?.getOrDefault("backgroundColor", "${Color.Transparent.toArgb()}")
+                                backgroundColor = it.data?.getOrDefault(
+                                    "backgroundColor",
+                                    "${Color.Transparent.toArgb()}"
+                                )
+                                    .toString().toInt(),
+                                rowId = it.data?.getOrDefault("rowId", "0").toString()
+
+                        )
+                    }
+                }
+                .addOnFailureListener {
+                    trySend(Result.failure(Exception("Error occurs")))
+                }
+        }
+
+    override fun getDraftedItems(userID: String): Flow<Result<List<FormEntity>>> =
+        callbackFlow {
+            trySend(Result.success(dao.getAllDrafts(true, userID)))
+            awaitClose()
+        }
+
+    override fun getSavedComponents(userID: String): Flow<Result<List<FormEntity>>> =
+        callbackFlow {
+            trySend(
+                Result.success(
+                    dao.getAllSubmitteds(
+                        isSubmitted = true,
+                        userId = userID
+                    )
+                )
+            )
+            awaitClose()
+        }
+
+    override suspend fun addAsDraft(formEntity: FormEntity): Flow<Result<String>> =
+        callbackFlow {
+            dao.insertDatas(formEntity)
+            trySend(Result.success("Success as draft"))
+            awaitClose()
+        }
+
+    override suspend fun addAsSaved(formEntity: FormEntity): Flow<Result<String>> =
+        callbackFlow {
+            dao.insertDatas(formEntity)
+            trySend(Result.success("Success as saved"))
+            awaitClose()
+        }
+
+
+    override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
+        firestore.collection("Users")
+            .whereEqualTo("userName", name)
+            .get()
+            .addOnSuccessListener {
+                if (it.documents.isEmpty()) {
+                    trySend(Result.failure(Exception("There is not such user")))
+                } else {
+                    it.documents.forEach {
+                        if (it.data?.getOrDefault("password", "").toString()
+                            == password
+                        ) {
+                            pref.saveId(it.id)
+                            trySend(Result.success(Unit))
+                        }
+                    }
+
+                }
+            }
+        awaitClose()
+    }
+
+    override fun getComponentsByUserId(userID: String): Flow<Result<List<ComponentData>>> =
+        callbackFlow {
+            val resultList = arrayListOf<ComponentData>()
+            val converter = Gson()
+            firestore.collection("Components")
+                .whereEqualTo("userId", userID)
+                .get()
+                .addOnSuccessListener {
+                    it.documents.forEach {
+                        resultList.add(
+                            ComponentData(
+                                id = it.id,
+                                userId = it.data?.getOrDefault("userId", "null").toString(),
+                                locId = it.data?.getOrDefault("locId", "0").toString()
+                                    .toLong(),
+                                idEnteredByUser = it.data?.getOrDefault(
+                                    "idEnteredByUser",
+                                    "null"
+                                )
+                                    .toString(),
+                                content = it.data?.getOrDefault("content", "null")
+                                    .toString(),
+                                textFieldType = converter.fromJson(
+                                    it.data?.getOrDefault(
+                                        "textFieldType",
+                                        "null"
+                                    ).toString(), TextFieldType::class.java
+                                ),
+                                maxLines = Integer.parseInt(
+                                    it.data?.getOrDefault("maxLines", "0").toString()
+                                ),
+                                maxLength = Integer.parseInt(
+                                    it.data?.getOrDefault("maxLength", "0").toString()
+                                ),
+                                minLength = Integer.parseInt(
+                                    it.data?.getOrDefault("minLength", "0").toString()
+                                ),
+                                maxValue = Integer.parseInt(
+                                    it.data?.getOrDefault("maxValue", "0").toString()
+                                ),
+                                minValue = Integer.parseInt(
+                                    it.data?.getOrDefault("minValue", "0").toString()
+                                ),
+                                isMulti = it.data?.getOrDefault("isMulti", "false")
+                                    .toString() == "true",
+                                variants = converter.fromJson(
+                                    it.data?.getOrDefault("variants", "[]").toString(),
+                                    Array<String>::class.java
+                                ).asList(),
+                                selected = converter.fromJson(
+                                    it.data?.getOrDefault("selected", "[]").toString(),
+                                    Array<Boolean>::class.java
+                                ).asList(),
+                                connectedIds = converter.fromJson(
+                                    it.data?.getOrDefault(
+                                        "connectedIds",
+                                        ""
+                                    ).toString(), Array<String>::class.java
+                                ).asList(),
+                                connectedValues = converter.fromJson(
+                                    it.data?.getOrDefault(
+                                        "connectedValues",
+                                        ""
+                                    ).toString(), Array<String>::class.java
+                                ).asList(),
+                                operators = converter.fromJson(
+                                    it.data?.getOrDefault(
+                                        "operators",
+                                        ""
+                                    ).toString(), object : TypeToken<List<String>>() {}.type
+                                ),
+                                type = converter.fromJson(
+                                    it.data?.getOrDefault("type", "").toString(),
+                                    ComponentEnum::class.java
+                                ),
+                                enteredValue = it.data?.getOrDefault("enteredValue", "")
+                                    .toString(),
+                                isVisible = it.data?.getOrDefault("visible", "true")
+                                    .toString() == "true",
+                                isRequired = it.data?.getOrDefault("required", false)
+                                    .toString() == "true",
+                                selectedSpinnerText = it.data?.getOrDefault(
+                                    "selectedSpinnerText",
+                                    ""
+                                ).toString(),
+                                imgUri = it.data?.getOrDefault("imgUri", "").toString(),
+                                ratioX = Integer.parseInt(
+                                    it.data?.getOrDefault("ratioX", "0").toString()
+                                ),
+                                ratioY = Integer.parseInt(
+                                    it.data?.getOrDefault("ratioY", "0").toString()
+                                ),
+                                customHeight = it.data?.getOrDefault("customHeight", "0")
+                                    .toString(),
+                                backgroundColor = it.data?.getOrDefault(
+                                    "backgroundColor",
+                                    "${Color.Transparent.toArgb()}"
+                                )
                                     .toString().toInt(),
                                 rowId = it.data?.getOrDefault("rowId", "0").toString()
                             )
@@ -176,19 +304,20 @@ class AppRepositoryImpl @Inject constructor(
             awaitClose()
         }
 
-    override fun updateComponent(componentData: ComponentData): Flow<Result<Unit>> = callbackFlow {
-        firestore.collection("Components")
-            .document(componentData.id)
-            .set(componentData)
-            .addOnSuccessListener {
-                trySend(Result.success(Unit))
-            }
-            .addOnFailureListener {
-                trySend(Result.failure(it))
-            }
+    override fun updateComponent(componentData: ComponentData): Flow<Result<Unit>> =
+        callbackFlow {
+            firestore.collection("Components")
+                .document(componentData.id)
+                .set(componentData)
+                .addOnSuccessListener {
+                    trySend(Result.success(Unit))
+                }
+                .addOnFailureListener {
+                    trySend(Result.failure(it))
+                }
 
-        awaitClose()
-    }
+            awaitClose()
+        }
 
     override fun hasUserInFireBase(userID: String): Flow<Boolean> = callbackFlow {
         firestore.collection("Users")

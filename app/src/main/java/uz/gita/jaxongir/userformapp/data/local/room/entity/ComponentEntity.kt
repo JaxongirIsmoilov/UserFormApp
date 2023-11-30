@@ -5,9 +5,9 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
+import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
-import uz.gita.jaxongir.userformapp.utills.colorConverter
 
 @Entity(tableName = "components")
 data class ComponentEntity(
@@ -34,12 +34,13 @@ data class ComponentEntity(
     val isVisible: Boolean = true,
     val isRequired: Boolean,
     val selectedSpinnerText: String,
-    val imgUri : String = "",
-    val ratioX : Int,
-    val ratioY : Int,
-    val customHeight : String,
+    val imgUri: String = "",
+    val ratioX: Int,
+    val ratioY: Int,
+    val customHeight: String,
     val rowId: String = "",
-    val backgroundColor: Int = Color.Transparent.toArgb()
+    val backgroundColor: Int = Color.Transparent.toArgb(),
+    val imageTypeEnum: ImageTypeEnum
 ) {
     fun toData(): ComponentData = ComponentData(
         id = id,
@@ -63,13 +64,13 @@ data class ComponentEntity(
         enteredValue = "",
         isVisible = isVisible,
         isRequired = isRequired,
-        selectedSpinnerText=selectedSpinnerText,
+        selectedSpinnerText = selectedSpinnerText,
         imgUri = imgUri,
         ratioX = ratioX,
         ratioY = ratioY,
         customHeight = customHeight,
         rowId = rowId,
-        backgroundColor = backgroundColor
-
+        backgroundColor = backgroundColor,
+        imageType = imageTypeEnum
     )
 }

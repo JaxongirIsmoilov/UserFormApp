@@ -48,6 +48,7 @@ import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
+import uz.gita.jaxongir.userformapp.ui.components.ImageComponent
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
@@ -149,6 +150,12 @@ fun DraftDetailsContent(
                                                     componentData = data, {}, true, true
                                                 )
 
+                                            }
+                                        }
+
+                                        ComponentEnum.Image -> {
+                                            item {
+                                                ImageComponent(data = data, isEnable = true)
                                             }
                                         }
 
@@ -260,7 +267,9 @@ fun DraftDetailsContent(
                                             }
                                         }
 
+                                        ComponentEnum.LazyRow ->{
 
+                                        }
                                         else -> {}
                                     }
                                 }

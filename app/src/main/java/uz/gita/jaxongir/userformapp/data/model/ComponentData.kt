@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.google.gson.Gson
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
+import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.room.entity.ComponentEntity
 import java.io.Serializable
@@ -30,13 +31,14 @@ data class ComponentData(
     val enteredValue: String = "",
     val isVisible: Boolean = true,
     val isRequired: Boolean = false,
-    val selectedSpinnerText : String,
-    val imgUri : String = "",
-    val ratioX : Int,
-    val ratioY : Int,
-    val customHeight : String,
+    val selectedSpinnerText: String,
+    val imgUri: String = "",
+    val ratioX: Int,
+    val ratioY: Int,
+    val customHeight: String,
     val rowId: String = "",
-    val backgroundColor: Int = Color.Transparent.toArgb()
+    val backgroundColor: Int = Color.Transparent.toArgb(),
+    val imageType: ImageTypeEnum = ImageTypeEnum.NONE
 ) : Serializable {
     private val converter = Gson()
 
@@ -67,6 +69,8 @@ data class ComponentData(
         customHeight = customHeight,
         rowId = rowId,
         backgroundColor = backgroundColor,
+        imageTypeEnum = imageType
+
     )
 }
 

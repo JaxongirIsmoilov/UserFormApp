@@ -37,7 +37,10 @@ import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.utills.toDp
 
 @Composable
-fun ImageComponent(data: ComponentData) {
+fun ImageComponent(
+    data: ComponentData,
+    isEnable: Boolean
+) {
     var imageUri: String by remember { mutableStateOf(data.imgUri) }
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.size(10.dp))
@@ -48,7 +51,13 @@ fun ImageComponent(data: ComponentData) {
                 .padding(horizontal = 15.dp)
                 .fillMaxWidth()
                 .height(data.customHeight.toDp())
-                .aspectRatio((data.ratioX / data.ratioY).toFloat())
+//                .aspectRatio(
+//                    if (data.ratioX > 0 && data.ratioY > 0) {
+//                        ((data.ratioX / data.ratioY).toFloat())
+//                    } else{
+//                        1f
+//                    }
+//                )
                 .background(color = Color(data.backgroundColor))
         )
         Spacer(modifier = Modifier.size(10.dp))
@@ -61,7 +70,7 @@ fun ImageComponent(data: ComponentData) {
                 .border(1.dp, Color(0xFFFF7686), RoundedCornerShape(12.dp))
                 .background(Color(0x33C4C4C4))
                 .clickable {
-                    checkedState = !checkedState
+                    if (isEnable) checkedState = !checkedState
                 }
                 .padding(horizontal = 16.dp, vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -69,7 +78,7 @@ fun ImageComponent(data: ComponentData) {
             Checkbox(
                 checked = checkedState,
                 onCheckedChange = {
-                    checkedState = it
+                    if (isEnable) checkedState = it
                 },
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color(0xFFFF7686),
@@ -97,7 +106,7 @@ fun ImageComponent(data: ComponentData) {
             Spacer(modifier = Modifier.size(10.dp))
 
             Button(
-                onClick = { checkedState=false },
+                onClick = { checkedState = false },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF3951))
             ) {
                 Text(

@@ -318,7 +318,7 @@ fun MainScreenContent(
 
                                     ComponentEnum.Image -> {
                                         item {
-                                            ImageComponent(data = data)
+                                            ImageComponent(data = data, true)
                                         }
                                     }
 

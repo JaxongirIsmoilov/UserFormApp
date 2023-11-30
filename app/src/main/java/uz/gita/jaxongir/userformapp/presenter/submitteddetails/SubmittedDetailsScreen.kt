@@ -36,6 +36,7 @@ import cafe.adriel.voyager.hilt.getViewModel
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
+import uz.gita.jaxongir.userformapp.ui.components.ImageComponent
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
@@ -105,6 +106,13 @@ fun DetailsScreenContent(
                                                 deleteComp = {}, false, isDraft = true
                                             )
 
+                                        }
+                                    }
+
+                                    ComponentEnum.Image -> {
+
+                                        item {
+                                            ImageComponent(data = data, isEnable = false)
                                         }
                                     }
 
