@@ -35,8 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
+import uz.gita.jaxongir.userformapp.ui.theme.UserFormAppTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -152,4 +154,12 @@ fun Color.contrastColor(): Color {
 
 object Patterns {
     val color = "#[0-9a-fA-F]{6}".toRegex()
+}
+
+@Preview
+@Composable
+fun ColorPickerPrev() {
+    UserFormAppTheme() {
+        ColorPickerDialog(initialColor = "", colors = listOf(), onChoice = {})
+    }
 }

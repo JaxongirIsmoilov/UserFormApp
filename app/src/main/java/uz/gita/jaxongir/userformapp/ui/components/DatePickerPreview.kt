@@ -137,7 +137,7 @@ fun DatePickerPreviewNew() {
             type = ComponentEnum.Dater,
             enteredValue = "",
             isVisible = false, isRequired = false, selectedSpinnerText = "",
-            imgUri = "", ratioX = 0, ratioY = 0, customHeight = "", rowId = "", backgroundColor = Color.Gray
+            imgUri = "", ratioX = 0, ratioY = 0, customHeight = "", rowId = "", backgroundColor = R.color.black
         ),
         "", false,
     )

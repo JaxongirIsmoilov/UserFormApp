@@ -136,8 +136,8 @@ fun DraftDetailsContent(
                                         ComponentEnum.Spinner -> {
                                             item {
                                                 SampleSpinnerPreview(
-                                                    list = data.variants ,
-                                                    preselected = data.selectedSpinnerText ,
+                                                    list = data.variants,
+                                                    preselected = data.selectedSpinnerText,
                                                     onSelectionChanged = {
                                                         onEventDispatchers.invoke(
                                                             DraftScreenContract.Intent.UpdateComponent(
@@ -279,19 +279,17 @@ fun DraftDetailsContent(
                                                     0xFFFA1466
                                                 )
                                             ), onClick = {
-                                                if (!shouldShowError) {
-                                                    onEventDispatchers.invoke(
-                                                        DraftScreenContract.Intent.SaveAsDraft(
-                                                            FormEntity(
-                                                                id = 0,
-                                                                uiState.value.list,
-                                                                isDraft = true,
-                                                                isSubmitted = false,
-                                                                myPref.getId()
-                                                            ), context = context
-                                                        )
+                                                onEventDispatchers.invoke(
+                                                    DraftScreenContract.Intent.SaveAsDraft(
+                                                        FormEntity(
+                                                            id = 0,
+                                                            uiState.value.list,
+                                                            isDraft = true,
+                                                            isSubmitted = false,
+                                                            myPref.getId()
+                                                        ), context = context
                                                     )
-                                                }
+                                                )
                                             }) {
                                             Text(text = "Save As Draft")
                                         }
@@ -302,17 +300,20 @@ fun DraftDetailsContent(
                                                     0xFFFA1466
                                                 )
                                             ), onClick = {
-                                                onEventDispatchers.invoke(
-                                                    DraftScreenContract.Intent.SaveAsSaved(
-                                                        FormEntity(
-                                                            id = 0,
-                                                            listComponents = uiState.value.list,
-                                                            isDraft = false,
-                                                            isSubmitted = true,
-                                                            myPref.getId()
-                                                        ), context
+                                                if (!shouldShowError) {
+                                                    onEventDispatchers.invoke(
+                                                        DraftScreenContract.Intent.SaveAsSaved(
+                                                            FormEntity(
+                                                                id = 0,
+                                                                listComponents = uiState.value.list,
+                                                                isDraft = false,
+                                                                isSubmitted = true,
+                                                                myPref.getId()
+                                                            ), context
+                                                        )
                                                     )
-                                                )
+
+                                                }
                                             }) {
                                             Text(text = "Save as Saved")
                                         }

@@ -1,6 +1,7 @@
 package uz.gita.jaxongir.userformapp.data.repository
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -150,10 +151,16 @@ class AppRepositoryImpl @Inject constructor(
                                     ""
                                 ).toString(),
                                 imgUri = it.data?.getOrDefault("imgUri", "").toString(),
-                                ratioX = Integer.parseInt(it.data?.getOrDefault("ratioX", "0").toString()),
-                                ratioY = Integer.parseInt(it.data?.getOrDefault("ratioY", "0").toString()),
-                                customHeight = it.data?.getOrDefault("customHeight", "0").toString(),
-                                backgroundColor = converter.fromJson(it.data?.getOrDefault("backgroundColor", "${Color.Transparent}").toString(), Color::class.java),
+                                ratioX = Integer.parseInt(
+                                    it.data?.getOrDefault("ratioX", "0").toString()
+                                ),
+                                ratioY = Integer.parseInt(
+                                    it.data?.getOrDefault("ratioY", "0").toString()
+                                ),
+                                customHeight = it.  data?.getOrDefault("customHeight", "0")
+                                    .toString(),
+                                backgroundColor = it.data?.getOrDefault("backgroundColor", "${Color.Transparent.toArgb()}")
+                                    .toString().toInt(),
                                 rowId = it.data?.getOrDefault("rowId", "0").toString()
                             )
                         )
@@ -194,6 +201,4 @@ class AppRepositoryImpl @Inject constructor(
 
         awaitClose()
     }
-
-
 }
