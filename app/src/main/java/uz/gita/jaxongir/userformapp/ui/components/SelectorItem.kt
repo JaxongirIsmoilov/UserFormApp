@@ -29,13 +29,14 @@ fun SelectorItem(
     componentData: ComponentData,
     deleteComp: (String) -> Unit,
     isEnable: Boolean,
+    modifier: Modifier,
     isInDraft: Boolean
 ) {
     val selectedItem = remember { mutableStateOf<String?>(null) }
     val listSem = arrayListOf<Boolean>()
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .then(
                 if (componentData.isVisible) Modifier
                     .fillMaxWidth()

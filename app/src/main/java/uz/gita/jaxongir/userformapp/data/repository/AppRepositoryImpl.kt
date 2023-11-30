@@ -124,10 +124,12 @@ class AppRepositoryImpl @Inject constructor(
                                     "${Color.Transparent.toArgb()}"
                                 )
                                     .toString().toInt(),
-                                rowId = it.data?.getOrDefault("rowId", "0").toString()
-
+                                rowId = it.data?.getOrDefault("rowId", "0").toString(),
+                                weight = it.data?.getOrDefault("weight", "").toString()
+                            )
                         )
                     }
+                    trySend(Result.success(componentList))
                 }
                 .addOnFailureListener {
                     trySend(Result.failure(Exception("Error occurs")))
@@ -289,7 +291,8 @@ class AppRepositoryImpl @Inject constructor(
                                     "${Color.Transparent.toArgb()}"
                                 )
                                     .toString().toInt(),
-                                rowId = it.data?.getOrDefault("rowId", "0").toString()
+                                rowId = it.data?.getOrDefault("rowId", "0").toString(),
+                                weight = it.data?.getOrDefault("weight", "").toString()
                             )
                         )
                     }

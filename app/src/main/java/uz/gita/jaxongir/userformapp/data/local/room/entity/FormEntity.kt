@@ -12,5 +12,5 @@ data class FormEntity(
     val listComponents: List<ComponentData>,
     val isDraft: Boolean,
     val isSubmitted: Boolean,
-    val userId: String
+    val userId: String,
 )

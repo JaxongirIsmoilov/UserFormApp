@@ -8,7 +8,7 @@ import uz.gita.jaxongir.userformapp.data.model.ComponentData
 interface MainContract {
     interface ViewModel {
         val uiState: StateFlow<UIState>
-     fun onEventDispatcher(intent: Intent)
+        fun onEventDispatcher(intent: Intent)
     }
 
     data class UIState(
@@ -16,7 +16,9 @@ interface MainContract {
         val userName: String = "User",
         val userId: String = "",
         val components: List<ComponentData> = emptyList(),
-        val checkedComponent: ComponentData? = null
+        val rowComponenets: List<ComponentData> = listOf(),
+        val checkedComponent: ComponentData? = null,
+        val isLoading: Boolean = false
     )
 
     interface Intent {
@@ -27,12 +29,14 @@ interface MainContract {
 
         data class CheckRowComponent(val componentData: ComponentData) : Intent
 
-        data class UpdateComponent(val componentData: ComponentData): Intent
+        data class UpdateComponent(val componentData: ComponentData) : Intent
 
         object Load : Intent
 
         data class ClickAsSaved(val entity: FormEntity, val context: Context) : Intent
-        data class ClickAsDraft(val entity: FormEntity, val context:Context) : Intent
+        data class ClickAsDraft(val entity: FormEntity, val context: Context) : Intent
+
+        data class GetAllRowItems(val rowId: String) : Intent
     }
 
 }

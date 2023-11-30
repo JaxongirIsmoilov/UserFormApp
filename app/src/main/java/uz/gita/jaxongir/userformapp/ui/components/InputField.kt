@@ -22,6 +22,7 @@ fun InputField(
     onEdit: (String) -> Unit,
     componentData: ComponentData,
     isEnable: Boolean,
+    modifier: Modifier,
     isInDraft: Boolean
 ) {
     val maxLength = if (componentData.maxLength == 0) Integer.MAX_VALUE else componentData.maxLength
@@ -52,11 +53,10 @@ fun InputField(
                         newContentForOther = it
                         onEdit(it)
                     }
-
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 label = { Text(text = componentData.content) },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFFF3951),
                     unfocusedBorderColor = Color(0xFFFF7686)
@@ -90,7 +90,7 @@ fun InputField(
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text(text = componentData.content) },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFFF3951),
                     unfocusedBorderColor = Color(0xFFFF7686)
@@ -132,7 +132,7 @@ fun InputField(
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 label = { Text(text = componentData.content) },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFFF3951),
                     unfocusedBorderColor = Color(0xFFFF7686)
