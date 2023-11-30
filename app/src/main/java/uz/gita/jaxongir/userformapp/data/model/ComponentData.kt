@@ -38,7 +38,8 @@ data class ComponentData(
     val customHeight: String,
     val rowId: String = "",
     val backgroundColor: Int = Color.Transparent.toArgb(),
-    val imageType: ImageTypeEnum = ImageTypeEnum.NONE
+    val imageType: ImageTypeEnum = ImageTypeEnum.NONE,
+    val weight: String
 ) : Serializable {
     private val converter = Gson()
 
@@ -102,5 +103,7 @@ val defaultData = ComponentData(
     1,
     "",
     "",
-    Color.Transparent.toArgb()
+    backgroundColor = Color.Transparent.toArgb(),
+    imageType = ImageTypeEnum.NONE,
+    weight = ""
 )

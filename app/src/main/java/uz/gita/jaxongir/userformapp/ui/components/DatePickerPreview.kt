@@ -35,6 +35,7 @@ import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
+import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import java.time.LocalDate
@@ -46,6 +47,7 @@ fun DatePickerPreview(
     componentData: ComponentData,
     content: String,
     isEnable: Boolean,
+    modifier: Modifier,
     deleteComp: () -> Unit = {}
 ) {
     var pickedDate by remember {
@@ -63,8 +65,8 @@ fun DatePickerPreview(
     val dateDialogState = rememberMaterialDialogState()
 
     Column(
-        modifier = Modifier.then(
-            if (componentData.isVisible) Modifier.fillMaxWidth() else Modifier.size(0.dp)
+        modifier = modifier.then(
+            if (componentData.isVisible) modifier.fillMaxWidth() else modifier.size(0.dp)
         )
     ) {
         Text(text = content, fontSize = 16.sp)
@@ -136,9 +138,18 @@ fun DatePickerPreviewNew() {
             operators = listOf(),
             type = ComponentEnum.Dater,
             enteredValue = "",
-            isVisible = false, isRequired = false, selectedSpinnerText = "",
-            imgUri = "", ratioX = 0, ratioY = 0, customHeight = "", rowId = "", backgroundColor = R.color.black
+            isVisible = false,
+            isRequired = false,
+            selectedSpinnerText = "",
+            imgUri = "",
+            ratioX = 0,
+            ratioY = 0,
+            customHeight = "",
+            rowId = "",
+            backgroundColor = R.color.black,
+            imageType = ImageTypeEnum.NONE,
+            weight = ""
         ),
-        "", false,
+        "", false, modifier = Modifier
     )
 }

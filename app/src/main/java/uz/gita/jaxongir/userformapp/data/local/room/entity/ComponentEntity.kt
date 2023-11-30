@@ -27,6 +27,7 @@ data class ComponentEntity(
     val variants: List<String>,
     val selected: List<Boolean>,
     val connectedValues: List<String>,
+    val weight: String = "",
     val connectedIds: List<String>,
     val operators: List<String>,
     val type: ComponentEnum,
@@ -71,6 +72,7 @@ data class ComponentEntity(
         customHeight = customHeight,
         rowId = rowId,
         backgroundColor = backgroundColor,
-        imageType = imageTypeEnum
+        imageType = imageTypeEnum,
+        ""
     )
 }

@@ -4,7 +4,6 @@ import android.content.Context
 import kotlinx.coroutines.flow.StateFlow
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
-import java.util.Date
 
 interface MainContract {
     interface ViewModel {
@@ -17,8 +16,9 @@ interface MainContract {
         val userName: String = "User",
         val userId: String = "",
         val components: List<ComponentData> = emptyList(),
+        val rowComponenets: List<ComponentData> = listOf(),
         val checkedComponent: ComponentData? = null,
-        val date: String =""
+        val isLoading: Boolean = false
     )
 
     interface Intent {
@@ -35,6 +35,8 @@ interface MainContract {
 
         data class ClickAsSaved(val entity: FormEntity, val context: Context) : Intent
         data class ClickAsDraft(val entity: FormEntity, val context: Context) : Intent
+
+        data class GetAllRowItems(val rowId: String) : Intent
     }
 
 }

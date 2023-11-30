@@ -37,15 +37,16 @@ fun SampleSpinnerPreview(
     content: String,
     componentData: ComponentData,
     deleteComp: (String) -> Unit,
+    modifier: Modifier,
     isEnable: Boolean,
-    isDraft: Boolean
+    isDraft: Boolean,
 ) {
 
     var selected by remember { mutableStateOf(preselected) }
     var expanded by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier.then(
+        modifier = modifier.then(
             if (componentData.isVisible) Modifier.wrapContentSize() else Modifier.size(0.dp)
         )
     ) {
