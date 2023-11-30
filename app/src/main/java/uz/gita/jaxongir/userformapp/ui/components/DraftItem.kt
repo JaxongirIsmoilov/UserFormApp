@@ -70,7 +70,7 @@ fun DraftItem(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "now", modifier = Modifier
+                text = entity.date.toString(), modifier = Modifier
                     .align(Alignment.Bottom)
                     .padding(bottom = 2.dp),
                 style = TextStyle(

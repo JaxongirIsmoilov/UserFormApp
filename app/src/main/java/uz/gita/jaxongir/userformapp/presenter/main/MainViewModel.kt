@@ -15,6 +15,8 @@ import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import uz.gita.jaxongir.userformapp.utills.myLog
+import java.text.SimpleDateFormat
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +29,10 @@ class MainViewModel @Inject constructor(
 
 
     init {
+
+        val sdf = SimpleDateFormat("dd MMM, yyyy - HH:mm")
+        val currentDateAndTime: String = sdf.format(Date())
+
         uiState.update { it.copy(userName = pref.getUserName()) }
         viewModelScope.launch {
             uiState.update { it.copy(loading = true) }
@@ -44,6 +50,7 @@ class MainViewModel @Inject constructor(
                     }
 
                     uiState.update { it.copy(loading = false) }
+                    uiState.update { it.copy(date = currentDateAndTime) }
 
                 }.launchIn(viewModelScope)
         }

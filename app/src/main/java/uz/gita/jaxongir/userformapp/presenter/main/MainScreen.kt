@@ -353,7 +353,8 @@ fun MainScreenContent(
                                                         uiState.value.components,
                                                         isDraft = true,
                                                         isSubmitted = false,
-                                                        myPref.getId()
+                                                        myPref.getId(),
+                                                        date = uiState.value.date
                                                     ), context
                                                 )
                                             )
@@ -375,7 +376,8 @@ fun MainScreenContent(
                                                             listComponents = uiState.value.components,
                                                             isDraft = false,
                                                             isSubmitted = true,
-                                                            myPref.getId()
+                                                            myPref.getId(),
+                                                            date = uiState.value.date
                                                         ), context
                                                     )
                                                 )

@@ -267,9 +267,10 @@ fun DraftDetailsContent(
                                             }
                                         }
 
-                                        ComponentEnum.LazyRow ->{
+                                        ComponentEnum.LazyRow -> {
 
                                         }
+
                                         else -> {}
                                     }
                                 }
@@ -295,7 +296,8 @@ fun DraftDetailsContent(
                                                             uiState.value.list,
                                                             isDraft = true,
                                                             isSubmitted = false,
-                                                            myPref.getId()
+                                                            myPref.getId(),
+                                                            date = ""
                                                         ), context = context
                                                     )
                                                 )
@@ -317,7 +319,7 @@ fun DraftDetailsContent(
                                                                 listComponents = uiState.value.list,
                                                                 isDraft = false,
                                                                 isSubmitted = true,
-                                                                myPref.getId()
+                                                                myPref.getId(), date = ""
                                                             ), context
                                                         )
                                                     )

@@ -125,7 +125,7 @@ class AppRepositoryImpl @Inject constructor(
                                 )
                                     .toString().toInt(),
                                 rowId = it.data?.getOrDefault("rowId", "0").toString()
-
+                            )
                         )
                     }
                 }
@@ -327,7 +327,6 @@ class AppRepositoryImpl @Inject constructor(
                 trySend(true)
             }
             .addOnFailureListener { trySend(false) }
-
         awaitClose()
     }
 }
