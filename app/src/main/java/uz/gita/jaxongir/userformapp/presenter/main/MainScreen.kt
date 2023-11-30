@@ -43,12 +43,11 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.delay
-import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
+import uz.gita.jaxongir.userformapp.ui.components.ImageComponent
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
@@ -316,13 +315,16 @@ fun MainScreenContent(
                                             }
                                         }
                                     }
-                                    ComponentEnum.Image -> {
 
+                                    ComponentEnum.Image -> {
+                                        item {
+                                            ImageComponent(data = data)
+                                        }
                                     }
 
                                     ComponentEnum.LazyRow -> {
                                         item {
-                                            Row (modifier = Modifier.fillMaxWidth()){
+                                            Row(modifier = Modifier.fillMaxWidth()) {
 
                                             }
                                         }
