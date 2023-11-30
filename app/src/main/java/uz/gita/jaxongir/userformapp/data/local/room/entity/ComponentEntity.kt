@@ -1,6 +1,7 @@
 package uz.gita.jaxongir.userformapp.data.local.room.entity
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
@@ -38,7 +39,7 @@ data class ComponentEntity(
     val ratioY : Int,
     val customHeight : String,
     val rowId: String = "",
-    val backgroundColor: String
+    val backgroundColor: Int = Color.Transparent.toArgb()
 ) {
     fun toData(): ComponentData = ComponentData(
         id = id,
@@ -68,7 +69,7 @@ data class ComponentEntity(
         ratioY = ratioY,
         customHeight = customHeight,
         rowId = rowId,
-        backgroundColor = colorConverter(backgroundColor)
+        backgroundColor = backgroundColor
 
     )
 }

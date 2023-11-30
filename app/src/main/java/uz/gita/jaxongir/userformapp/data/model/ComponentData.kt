@@ -1,8 +1,12 @@
 package uz.gita.jaxongir.userformapp.data.model
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import com.google.gson.Gson
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
+import uz.gita.jaxongir.userformapp.data.local.room.entity.ComponentEntity
+import java.io.Serializable
 
 data class ComponentData(
     val id: String,
@@ -32,8 +36,39 @@ data class ComponentData(
     val ratioY : Int,
     val customHeight : String,
     val rowId: String = "",
-    val backgroundColor: Color = Color.Transparent
-)
+    val backgroundColor: Int = Color.Transparent.toArgb()
+) : Serializable {
+    private val converter = Gson()
+
+    fun toEntity(): ComponentEntity = ComponentEntity(
+        id = id,
+        userId = userId,
+        locId = locId,
+        idEnteredByUser = idEnteredByUser,
+        content = content,
+        textFieldType = textFieldType,
+        maxLines = maxLines,
+        maxLength = maxLength,
+        minLength = minLength,
+        maxValue = maxValue,
+        minValue = minValue,
+        isMulti = isMulti,
+        variants = variants,
+        selected = selected,
+        connectedValues = connectedValues,
+        connectedIds = connectedIds,
+        operators = operators,
+        type = type,
+        isRequired = isRequired,
+        selectedSpinnerText = selectedSpinnerText,
+        imgUri = imgUri,
+        ratioX = ratioX,
+        ratioY = ratioY,
+        customHeight = customHeight,
+        rowId = rowId,
+        backgroundColor = backgroundColor,
+    )
+}
 
 val defaultData = ComponentData(
     "1",
@@ -63,5 +98,5 @@ val defaultData = ComponentData(
     1,
     "",
     "",
-    Color.Transparent
+    Color.Transparent.toArgb()
 )

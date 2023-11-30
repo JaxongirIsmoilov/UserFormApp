@@ -315,6 +315,9 @@ fun MainScreenContent(
                                             }
                                         }
                                     }
+                                    ComponentEnum.Image -> {
+
+                                    }
 
                                     ComponentEnum.LazyRow -> {
                                         item {
