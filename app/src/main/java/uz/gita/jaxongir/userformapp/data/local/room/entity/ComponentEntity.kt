@@ -33,7 +33,6 @@ data class ComponentEntity(
     val isRequired: Boolean = false,
     val imgUri: String = "",
     val ratioX: Int,
-    val selectedSpinnerText: String,
     val enteredValue: String,
     val ratioY: Int,
     val isVisible: Boolean,
@@ -42,7 +41,8 @@ data class ComponentEntity(
     val backgroundColor: Int = Color.Transparent.toArgb(),
     val weight: String,
     val imageType: ImageTypeEnum,
-    val inValues: List<String> = listOf()
+    val inValues: List<String> = listOf(),
+    val draftId: String
 ) {
     fun toData(): ComponentData = ComponentData(
         id = id,
@@ -65,7 +65,6 @@ data class ComponentEntity(
         type = type,
         isRequired = isRequired,
         enteredValue = idEnteredByUser,
-        selectedSpinnerText = selectedSpinnerText,
         imgUri = imgUri,
         ratioX = ratioX,
         ratioY = ratioY,
@@ -75,7 +74,7 @@ data class ComponentEntity(
         weight = weight,
         imageType = imageType,
         inValues = inValues,
-        isVisible = isVisible
-
+        isVisible = isVisible,
+        draftId = draftId
     )
 }

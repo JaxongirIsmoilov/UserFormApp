@@ -39,10 +39,9 @@ data class ComponentData(
     val weight: String,
     val imageType: ImageTypeEnum = ImageTypeEnum.NONE,
     val inValues: List<String> = listOf(),
-    val selectedSpinnerText: String,
     val isVisible: Boolean,
-
-    )  {
+    val draftId: String,
+) {
     private val converter = Gson()
 
     fun toEntity(): ComponentEntity = ComponentEntity(
@@ -75,9 +74,8 @@ data class ComponentData(
         imageType = imageType,
         isVisible = isVisible,
         inValues = inValues,
-        selectedSpinnerText = selectedSpinnerText,
-        enteredValue = enteredValue
-
+        enteredValue = enteredValue,
+        draftId = draftId
     )
 }
 
@@ -110,6 +108,6 @@ val defaultData = ComponentData(
     "",
     ImageTypeEnum.NONE,
     listOf(),
-    "",
-    false
+    false,
+    ""
 )

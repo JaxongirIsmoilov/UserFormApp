@@ -19,6 +19,7 @@ import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.dao.Dao
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
+import uz.gita.jaxongir.userformapp.data.model.DraftModel
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import uz.gita.jaxongir.userformapp.utills.myLog2
 import javax.inject.Inject
@@ -26,7 +27,7 @@ import javax.inject.Inject
 class AppRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val pref: MyPref,
-    private val dao: Dao
+    private val dao: Dao,
 ) : AppRepository {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     override fun getAllRowItemsById(rowId: String): Flow<Result<List<ComponentData>>> =
@@ -110,10 +111,7 @@ class AppRepositoryImpl @Inject constructor(
                                     .toString() == "true",
                                 isRequired = it.data?.getOrDefault("required", false)
                                     .toString() == "true",
-                                selectedSpinnerText = it.data?.getOrDefault(
-                                    "selectedSpinnerText",
-                                    ""
-                                ).toString(),
+
                                 imgUri = it.data?.getOrDefault("imgUri", "").toString(),
                                 ratioX = Integer.parseInt(
                                     it.data?.getOrDefault("ratioX", "0").toString()
@@ -129,9 +127,13 @@ class AppRepositoryImpl @Inject constructor(
                                 )
                                     .toString().toInt(),
                                 rowId = it.data?.getOrDefault("rowId", "0").toString(),
-                                weight = it.data?.getOrDefault("weight", "").toString()
+                                weight = it.data?.getOrDefault("weight", "").toString(),
+                                draftId = it.data?.getOrDefault(
+                                    "draftId",
+                                    ""
+                                ).toString(),
                             )
-                            )
+                        )
                     }
                     trySend(Result.success(componentList))
                 }
@@ -140,34 +142,110 @@ class AppRepositoryImpl @Inject constructor(
                 }
         }
 
-    override fun getDraftedItems(userID: String): Flow<Result<List<FormEntity>>> = flow {
-        dao.getAllDrafts(isDraft = true, userID).onEach {
-            myLog2("Drafted items get $it")
-            emit(Result.success(it))
-        }.collect()
+    override fun getDraftedItems(draftId: String, userID: String): Flow<Result<List<DraftModel>>> = callbackFlow {
+        firestore.collection("Drafts")
+            .whereEqualTo("draftId", draftId)
+            .get()
+            .addOnSuccessListener {
+                val list = arrayListOf<DraftModel>()
+
+                it.documents.forEach {
+                    list.add(
+                        DraftModel(
+                            id = it.data?.getOrDefault("draftId", "").toString(),
+                            componentId = it.data?.getOrDefault("componentId", "").toString(),
+                            value = it.data?.getOrDefault("value", "").toString(),
+                            locId = it.data?.getOrDefault("locId", "0").toString().toLong(),
+                            name = it.data?.getOrDefault("name", "").toString()
+                        )
+                    )
+                }
+                trySend(Result.success(list))
+            }
+            .addOnFailureListener {
+                trySend(Result.failure(it))
+            }
+
+        awaitClose()
+    }
+
+    override fun getSavedComponents(draftId: String, userID: String): Flow<Result<List<DraftModel>>> = callbackFlow {
+        firestore.collection("Submits")
+            .whereEqualTo("draftId", draftId)
+            .get()
+            .addOnSuccessListener {
+                val list = arrayListOf<DraftModel>()
+
+                it.documents.forEach {
+                    list.add(
+                        DraftModel(
+                            id = it.data?.getOrDefault("draftId", "").toString(),
+                            componentId = it.data?.getOrDefault("componentId", "").toString(),
+                            value = it.data?.getOrDefault("value", "").toString(),
+                            locId = it.data?.getOrDefault("locId", "0").toString().toLong(),
+                            name = it.data?.getOrDefault("name", "").toString()
+                        )
+                    )
+                }
+                trySend(Result.success(list))
+            }
+            .addOnFailureListener {
+                trySend(Result.failure(it))
+            }
+
+        awaitClose()
 
     }
 
-    override fun getSavedComponents(userID: String): Flow<Result<List<FormEntity>>> = flow {
-        myLog2("success saved ")
-        dao.getAllSubmitteds(isSubmitted = true, userID).onEach {
-            myLog2("Submitted items get $it")
-            emit(Result.success(it))
-        }.collect()
-
+    override fun addAsDraft(
+        componentData: ComponentData,
+        value: String,
+        name: String,
+        draftId: String,
+    ): Flow<Result<String>> = callbackFlow {
+        firestore.collection("Drafts")
+            .add(
+                DraftModel(
+                    id = draftId,
+                    componentId = componentData.id,
+                    value = value,
+                    locId = componentData.locId,
+                    name = name
+                )
+            )
+            .addOnSuccessListener {
+                trySend(Result.success("Success"))
+            }
+            .addOnFailureListener {
+                trySend(Result.failure(it))
+            }
+        awaitClose()
     }
 
-    override  fun addAsDraft(entity: FormEntity): Flow<Result<String>> = flow {
-        dao.insertDatas(entity)
-        myLog2("add drafts")
-        emit(Result.success("Success as draft"))
+    override fun addAsSaved(
+        componentData: ComponentData,
+        value: String,
+        name: String,
+        draftId: String,
+    ): Flow<Result<String>> = callbackFlow {
+        firestore.collection("Submits")
+            .add(
+                DraftModel(
+                    id = draftId,
+                    componentId = componentData.id,
+                    value = value,
+                    locId = componentData.locId,
+                    name = name
+                )
+            )
+            .addOnSuccessListener {
+                trySend(Result.success("Success"))
+            }
+            .addOnFailureListener {
+                trySend(Result.failure(it))
+            }
+        awaitClose()
     }
-
-    override  fun addAsSaved(entity: FormEntity): Flow<Result<String>> = flow {
-            dao.insertDatas(entity)
-            myLog2("add saveds")
-            emit(Result.success("Success as saved"))
-        }
 
 
     override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
@@ -273,10 +351,6 @@ class AppRepositoryImpl @Inject constructor(
                                     .toString() == "true",
                                 isRequired = it.data?.getOrDefault("required", false)
                                     .toString() == "true",
-                                selectedSpinnerText = it.data?.getOrDefault(
-                                    "selectedSpinnerText",
-                                    ""
-                                ).toString(),
                                 imgUri = it.data?.getOrDefault("imgUri", "").toString(),
                                 ratioX = Integer.parseInt(
                                     it.data?.getOrDefault("ratioX", "0").toString()
@@ -292,7 +366,11 @@ class AppRepositoryImpl @Inject constructor(
                                 )
                                     .toString().toInt(),
                                 rowId = it.data?.getOrDefault("rowId", "0").toString(),
-                                weight = it.data?.getOrDefault("weight", "").toString()
+                                weight = it.data?.getOrDefault("weight", "").toString(),
+                                draftId = it.data?.getOrDefault(
+                                    "draftId",
+                                    ""
+                                ).toString(),
                             )
                         )
                     }
