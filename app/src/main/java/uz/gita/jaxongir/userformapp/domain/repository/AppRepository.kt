@@ -7,7 +7,6 @@ import uz.gita.jaxongir.userformapp.data.model.DraftModel
 
 interface AppRepository {
 
-    fun getAllRowItemsById(rowId: String): Flow<Result<List<ComponentData>>>
     fun getDraftedItems(draftId: String, userID: String): Flow<Result<List<DraftModel>>>
     fun getSavedComponents(draftId: String, userID: String): Flow<Result<List<DraftModel>>>
     fun addAsDraft(componentData: ComponentData, value: String, name: String, draftId: String): Flow<Result<String>>

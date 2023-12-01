@@ -38,7 +38,6 @@ class SubmitedScreen : AndroidScreen() {
         SubmitedScreenContent(
             uiState = vm.uiState.collectAsState(),
             onEventDispatcher = vm::onEventDispatcher
-
         )
     }
 }

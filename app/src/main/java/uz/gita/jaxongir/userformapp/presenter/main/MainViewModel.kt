@@ -20,8 +20,6 @@ import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import uz.gita.jaxongir.userformapp.utills.myLog
-import java.text.SimpleDateFormat
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,9 +33,7 @@ class MainViewModel @Inject constructor(
     override val uiState = MutableStateFlow(MainContract.UIState())
 
 
-
     init {
-
 
 
         uiState.update { it.copy(userName = pref.getUserName()) }
@@ -66,12 +62,16 @@ class MainViewModel @Inject constructor(
         when (intent) {
             is MainContract.Intent.ClickAsDraft -> {
                 viewModelScope.launch {
-                    appRepository.addAsDraft(intent.entity).onEach {
+                    appRepository.addAsDraft(
+                        intent.componentData,
+                        intent.value,
+                        intent.name,
+                        intent.draftId
+                    ).onEach {
 
                     }.launchIn(viewModelScope)
                     Toast.makeText(intent.context, "Saved as Draft", Toast.LENGTH_SHORT).show()
                     mainDirection.back()
-
 
 
                 }
@@ -81,7 +81,12 @@ class MainViewModel @Inject constructor(
             is MainContract.Intent.ClickAsSaved -> {
                 viewModelScope.launch {
                     Toast.makeText(intent.context, "Saved as Submitted", Toast.LENGTH_SHORT).show()
-                    appRepository.addAsSaved(intent.entity).onEach {
+                    appRepository.addAsSaved(
+                        intent.componentData,
+                        intent.value,
+                        intent.name,
+                        intent.draftId
+                    ).onEach {
 
                     }.launchIn(viewModelScope)
                     mainDirection.back()

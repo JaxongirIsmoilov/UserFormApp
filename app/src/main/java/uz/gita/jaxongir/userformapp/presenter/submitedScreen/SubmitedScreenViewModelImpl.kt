@@ -25,7 +25,7 @@ class SubmitedScreenViewModelImpl @Inject constructor(
         MutableStateFlow(SubmitedScreenContract.UIState())
 
     init {
-        appRepository.getSavedComponents(myPref.getId()).onEach {
+        appRepository.getSavedComponents().onEach {
             it.onSuccess { list ->
                 myLog2("success get saved list:$list")
                 uiState.update {
