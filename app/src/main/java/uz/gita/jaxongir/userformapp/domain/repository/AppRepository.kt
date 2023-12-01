@@ -15,5 +15,7 @@ interface AppRepository {
     fun getComponentsByUserId(userID: String): Flow<Result<List<ComponentData>>>
     fun updateComponent(componentData: ComponentData): Flow<Result<Unit>>
     fun hasUserInFireBase(userID: String): Flow<Boolean>
+    fun getSavedComponentsById(componentId: String) : Flow<Result<List<DraftModel>>>
+    fun getDraftedComponentsById(componentId : String) : Flow<Result<List<DraftModel>>>
 
 }

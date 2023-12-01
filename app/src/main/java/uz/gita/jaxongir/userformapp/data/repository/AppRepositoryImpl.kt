@@ -10,18 +10,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.dao.Dao
-import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.data.model.DraftModel
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
-import uz.gita.jaxongir.userformapp.utills.myLog2
 import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
@@ -31,34 +26,38 @@ class AppRepositoryImpl @Inject constructor(
 ) : AppRepository {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    override fun getDraftedItems(draftId: String, userID: String): Flow<Result<List<DraftModel>>> = callbackFlow {
-        firestore.collection("Drafts")
-            .whereEqualTo("draftId", draftId)
-            .get()
-            .addOnSuccessListener {
-                val list = arrayListOf<DraftModel>()
+    override fun getDraftedItems(draftId: String, userID: String): Flow<Result<List<DraftModel>>> =
+        callbackFlow {
+            firestore.collection("Drafts")
+                .whereEqualTo("draftId", draftId)
+                .get()
+                .addOnSuccessListener {
+                    val list = arrayListOf<DraftModel>()
 
-                it.documents.forEach {
-                    list.add(
-                        DraftModel(
-                            id = it.data?.getOrDefault("draftId", "").toString(),
-                            componentId = it.data?.getOrDefault("componentId", "").toString(),
-                            value = it.data?.getOrDefault("value", "").toString(),
-                            locId = it.data?.getOrDefault("locId", "0").toString().toLong(),
-                            name = it.data?.getOrDefault("name", "").toString()
+                    it.documents.forEach {
+                        list.add(
+                            DraftModel(
+                                id = it.data?.getOrDefault("draftId", "").toString(),
+                                componentId = it.data?.getOrDefault("componentId", "").toString(),
+                                value = it.data?.getOrDefault("value", "").toString(),
+                                locId = it.data?.getOrDefault("locId", "0").toString().toLong(),
+                                name = it.data?.getOrDefault("name", "").toString()
+                            )
                         )
-                    )
+                    }
+                    trySend(Result.success(list))
                 }
-                trySend(Result.success(list))
-            }
-            .addOnFailureListener {
-                trySend(Result.failure(it))
-            }
+                .addOnFailureListener {
+                    trySend(Result.failure(it))
+                }
 
-        awaitClose()
-    }
+            awaitClose()
+        }
 
-    override fun getSavedComponents(draftId: String, userID: String): Flow<Result<List<DraftModel>>> = callbackFlow {
+    override fun getSavedComponents(
+        draftId: String,
+        userID: String
+    ): Flow<Result<List<DraftModel>>> = callbackFlow {
         firestore.collection("Submits")
             .whereEqualTo("draftId", draftId)
             .get()
@@ -300,4 +299,58 @@ class AppRepositoryImpl @Inject constructor(
 
         awaitClose()
     }
+
+    override fun getSavedComponentsById(componentId: String): Flow<Result<List<DraftModel>>> =
+        callbackFlow {
+            val resultData = arrayListOf<DraftModel>()
+            firestore.collection("Submits")
+                .whereEqualTo("componentId", componentId)
+                .get()
+                .addOnSuccessListener {
+                    it.documents.forEach {
+                        resultData.add(
+                            DraftModel(
+                                id = it.id,
+                                componentId = componentId,
+                                value = it.data?.getOrDefault("value", "").toString(),
+                                locId = it.data?.getOrDefault("data", "").toString().toLong(),
+                                name = it.data?.getOrDefault("name", "").toString()
+                            )
+                        )
+                        trySend(
+                            Result.success(resultData)
+                        )
+                    }
+                }
+                .addOnFailureListener {
+                    trySend(Result.failure(it))
+                }
+        }
+
+    override fun getDraftedComponentsById(componentId: String): Flow<Result<List<DraftModel>>> =
+        callbackFlow {
+            val resultData = arrayListOf<DraftModel>()
+            firestore.collection("Drafts")
+                .whereEqualTo("componentId", componentId)
+                .get()
+                .addOnSuccessListener {
+                    it.documents.forEach {
+                        resultData.add(
+                            DraftModel(
+                                id = it.id,
+                                componentId = componentId,
+                                value = it.data?.getOrDefault("value", "").toString(),
+                                locId = it.data?.getOrDefault("data", "").toString().toLong(),
+                                name = it.data?.getOrDefault("name", "").toString()
+                            )
+                        )
+                        trySend(
+                            Result.success(resultData)
+                        )
+                    }
+                }
+                .addOnFailureListener {
+                    trySend(Result.failure(it))
+                }
+        }
 }
