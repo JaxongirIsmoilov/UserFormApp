@@ -144,6 +144,7 @@ fun MainScreenContent(
                                 .wrapContentHeight()
                                 .padding(top = 10.dp)
                         ) {
+
                             uiState.value.components.forEach { data ->
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
@@ -814,70 +815,72 @@ fun MainScreenContent(
                                             }
                                         }
 
-                                        item {
-                                            Row(
-                                                modifier = Modifier
-                                                    .padding(top = 10.dp)
-                                                    .fillMaxWidth()
-                                                    .height(80.dp)
-                                                    .align(Alignment.CenterHorizontally)
-                                            ) {
-                                                Spacer(modifier = Modifier.weight(1f))
-                                                Button(
-                                                    colors = ButtonDefaults.buttonColors(
-                                                        containerColor = Color(
-                                                            0xFFFA1466
-                                                        )
-                                                    ), onClick = {
-                                                        onEventDispatchers.invoke(
-                                                            MainContract.Intent.ClickAsDraft(
-                                                                FormEntity(
-                                                                    id = 0,
-                                                                    uiState.value.components,
-                                                                    isDraft = true,
-                                                                    isSubmitted = false,
-                                                                    myPref.getId(),
-                                                                    date= currentDateAndTime                                                               ), context
-                                                            )
-                                                        )
-                                                    }) {
-                                                    Text(text = "Save As Draft")
-                                                }
-                                                Spacer(modifier = Modifier.weight(1f))
-                                                Button(
-                                                    colors = ButtonDefaults.buttonColors(
-                                                        containerColor = Color(
-                                                            0xFFFA1466
-                                                        )
-                                                    ), onClick = {
-                                                        if (!shouldShowError) {
-                                                            onEventDispatchers.invoke(
-                                                                MainContract.Intent.ClickAsSaved(
-                                                                    FormEntity(
-                                                                        id = 0,
-                                                                        listComponents = uiState.value.components,
-                                                                        isDraft = false,
-                                                                        isSubmitted = true,
-                                                                        myPref.getId(),
-                                                                        date=currentDateAndTime
-                                                                    ), context
-                                                                )
-                                                            )
-                                                        } else {
-                                                            Toast.makeText(
-                                                                context,
-                                                                "Check required fields",
-                                                                Toast.LENGTH_SHORT
-                                                            ).show()
-                                                        }
-
-                                                    }) {
-                                                    Text(text = "Save as Saved")
-                                                }
-                                                Spacer(modifier = Modifier.weight(1f))
-                                            }
-                                        }
                                     }
+                                }
+                            }
+
+
+                            item {
+                                Row(
+                                    modifier = Modifier
+                                        .padding(top = 10.dp)
+                                        .fillMaxWidth()
+                                        .height(80.dp)
+                                        .align(Alignment.CenterHorizontally)
+                                ) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Button(
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(
+                                                0xFFFA1466
+                                            )
+                                        ), onClick = {
+                                            onEventDispatchers.invoke(
+                                                MainContract.Intent.ClickAsDraft(
+                                                    FormEntity(
+                                                        id = 0,
+                                                        uiState.value.components,
+                                                        isDraft = true,
+                                                        isSubmitted = false,
+                                                        myPref.getId(),
+                                                        date= currentDateAndTime                                                               ), context
+                                                )
+                                            )
+                                        }) {
+                                        Text(text = "Save As Draft")
+                                    }
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Button(
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(
+                                                0xFFFA1466
+                                            )
+                                        ), onClick = {
+                                            if (!shouldShowError) {
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.ClickAsSaved(
+                                                        FormEntity(
+                                                            id = 0,
+                                                            listComponents = uiState.value.components,
+                                                            isDraft = false,
+                                                            isSubmitted = true,
+                                                            myPref.getId(),
+                                                            date=currentDateAndTime
+                                                        ), context
+                                                    )
+                                                )
+                                            } else {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Check required fields",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+
+                                        }) {
+                                        Text(text = "Save as Saved")
+                                    }
+                                    Spacer(modifier = Modifier.weight(1f))
                                 }
                             }
                         }
