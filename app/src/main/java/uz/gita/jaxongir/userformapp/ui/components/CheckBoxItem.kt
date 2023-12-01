@@ -23,9 +23,13 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun CheckBoxItem(
     title: String,
-    onEdit:() -> Unit
-) {
-    var checkedState = remember { mutableStateOf(false) }
+    onEdit: () -> Unit,
+    isEnable: Boolean,
+    state: Boolean,
+    checkedStates: (Boolean) -> Unit,
+
+    ) {
+    var checkedState = remember { mutableStateOf(state) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,9 +43,16 @@ fun CheckBoxItem(
             .padding(horizontal = 16.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        checkedStates.invoke(checkedState.value)
         Checkbox(
             checked = checkedState.value,
-            onCheckedChange = { checkedState.value = it },
+            onCheckedChange = {
+                if (isEnable) {
+                    checkedState.value = it
+
+                }
+
+            },
             colors = CheckboxDefaults.colors(
                 checkedColor = Color(0xFFFF7686),
                 uncheckedColor = Color(0x33c4c4c4),

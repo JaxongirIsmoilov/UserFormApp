@@ -1,8 +1,8 @@
 package uz.gita.jaxongir.userformapp.presenter.main
 
+import android.content.Context
 import kotlinx.coroutines.flow.StateFlow
-import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
-import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
 interface MainContract {
@@ -16,7 +16,9 @@ interface MainContract {
         val userName: String = "User",
         val userId: String = "",
         val components: List<ComponentData> = emptyList(),
-        val checkedComponent: ComponentData? = null
+        val rowComponenets: List<ComponentData> = listOf(),
+        val checkedComponent: ComponentData? = null,
+        val isLoading: Boolean = false
     )
 
     interface Intent {
@@ -25,9 +27,16 @@ interface MainContract {
 
         data class CheckedComponent(val componentData: ComponentData) : Intent
 
-        data class UpdateComponent(val componentData: ComponentData): Intent
+        data class CheckRowComponent(val componentData: ComponentData) : Intent
 
-        object Load: Intent
+        data class UpdateComponent(val componentData: ComponentData) : Intent
+
+        object Load : Intent
+
+        data class ClickAsSaved(val entity: FormEntity, val context: Context) : Intent
+        data class ClickAsDraft(val entity: FormEntity, val context: Context) : Intent
+
+        data class GetAllRowItems(val rowId: String) : Intent
     }
 
 }

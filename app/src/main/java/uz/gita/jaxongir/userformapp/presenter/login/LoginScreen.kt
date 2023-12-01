@@ -58,7 +58,6 @@ class LoginScreen : AndroidScreen() {
             onEventDispatcher = vm::onEventDispatcher,
             uiState = vm.uiState.collectAsState()
         )
-
     }
 }
 

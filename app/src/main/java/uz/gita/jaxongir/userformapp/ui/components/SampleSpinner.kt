@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
@@ -16,7 +15,6 @@ import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -28,9 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
 @Composable
@@ -41,13 +37,16 @@ fun SampleSpinnerPreview(
     content: String,
     componentData: ComponentData,
     deleteComp: (String) -> Unit,
+    modifier: Modifier,
+    isEnable: Boolean,
+    isDraft: Boolean,
 ) {
 
     var selected by remember { mutableStateOf(preselected) }
     var expanded by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier.then(
+        modifier = modifier.then(
             if (componentData.isVisible) Modifier.wrapContentSize() else Modifier.size(0.dp)
         )
     ) {
@@ -75,9 +74,12 @@ fun SampleSpinnerPreview(
                     DropdownMenuItem(
                         modifier = Modifier.wrapContentWidth(),
                         onClick = {
-                            selected = entry
-                            expanded = false
-                            onSelectionChanged(entry)
+                            if (isEnable) {
+                                selected = entry
+                                expanded = false
+                                onSelectionChanged(entry)
+                            }
+
                         },
                         text = {
                             Text(
@@ -86,10 +88,13 @@ fun SampleSpinnerPreview(
                                     .wrapContentWidth()
                                     .align(Alignment.Start)
                                     .clickable {
-                                        selected = entry
-                                        expanded = !expanded
-                                        onSelectionChanged(entry)
-                                        deleteComp(entry)
+                                        if (isEnable) {
+                                            selected = entry
+                                            expanded = !expanded
+                                            onSelectionChanged(entry)
+                                            deleteComp(entry)
+                                        }
+
                                     }
                             )
                         }
