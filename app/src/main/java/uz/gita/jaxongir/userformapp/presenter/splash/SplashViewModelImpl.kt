@@ -22,7 +22,7 @@ class SplashViewModelImpl @Inject constructor(
         viewModelScope.launch {
             repository.hasUserInFireBase(pref.getId()).onEach {
                 if (pref.isLogin()) {
-                    delay(1500L)
+                    delay(1000L)
                     direction.moveToEntry()
                 } else {
                     delay(1500L)
