@@ -599,10 +599,6 @@ fun MainScreenContent(
                                                                                 10.dp
                                                                             )
                                                                         )
-                                                                        Log.d(
-                                                                            "DDD",
-                                                                            "MainScreenContent: ${data.isRequired}"
-                                                                        )
                                                                         if (data.isRequired) {
                                                                             if (data.enteredValue == "") {
                                                                                 shouldShowError =
