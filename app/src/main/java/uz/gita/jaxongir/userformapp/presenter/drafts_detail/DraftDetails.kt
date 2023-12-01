@@ -62,14 +62,11 @@ import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
-import uz.gita.jaxongir.userformapp.presenter.main.MainContract
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
-import uz.gita.jaxongir.userformapp.ui.components.ImageComponent
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
 import uz.gita.jaxongir.userformapp.utills.myLog
-import uz.gita.jaxongir.userformapp.utills.myLog2
 import javax.inject.Inject
 
 class DraftDetails @Inject constructor(
@@ -200,7 +197,9 @@ fun DraftDetailsContent(
                                                         onSaveStates = {
                                                             onEventDispatchers.invoke(
                                                                 DraftScreenContract.Intent.UpdateComponent(
-                                                                    componentData = data.copy(selected = it)
+                                                                    componentData = data.copy(
+                                                                        selected = it
+                                                                    )
                                                                 )
                                                             )
                                                         },
@@ -397,7 +396,9 @@ fun DraftDetailsContent(
                                                                 modifier = Modifier
                                                                     .then(
                                                                         if (data.ratioX != 0) {
-                                                                            Modifier.aspectRatio(data.ratioX.toFloat() / data.ratioY.toFloat())
+                                                                            Modifier.aspectRatio(
+                                                                                data.ratioX.toFloat() / data.ratioY.toFloat()
+                                                                            )
                                                                         } else if (data.customHeight != "") {
                                                                             Modifier.height(height = height)
                                                                         } else {
@@ -448,7 +449,9 @@ fun DraftDetailsContent(
                                                                 modifier = Modifier
                                                                     .then(
                                                                         if (data.ratioX != 0) {
-                                                                            Modifier.aspectRatio(data.ratioX.toFloat() / data.ratioY.toFloat())
+                                                                            Modifier.aspectRatio(
+                                                                                data.ratioX.toFloat() / data.ratioY.toFloat()
+                                                                            )
                                                                         } else if (data.customHeight != "") {
                                                                             Modifier.height(height = height)
                                                                         } else {
@@ -483,7 +486,11 @@ fun DraftDetailsContent(
                                                         }.forEach {
                                                             when (it.type) {
                                                                 ComponentEnum.Selector -> {
-                                                                    Box(modifier = Modifier.weight(it.weight.toFloat())) {
+                                                                    Box(
+                                                                        modifier = Modifier.weight(
+                                                                            it.weight.toFloat()
+                                                                        )
+                                                                    ) {
                                                                         onEventDispatchers.invoke(
                                                                             DraftScreenContract.Intent.CheckedComponent(
                                                                                 data
@@ -497,14 +504,18 @@ fun DraftDetailsContent(
                                                                                 onSaveStates = {
                                                                                     onEventDispatchers.invoke(
                                                                                         DraftScreenContract.Intent.UpdateComponent(
-                                                                                            componentData = data.copy(selected = it)
+                                                                                            componentData = data.copy(
+                                                                                                selected = it
+                                                                                            )
                                                                                         )
                                                                                     )
                                                                                 },
                                                                                 deleteComp = {
                                                                                     onEventDispatchers.invoke(
                                                                                         DraftScreenContract.Intent.UpdateComponent(
-                                                                                            data.copy(enteredValue = "")
+                                                                                            data.copy(
+                                                                                                enteredValue = ""
+                                                                                            )
                                                                                         )
                                                                                     )
                                                                                     if (data.operators.isNotEmpty()) {
@@ -524,7 +535,11 @@ fun DraftDetailsContent(
                                                                 }
 
                                                                 ComponentEnum.SampleText -> {
-                                                                    Box(modifier = Modifier.weight(it.weight.toFloat())) {
+                                                                    Box(
+                                                                        modifier = Modifier.weight(
+                                                                            it.weight.toFloat()
+                                                                        )
+                                                                    ) {
                                                                         if (data.operators.isNotEmpty()) {
                                                                             onEventDispatchers.invoke(
                                                                                 DraftScreenContract.Intent.CheckedComponent(
@@ -537,18 +552,32 @@ fun DraftDetailsContent(
                                                                                 .then(
                                                                                     if (data.isVisible) Modifier
                                                                                         .fillMaxWidth()
-                                                                                        .clip(RoundedCornerShape(12.dp))
+                                                                                        .clip(
+                                                                                            RoundedCornerShape(
+                                                                                                12.dp
+                                                                                            )
+                                                                                        )
                                                                                         .border(
                                                                                             1.dp,
-                                                                                            Color(0xFFFF7686),
-                                                                                            RoundedCornerShape(12.dp)
+                                                                                            Color(
+                                                                                                0xFFFF7686
+                                                                                            ),
+                                                                                            RoundedCornerShape(
+                                                                                                12.dp
+                                                                                            )
                                                                                         )
-                                                                                        .background(Color(0x33C4C4C4))
+                                                                                        .background(
+                                                                                            Color(
+                                                                                                0x33C4C4C4
+                                                                                            )
+                                                                                        )
                                                                                         .padding(
                                                                                             horizontal = 16.dp,
                                                                                             vertical = 5.dp
                                                                                         )
-                                                                                    else Modifier.size(0.dp)
+                                                                                    else Modifier.size(
+                                                                                        0.dp
+                                                                                    )
                                                                                 ),
                                                                             verticalAlignment = Alignment.CenterVertically
                                                                         ) {
@@ -559,19 +588,27 @@ fun DraftDetailsContent(
                                                                                     .padding(bottom = 10.dp)
                                                                             )
                                                                         }
-                                                                        Spacer(modifier = Modifier.height(16.dp))
+                                                                        Spacer(
+                                                                            modifier = Modifier.height(
+                                                                                16.dp
+                                                                            )
+                                                                        )
                                                                     }
                                                                 }
 
                                                                 ComponentEnum.Spinner -> {
                                                                     SampleSpinnerPreview(
-                                                                        list = data.variants ?: listOf(),
-                                                                        preselected = data.variants[0] ?: "",
+                                                                        list = data.variants
+                                                                            ?: listOf(),
+                                                                        preselected = data.variants[0]
+                                                                            ?: "",
 
                                                                         onSelectionChanged = {
                                                                             onEventDispatchers.invoke(
                                                                                 DraftScreenContract.Intent.UpdateComponent(
-                                                                                    data.copy(selectedSpinnerText = it)
+                                                                                    data.copy(
+                                                                                        selectedSpinnerText = it
+                                                                                    )
                                                                                 )
                                                                             )
                                                                             if (data.operators.isNotEmpty()) {
@@ -667,7 +704,9 @@ fun DraftDetailsContent(
                                                                     ) {
                                                                         onEventDispatchers.invoke(
                                                                             DraftScreenContract.Intent.UpdateComponent(
-                                                                                data.copy(enteredValue = "asdfdsa")
+                                                                                data.copy(
+                                                                                    enteredValue = "asdfdsa"
+                                                                                )
                                                                             )
                                                                         )
                                                                         if (data.operators.isNotEmpty()) {
@@ -774,7 +813,9 @@ fun DraftDetailsContent(
                                                                             )
 
                                                                             AsyncImage(
-                                                                                model = Uri.parse(uri),
+                                                                                model = Uri.parse(
+                                                                                    uri
+                                                                                ),
                                                                                 contentDescription = null,
                                                                                 modifier = Modifier
                                                                                     .then(
@@ -827,7 +868,8 @@ fun DraftDetailsContent(
                                                                         uiState.value.list,
                                                                         isDraft = true,
                                                                         isSubmitted = false,
-                                                                        myPref.getId()
+                                                                        myPref.getId(),
+                                                                        date = ""
                                                                     ), context
                                                                 )
                                                             )
@@ -849,7 +891,8 @@ fun DraftDetailsContent(
                                                                             listComponents = uiState.value.list,
                                                                             isDraft = false,
                                                                             isSubmitted = true,
-                                                                            myPref.getId()
+                                                                            myPref.getId(),
+                                                                            date = ""
                                                                         ), context
                                                                     )
                                                                 )
@@ -893,7 +936,8 @@ fun DraftDetailsContent(
                                                             uiState.value.list,
                                                             isDraft = true,
                                                             isSubmitted = false,
-                                                            myPref.getId()
+                                                            myPref.getId(),
+                                                            date = ""
                                                         ), context = context
                                                     )
                                                 )
@@ -915,7 +959,8 @@ fun DraftDetailsContent(
                                                                 listComponents = uiState.value.list,
                                                                 isDraft = false,
                                                                 isSubmitted = true,
-                                                                myPref.getId()
+                                                                myPref.getId(),
+                                                                date = ""
                                                             ), context
                                                         )
                                                     )

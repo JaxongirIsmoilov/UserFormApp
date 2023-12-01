@@ -37,8 +37,7 @@ class MainViewModel @Inject constructor(
 
     init {
 
-        val sdf = SimpleDateFormat("dd MMM, yyyy - HH:mm")
-        val currentDateAndTime: String = sdf.format(Date())
+
 
         uiState.update { it.copy(userName = pref.getUserName()) }
         viewModelScope.launch {
@@ -57,7 +56,6 @@ class MainViewModel @Inject constructor(
                     }
 
                     uiState.update { it.copy(loading = false) }
-                    uiState.update { it.copy(date = currentDateAndTime) }
 
                 }.launchIn(viewModelScope)
         }

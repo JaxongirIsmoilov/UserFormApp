@@ -42,6 +42,7 @@ fun DraftItem(
             }
             .padding(start = 16.dp, top = 16.dp, end = 16.dp),
     ) {
+
         Row(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
@@ -55,6 +56,7 @@ fun DraftItem(
                     fontWeight = FontWeight.Bold
                 )
             )
+
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "List size:${entity.listComponents.size}", modifier = Modifier
@@ -70,7 +72,7 @@ fun DraftItem(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = entity.date.toString(), modifier = Modifier
+                text = entity.date, modifier = Modifier
                     .align(Alignment.Bottom)
                     .padding(bottom = 2.dp),
                 style = TextStyle(
