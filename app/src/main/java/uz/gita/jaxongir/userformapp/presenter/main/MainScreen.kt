@@ -477,132 +477,323 @@ fun MainScreenContent(
                                                         when (it.type) {
                                                             ComponentEnum.Selector -> {
                                                                 Box(modifier = Modifier.weight(it.weight.toFloat())) {
-
+                                                                    onEventDispatchers.invoke(
+                                                                        MainContract.Intent.CheckedComponent(
+                                                                            data
+                                                                        )
+                                                                    )
+                                                                    Column {
+                                                                        SelectorItem(
+                                                                            question = data.content,
+                                                                            list = data.variants,
+                                                                            componentData = data,
+                                                                            onSaveStates = {
+                                                                                onEventDispatchers.invoke(
+                                                                                    MainContract.Intent.UpdateComponent(
+                                                                                        componentData = data.copy(selected = it)
+                                                                                    )
+                                                                                )
+                                                                            },
+                                                                            deleteComp = {
+                                                                                onEventDispatchers.invoke(
+                                                                                    MainContract.Intent.UpdateComponent(
+                                                                                        data.copy(enteredValue = "")
+                                                                                    )
+                                                                                )
+                                                                                if (data.operators.isNotEmpty()) {
+                                                                                    onEventDispatchers.invoke(
+                                                                                        MainContract.Intent.CheckedComponent(
+                                                                                            data
+                                                                                        )
+                                                                                    )
+                                                                                }
+                                                                            },
+                                                                            isEnable = true,
+                                                                            modifier = Modifier.fillMaxWidth(),
+                                                                            isInDraft = false
+                                                                        )
+                                                                    }
                                                                 }
                                                             }
 
                                                             ComponentEnum.SampleText -> {
+                                                                Box(modifier = Modifier.weight(it.weight.toFloat())) {
+                                                                    if (data.operators.isNotEmpty()) {
+                                                                        onEventDispatchers.invoke(
+                                                                            MainContract.Intent.CheckedComponent(
+                                                                                data
+                                                                            )
+                                                                        )
+                                                                    }
+                                                                    Row(
+                                                                        modifier = Modifier
+                                                                            .then(
+                                                                                if (data.isVisible) Modifier
+                                                                                    .fillMaxWidth()
+                                                                                    .clip(RoundedCornerShape(12.dp))
+                                                                                    .border(
+                                                                                        1.dp,
+                                                                                        Color(0xFFFF7686),
+                                                                                        RoundedCornerShape(12.dp)
+                                                                                    )
+                                                                                    .background(Color(0x33C4C4C4))
+                                                                                    .padding(
+                                                                                        horizontal = 16.dp,
+                                                                                        vertical = 5.dp
+                                                                                    )
+                                                                                else Modifier.size(0.dp)
+                                                                            ),
+                                                                        verticalAlignment = Alignment.CenterVertically
+                                                                    ) {
+                                                                        Text(
+                                                                            text = data.content,
+                                                                            fontSize = 22.sp,
+                                                                            modifier = Modifier
+                                                                                .padding(bottom = 10.dp)
+                                                                        )
+                                                                    }
+                                                                    Spacer(modifier = Modifier.height(16.dp))
+                                                                }
                                                             }
 
                                                             ComponentEnum.Spinner -> {
+                                                                SampleSpinnerPreview(
+                                                                    list = data.variants ?: listOf(),
+                                                                    preselected = data.variants[0] ?: "",
 
+                                                                    onSelectionChanged = {
+                                                                        onEventDispatchers.invoke(
+                                                                            MainContract.Intent.UpdateComponent(
+                                                                                data.copy(selectedSpinnerText = it)
+                                                                            )
+                                                                        )
+                                                                        if (data.operators.isNotEmpty()) {
+                                                                            myLog("spinner compo")
+                                                                            onEventDispatchers.invoke(
+                                                                                MainContract.Intent.CheckedComponent(
+                                                                                    data
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                    },
+                                                                    content = data.content,
+                                                                    componentData = data,
+                                                                    {},
+                                                                    modifier = Modifier.fillMaxWidth(),
+                                                                    true,
+                                                                    isDraft = false
+                                                                )
                                                             }
 
                                                             ComponentEnum.Input -> {
+                                                                onEventDispatchers.invoke(
+                                                                    MainContract.Intent.CheckedComponent(
+                                                                        data
+                                                                    )
+                                                                )
 
+                                                                if (data.rowId == "") {
+                                                                    Column(modifier = Modifier.fillMaxWidth()) {
+                                                                        Spacer(
+                                                                            modifier = Modifier.size(
+                                                                                10.dp
+                                                                            )
+                                                                        )
+                                                                        Log.d(
+                                                                            "DDD",
+                                                                            "MainScreenContent: ${data.isRequired}"
+                                                                        )
+                                                                        if (data.isRequired) {
+                                                                            if (data.enteredValue == "") {
+                                                                                shouldShowError =
+                                                                                    true
+                                                                            }
+                                                                            Text(
+                                                                                text = "This Field is required",
+                                                                                fontWeight = FontWeight(
+                                                                                    600
+                                                                                ),
+                                                                                color = Color(
+                                                                                    0xFFff7686
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                        Spacer(
+                                                                            modifier = Modifier.size(
+                                                                                10.dp
+                                                                            )
+                                                                        )
+                                                                        InputField(
+                                                                            onEdit = {
+                                                                                onEventDispatchers.invoke(
+                                                                                    MainContract.Intent.UpdateComponent(
+                                                                                        data.copy(
+                                                                                            enteredValue = it
+                                                                                        )
+                                                                                    )
+                                                                                )
+                                                                                if (data.operators.isNotEmpty()) {
+                                                                                    onEventDispatchers.invoke(
+                                                                                        MainContract.Intent.CheckedComponent(
+                                                                                            data
+                                                                                        )
+                                                                                    )
+                                                                                }
+
+                                                                            },
+                                                                            componentData = data,
+                                                                            isEnable = true,
+                                                                            modifier = Modifier.fillMaxWidth(),
+                                                                            isInDraft = false
+                                                                        )
+                                                                    }
+                                                                }
                                                             }
 
                                                             ComponentEnum.Dater -> {
-
+                                                                onEventDispatchers.invoke(
+                                                                    MainContract.Intent.CheckedComponent(
+                                                                        data
+                                                                    )
+                                                                )
+                                                                DatePickerPreview(
+                                                                    componentData = data,
+                                                                    content = data.content,
+                                                                    modifier = Modifier.fillMaxWidth(),
+                                                                    isEnable = true
+                                                                ) {
+                                                                    onEventDispatchers.invoke(
+                                                                        MainContract.Intent.UpdateComponent(
+                                                                            data.copy(enteredValue = "asdfdsa")
+                                                                        )
+                                                                    )
+                                                                    if (data.operators.isNotEmpty()) {
+                                                                        onEventDispatchers.invoke(
+                                                                            MainContract.Intent.CheckedComponent(
+                                                                                data
+                                                                            )
+                                                                        )
+                                                                    }
+                                                                }
                                                             }
 
                                                             ComponentEnum.Image -> {
-                                                                val height = when (data.customHeight) {
-                                                                    "w/3" -> {
-                                                                        with(density) { weight.dp / 3 }
+                                                                val height =
+                                                                    when (data.customHeight) {
+                                                                        "w/3" -> {
+                                                                            weight.dp / 3
+                                                                        }
+
+                                                                        "w/2" -> {
+                                                                            weight.dp / 2
+                                                                        }
+
+                                                                        "w" -> {
+                                                                            weight.dp
+                                                                        }
+
+                                                                        "2w" -> {
+                                                                            weight.dp * 2
+                                                                        }
+
+                                                                        else -> {
+                                                                            0.dp
+                                                                        }
+
                                                                     }
+                                                                if (data.imageType == ImageTypeEnum.GALLERY) {
+                                                                    Box(
+                                                                        modifier = Modifier
+                                                                            .fillMaxWidth()
+                                                                            .background(
+                                                                                color = Color(
+                                                                                    data.backgroundColor.red,
+                                                                                    data.backgroundColor.green,
+                                                                                    data.backgroundColor.blue
 
-                                                                    "w/2" -> {
-                                                                        with(density) { weight.dp / 2 }
-                                                                    }
-
-                                                                    "w" -> {
-                                                                        with(density) { weight.dp }
-                                                                    }
-
-                                                                    "2w" -> {
-                                                                        with(density) { weight.dp * 2 }
-                                                                    }
-
-                                                                    else -> {
-                                                                        0.dp
-                                                                    }
-
-                                                                }
-
-                                                                    if (data.imageType == ImageTypeEnum.GALLERY) {
-                                                                        Box(
+                                                                                )
+                                                                            )
+                                                                    )
+                                                                    {
+                                                                        AsyncImage(
+                                                                            model = data.imgUri,
+                                                                            contentDescription = null,
                                                                             modifier = Modifier
-                                                                                .fillMaxWidth()
-                                                                                .background(
-                                                                                    color = Color(
-                                                                                        data.backgroundColor.red,
-                                                                                        data.backgroundColor.green,
-                                                                                        data.backgroundColor.blue
-
-                                                                                    )
+                                                                                .then(
+                                                                                    if (data.ratioX != 0) {
+                                                                                        Modifier.aspectRatio(
+                                                                                            data.ratioX.toFloat() / data.ratioY.toFloat()
+                                                                                        )
+                                                                                    } else if (data.customHeight != "") {
+                                                                                        Modifier.height(
+                                                                                            height = height
+                                                                                        )
+                                                                                    } else {
+                                                                                        Modifier
+                                                                                    }
                                                                                 )
                                                                         )
-                                                                        {
-                                                                            AsyncImage(
-                                                                                model = data.imgUri,
-                                                                                contentDescription = null,
-                                                                                modifier = Modifier
-                                                                                    .then(
-                                                                                        if (data.ratioX != 0) {
-                                                                                            Modifier.aspectRatio(data.ratioX.toFloat() / data.ratioY.toFloat())
-                                                                                        } else if (data.customHeight != "") {
-                                                                                            Modifier.height(height = height)
-                                                                                        } else {
-                                                                                            Modifier
-                                                                                        }
-                                                                                    )
-                                                                            )
-                                                                        }
-                                                                    } else {
-                                                                        var uri by remember {
-                                                                            mutableStateOf("")
-                                                                        }
-                                                                        Column(
-                                                                            Modifier
-                                                                                .fillMaxWidth()
-                                                                                .background(
-                                                                                    color = Color(
-                                                                                        data.backgroundColor.red,
-                                                                                        data.backgroundColor.green,
-                                                                                        data.backgroundColor.blue
-                                                                                    )
+                                                                    }
+                                                                } else {
+                                                                    var uri by remember {
+                                                                        mutableStateOf("")
+                                                                    }
+                                                                    Column(
+                                                                        Modifier
+                                                                            .fillMaxWidth()
+                                                                            .background(
+                                                                                color = Color(
+                                                                                    data.backgroundColor.red,
+                                                                                    data.backgroundColor.green,
+                                                                                    data.backgroundColor.blue
                                                                                 )
-                                                                        ) {
-                                                                            OutlinedTextField(
-                                                                                value = "",
-                                                                                onValueChange = {
-                                                                                    uri = it
-                                                                                },
-                                                                                singleLine = true,
-                                                                                label = {
-                                                                                    Text(text = "Rasm Uri kiriting")
-                                                                                },
-                                                                                modifier = Modifier.fillMaxWidth(),
-                                                                                colors = OutlinedTextFieldDefaults.colors(
-                                                                                    focusedBorderColor = Color(
-                                                                                        0xFFFF3951
-                                                                                    ),
-                                                                                    unfocusedBorderColor = Color(
-                                                                                        0xFFFF7686
-                                                                                    )
+                                                                            )
+                                                                    ) {
+                                                                        OutlinedTextField(
+                                                                            value = "",
+                                                                            onValueChange = {
+                                                                                uri = it
+                                                                            },
+                                                                            singleLine = true,
+                                                                            label = {
+                                                                                Text(text = "Rasm Uri kiriting")
+                                                                            },
+                                                                            modifier = Modifier.fillMaxWidth(),
+                                                                            colors = OutlinedTextFieldDefaults.colors(
+                                                                                focusedBorderColor = Color(
+                                                                                    0xFFFF3951
                                                                                 ),
-                                                                                maxLines = 1,
-                                                                            )
+                                                                                unfocusedBorderColor = Color(
+                                                                                    0xFFFF7686
+                                                                                )
+                                                                            ),
+                                                                            maxLines = 1,
+                                                                        )
 
-                                                                            AsyncImage(
-                                                                                model = Uri.parse(uri),
-                                                                                contentDescription = null,
-                                                                                modifier = Modifier
-                                                                                    .then(
-                                                                                        if (data.ratioX != 0) {
-                                                                                            Modifier.aspectRatio(data.ratioX.toFloat() / data.ratioY.toFloat())
-                                                                                        } else if (data.customHeight != "") {
-                                                                                            Modifier.height(height = height)
-                                                                                        } else {
-                                                                                            Modifier
-                                                                                        }
-                                                                                    ),
-                                                                                error = painterResource(id = R.drawable.cats)
+                                                                        AsyncImage(
+                                                                            model = Uri.parse(uri),
+                                                                            contentDescription = null,
+                                                                            modifier = Modifier
+                                                                                .then(
+                                                                                    if (data.ratioX != 0) {
+                                                                                        Modifier.aspectRatio(
+                                                                                            data.ratioX.toFloat() / data.ratioY.toFloat()
+                                                                                        )
+                                                                                    } else if (data.customHeight != "") {
+                                                                                        Modifier.height(
+                                                                                            height = height
+                                                                                        )
+                                                                                    } else {
+                                                                                        Modifier
+                                                                                    }
+                                                                                ),
+                                                                            error = painterResource(
+                                                                                id = R.drawable.cats
                                                                             )
-                                                                        }
+                                                                        )
                                                                     }
                                                                 }
+                                                            }
 
                                                             else -> {}
                                                         }
