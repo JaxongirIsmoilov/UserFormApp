@@ -42,7 +42,7 @@ data class ComponentData(
     val selectedSpinnerText: String,
     val isVisible: Boolean,
 
-    ) : Serializable {
+    )  {
     private val converter = Gson()
 
     fun toEntity(): ComponentEntity = ComponentEntity(

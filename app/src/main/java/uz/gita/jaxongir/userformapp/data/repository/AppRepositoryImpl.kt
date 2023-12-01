@@ -10,6 +10,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
@@ -137,41 +140,33 @@ class AppRepositoryImpl @Inject constructor(
                 }
         }
 
-    override fun getDraftedItems(userID: String): Flow<Result<List<FormEntity>>> =
-        callbackFlow {
-            myLog2("Drafted items get")
-            trySend(Result.success(dao.getAllDrafts(true, userID)))
-            awaitClose()
-        }
+    override fun getDraftedItems(userID: String): Flow<Result<List<FormEntity>>> = flow {
+        dao.getAllDrafts(isDraft = true, userID).onEach {
+            myLog2("Drafted items get $it")
+            emit(Result.success(it))
+        }.collect()
 
-    override fun getSavedComponents(userID: String): Flow<Result<List<FormEntity>>> =
-        callbackFlow {
-            myLog2("success saved ")
-            trySend(
-                Result.success(
-                    dao.getAllSubmitteds(
-                        isSubmitted = true,
-                        userId = userID
-                    )
-                )
-            )
-            awaitClose()
-        }
+    }
 
-    override suspend fun addAsDraft(formEntity: FormEntity): Flow<Result<String>> =
-        callbackFlow {
-            dao.insertDatas(formEntity)
-            myLog2("add drafts")
-            trySend(Result.success("Success as draft"))
-            awaitClose()
-        }
+    override fun getSavedComponents(userID: String): Flow<Result<List<FormEntity>>> = flow {
+        myLog2("success saved ")
+        dao.getAllSubmitteds(isSubmitted = true, userID).onEach {
+            myLog2("Submitted items get $it")
+            emit(Result.success(it))
+        }.collect()
 
-    override suspend fun addAsSaved(formEntity: FormEntity): Flow<Result<String>> =
-        callbackFlow {
-            dao.insertDatas(formEntity)
+    }
+
+    override  fun addAsDraft(entity: FormEntity): Flow<Result<String>> = flow {
+        dao.insertDatas(entity)
+        myLog2("add drafts")
+        emit(Result.success("Success as draft"))
+    }
+
+    override  fun addAsSaved(entity: FormEntity): Flow<Result<String>> = flow {
+            dao.insertDatas(entity)
             myLog2("add saveds")
-            trySend(Result.success("Success as saved"))
-            awaitClose()
+            emit(Result.success("Success as saved"))
         }
 
 

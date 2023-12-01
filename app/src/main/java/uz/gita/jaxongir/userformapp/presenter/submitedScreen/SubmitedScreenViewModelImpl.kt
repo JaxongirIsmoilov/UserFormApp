@@ -27,13 +27,13 @@ class SubmitedScreenViewModelImpl @Inject constructor(
     init {
         appRepository.getSavedComponents(myPref.getId()).onEach {
             it.onSuccess { list ->
-                myLog2("success get saved")
+                myLog2("success get saved list:$list")
                 uiState.update {
                     it.copy(list = list)
                 }
             }
             it.onFailure {
-
+                myLog2("exception:${it.localizedMessage}")
             }
         }.launchIn(viewModelScope)
     }

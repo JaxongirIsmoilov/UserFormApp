@@ -25,7 +25,7 @@ class DraftViewModelImpl @Inject constructor(
     init {
         repository.getDraftedItems(myPref.getId()).onEach {
             it.onSuccess { list ->
-                myLog2("success get drafted")
+                myLog2("success get drafted list $list")
                 uiState.update { it.copy(list = list) }
             }
         }.launchIn(viewModelScope)
