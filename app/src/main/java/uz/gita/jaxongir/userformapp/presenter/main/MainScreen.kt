@@ -100,16 +100,11 @@ fun MainScreenContent(
     val density = LocalDensity.current
     val weight = LocalConfiguration.current.screenWidthDp
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color(0xFFFF3951))
-                    .height(70.dp)
-            ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color(0xFFFF3951))
+                .height(70.dp)) {
                 Text(
                     text = "User: ${uiState.value.userName}",
                     style = TextStyle(
@@ -134,7 +129,7 @@ fun MainScreenContent(
                     )
 
                 } else {
-                    Column(modifier = Modifier.padding(horizontal = 15.dp)) {
+                    Column() {
                         Text(
                             text = "Fill these sheets",
                             modifier = Modifier
@@ -175,7 +170,9 @@ fun MainScreenContent(
                                                 content = data.content,
                                                 componentData = data,
                                                 {},
-                                                modifier = Modifier.fillMaxWidth(),
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(horizontal = 15.dp),
                                                 true,
                                                 isDraft = false
                                             )
@@ -217,7 +214,9 @@ fun MainScreenContent(
                                                         }
                                                     },
                                                     isEnable = true,
-                                                    modifier = Modifier.fillMaxWidth(),
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(horizontal = 15.dp),
                                                     isInDraft = false
                                                 )
                                             }
@@ -260,6 +259,7 @@ fun MainScreenContent(
                                                     fontSize = 22.sp,
                                                     modifier = Modifier
                                                         .padding(bottom = 10.dp)
+                                                        .padding(horizontal = 15.dp)
                                                 )
                                             }
                                             Spacer(modifier = Modifier.height(16.dp))
@@ -276,7 +276,9 @@ fun MainScreenContent(
                                             )
 
                                             if (data.rowId == "") {
-                                                Column(modifier = Modifier.fillMaxWidth()) {
+                                                Column(modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(horizontal = 15.dp)) {
                                                     Spacer(modifier = Modifier.size(10.dp))
                                                     Log.d(
                                                         "DDD",
@@ -331,7 +333,9 @@ fun MainScreenContent(
                                             DatePickerPreview(
                                                 componentData = data,
                                                 content = data.content,
-                                                modifier = Modifier.fillMaxWidth(),
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(horizontal = 15.dp),
                                                 isEnable = true
                                             ) {
                                                 onEventDispatchers.invoke(
@@ -384,7 +388,6 @@ fun MainScreenContent(
                                                                     data.backgroundColor.red,
                                                                     data.backgroundColor.green,
                                                                     data.backgroundColor.blue
-
                                                                 )
                                                             )
                                                     )
@@ -404,10 +407,8 @@ fun MainScreenContent(
                                                                 )
                                                         )
                                                     }
-                                                } else {
-                                                    var uri by remember {
-                                                        mutableStateOf("")
-                                                    }
+                                                }
+                                                else {
                                                     Column(
                                                         Modifier
                                                             .fillMaxWidth()
@@ -418,9 +419,13 @@ fun MainScreenContent(
                                                                     data.backgroundColor.blue
                                                                 )
                                                             )
+                                                            .padding(horizontal = 15.dp)
+
                                                     ) {
+                                                        var uri by remember { mutableStateOf("") }
+
                                                         OutlinedTextField(
-                                                            value = "",
+                                                            value = uri,
                                                             onValueChange = {
                                                                 uri = it
                                                             },
@@ -437,8 +442,12 @@ fun MainScreenContent(
                                                                     0xFFFF7686
                                                                 )
                                                             ),
+                                                            textStyle = TextStyle(color = Color.Unspecified)
+                                                            ,
                                                             maxLines = 1,
                                                         )
+
+                                                        Spacer(modifier = Modifier.size(20.dp))
 
                                                         AsyncImage(
                                                             model = Uri.parse(uri),
@@ -463,9 +472,11 @@ fun MainScreenContent(
                                     }
 
                                     ComponentEnum.LazyRow -> {
+
                                         item {
                                             Card(
                                                 modifier = Modifier
+                                                    .padding(horizontal = 15.dp)
                                                     .fillMaxWidth()
                                                     .height(80.dp)
                                                     .clip(RoundedCornerShape(12.dp)),

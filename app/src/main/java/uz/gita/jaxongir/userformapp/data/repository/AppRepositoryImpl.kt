@@ -131,7 +131,7 @@ class AppRepositoryImpl @Inject constructor(
                                 rowId = it.data?.getOrDefault("rowId", "0").toString(),
                                 weight = it.data?.getOrDefault("weight", "").toString()
                             )
-                        )
+                            )
                     }
                     trySend(Result.success(componentList))
                 }

@@ -35,6 +35,7 @@ class MainViewModel @Inject constructor(
     override val uiState = MutableStateFlow(MainContract.UIState())
 
 
+
     init {
 
 
@@ -70,6 +71,8 @@ class MainViewModel @Inject constructor(
                     }.launchIn(viewModelScope)
                     Toast.makeText(intent.context, "Saved as Draft", Toast.LENGTH_SHORT).show()
                     mainDirection.back()
+
+
 
                 }
             }
