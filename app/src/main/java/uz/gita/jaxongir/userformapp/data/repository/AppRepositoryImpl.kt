@@ -17,6 +17,7 @@ import uz.gita.jaxongir.userformapp.data.local.room.dao.Dao
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
+import uz.gita.jaxongir.userformapp.utills.myLog2
 import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
@@ -138,12 +139,14 @@ class AppRepositoryImpl @Inject constructor(
 
     override fun getDraftedItems(userID: String): Flow<Result<List<FormEntity>>> =
         callbackFlow {
+            myLog2("Drafted items get")
             trySend(Result.success(dao.getAllDrafts(true, userID)))
             awaitClose()
         }
 
     override fun getSavedComponents(userID: String): Flow<Result<List<FormEntity>>> =
         callbackFlow {
+            myLog2("success saved ")
             trySend(
                 Result.success(
                     dao.getAllSubmitteds(
@@ -158,6 +161,7 @@ class AppRepositoryImpl @Inject constructor(
     override suspend fun addAsDraft(formEntity: FormEntity): Flow<Result<String>> =
         callbackFlow {
             dao.insertDatas(formEntity)
+            myLog2("add drafts")
             trySend(Result.success("Success as draft"))
             awaitClose()
         }
@@ -165,6 +169,7 @@ class AppRepositoryImpl @Inject constructor(
     override suspend fun addAsSaved(formEntity: FormEntity): Flow<Result<String>> =
         callbackFlow {
             dao.insertDatas(formEntity)
+            myLog2("add saveds")
             trySend(Result.success("Success as saved"))
             awaitClose()
         }
