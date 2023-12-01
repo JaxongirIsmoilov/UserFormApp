@@ -147,7 +147,11 @@ fun DraftDetailsContent(
                                                         )
                                                     },
                                                     content = data.content,
-                                                    componentData = data, {}, true, true
+                                                    componentData = data,
+                                                    {},
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    true,
+                                                    true
                                                 )
 
                                             }
@@ -177,7 +181,7 @@ fun DraftDetailsContent(
                                                             )
                                                         },
                                                         deleteComp = {},
-                                                        isEnable = true, isInDraft = true
+                                                        isEnable = true, modifier = Modifier.fillMaxWidth(), isInDraft = true
                                                     )
                                                 }
                                             }
@@ -250,6 +254,7 @@ fun DraftDetailsContent(
                                                         },
                                                         componentData = data,
                                                         isEnable = true,
+                                                        modifier = Modifier.fillMaxWidth(),
                                                         isInDraft = true
                                                     )
                                                 }
@@ -261,15 +266,16 @@ fun DraftDetailsContent(
                                             item {
                                                 DatePickerPreview(
                                                     componentData = data,
-                                                    content = data.content, isEnable = true
+                                                    content = data.content, modifier = Modifier.fillMaxWidth(), isEnable = true
                                                 ) {
                                                 }
                                             }
                                         }
 
-                                        ComponentEnum.LazyRow ->{
+                                        ComponentEnum.LazyRow -> {
 
                                         }
+
                                         else -> {}
                                     }
                                 }

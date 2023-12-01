@@ -14,5 +14,4 @@ class DraftDetailsDirectionImpl @Inject constructor(
     override suspend fun backToDraftsListScreen() {
         appNavigator.back()
     }
-
 }
