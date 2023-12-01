@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.submitteddetails
 
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -28,15 +32,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
+import coil.compose.AsyncImage
+import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
+import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
-import uz.gita.jaxongir.userformapp.ui.components.ImageComponent
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
@@ -62,6 +74,8 @@ fun DetailsScreenContent(
     onEventDispatchers: (SubmittedDetailsContract.Intent) -> Unit,
     list: List<ComponentData>
 ) {
+    val density = LocalDensity.current
+    val weight = LocalConfiguration.current.screenWidthDp
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -103,16 +117,12 @@ fun DetailsScreenContent(
                                                 onSelectionChanged = {},
                                                 content = data.content,
                                                 componentData = data,
-                                                deleteComp = {}, false, isDraft = true
+                                                deleteComp = {},
+                                                modifier = Modifier.fillMaxWidth(),
+                                                false,
+                                                isDraft = true
                                             )
 
-                                        }
-                                    }
-
-                                    ComponentEnum.Image -> {
-
-                                        item {
-                                            ImageComponent(data = data, isEnable = false)
                                         }
                                     }
 
@@ -125,7 +135,9 @@ fun DetailsScreenContent(
                                                     onSaveStates = {},
                                                     componentData = data,
                                                     {},
-                                                    isEnable = false, true
+                                                    isEnable = false,
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    true
                                                 )
                                             }
                                         }
@@ -184,7 +196,8 @@ fun DetailsScreenContent(
                                                 InputField(
                                                     onEdit = { },
                                                     componentData = data,
-                                                    isEnable = false, isInDraft = true
+                                                    isEnable = false, isInDraft = true,
+                                                    modifier = Modifier.fillMaxWidth()
                                                 )
                                             }
 
@@ -197,10 +210,133 @@ fun DetailsScreenContent(
                                             DatePickerPreview(
                                                 componentData = data,
                                                 content = data.content,
-                                                isEnable = false
+                                                isEnable = false,
+                                                modifier = Modifier.fillMaxWidth()
                                             ) {
                                             }
                                         }
+                                    }
+
+
+                                    ComponentEnum.Image -> {
+                                        val height =
+                                            when (data.customHeight) {
+                                                "w/3" -> {
+                                                    weight.dp / 3
+                                                }
+
+                                                "w/2" -> {
+                                                    weight.dp / 2
+                                                }
+
+                                                "w" -> {
+                                                    weight.dp
+                                                }
+
+                                                "2w" -> {
+                                                    weight.dp * 2
+                                                }
+
+                                                else -> {
+                                                    0.dp
+                                                }
+
+                                            }
+                                        item {
+                                            if (data.imageType == ImageTypeEnum.GALLERY) {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .background(
+                                                            color = Color(
+                                                                data.backgroundColor.red,
+                                                                data.backgroundColor.green,
+                                                                data.backgroundColor.blue
+
+                                                            )
+                                                        )
+                                                )
+                                                {
+                                                    AsyncImage(
+                                                        model = data.imgUri,
+                                                        contentDescription = null,
+                                                        modifier = Modifier
+                                                            .then(
+                                                                if (data.ratioX != 0) {
+                                                                    Modifier.aspectRatio(
+                                                                        data.ratioX.toFloat() / data.ratioY.toFloat()
+                                                                    )
+                                                                } else if (data.customHeight != "") {
+                                                                    Modifier.height(
+                                                                        height = height
+                                                                    )
+                                                                } else {
+                                                                    Modifier
+                                                                }
+                                                            )
+                                                    )
+                                                }
+                                            } else {
+                                                var uri by remember {
+                                                    mutableStateOf("")
+                                                }
+                                                Column(
+                                                    Modifier
+                                                        .fillMaxWidth()
+                                                        .background(
+                                                            color = Color(
+                                                                data.backgroundColor.red,
+                                                                data.backgroundColor.green,
+                                                                data.backgroundColor.blue
+                                                            )
+                                                        )
+                                                ) {
+                                                    OutlinedTextField(
+                                                        value = "",
+                                                        onValueChange = {
+                                                            uri = it
+                                                        },
+                                                        singleLine = true,
+                                                        label = {
+                                                            Text(text = "Rasm Uri kiriting")
+                                                        },
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        colors = OutlinedTextFieldDefaults.colors(
+                                                            focusedBorderColor = Color(
+                                                                0xFFFF3951
+                                                            ),
+                                                            unfocusedBorderColor = Color(
+                                                                0xFFFF7686
+                                                            )
+                                                        ),
+                                                        maxLines = 1,
+                                                    )
+
+                                                    AsyncImage(
+                                                        model = Uri.parse(uri),
+                                                        contentDescription = null,
+                                                        modifier = Modifier
+                                                            .then(
+                                                                if (data.ratioX != 0) {
+                                                                    Modifier.aspectRatio(
+                                                                        data.ratioX.toFloat() / data.ratioY.toFloat()
+                                                                    )
+                                                                } else if (data.customHeight != "") {
+                                                                    Modifier.height(
+                                                                        height = height
+                                                                    )
+                                                                } else {
+                                                                    Modifier
+                                                                }
+                                                            ),
+                                                        error = painterResource(
+                                                            id = R.drawable.cats
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                        }
+
                                     }
 
                                     else -> {}

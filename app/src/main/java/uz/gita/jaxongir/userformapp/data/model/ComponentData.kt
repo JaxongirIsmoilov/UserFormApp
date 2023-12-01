@@ -10,11 +10,12 @@ import uz.gita.jaxongir.userformapp.data.local.room.entity.ComponentEntity
 import java.io.Serializable
 
 data class ComponentData(
-    val id: String,
-    val userId: String,
-    val locId: Long,
+    val id: String = "",
+    val userId: String = "",
+    val locId: Long = 0L,
     val idEnteredByUser: String = "",
-    val content: String,
+    val content: String = "",
+    val enteredValue: String = "",
     val textFieldType: TextFieldType,
     val maxLines: Int,
     val maxLength: Int,
@@ -27,20 +28,21 @@ data class ComponentData(
     val connectedValues: List<String> = listOf(),
     val connectedIds: List<String> = listOf(),
     val operators: List<String> = listOf(),
-    val type: ComponentEnum,
-    val enteredValue: String = "",
-    val isVisible: Boolean = true,
+    val type: ComponentEnum = ComponentEnum.SampleText,
     val isRequired: Boolean = false,
-    val selectedSpinnerText: String,
     val imgUri: String = "",
-    val ratioX: Int,
-    val ratioY: Int,
-    val customHeight: String,
+    val ratioX: Int = 0,
+    val ratioY: Int = 0,
+    val customHeight: String = "",
     val rowId: String = "",
     val backgroundColor: Int = Color.Transparent.toArgb(),
+    val weight: String,
     val imageType: ImageTypeEnum = ImageTypeEnum.NONE,
-    val weight: String
-) : Serializable {
+    val inValues: List<String> = listOf(),
+    val selectedSpinnerText: String,
+    val isVisible: Boolean,
+
+    )  {
     private val converter = Gson()
 
     fun toEntity(): ComponentEntity = ComponentEntity(
@@ -63,14 +65,18 @@ data class ComponentData(
         operators = operators,
         type = type,
         isRequired = isRequired,
-        selectedSpinnerText = selectedSpinnerText,
         imgUri = imgUri,
         ratioX = ratioX,
         ratioY = ratioY,
         customHeight = customHeight,
         rowId = rowId,
         backgroundColor = backgroundColor,
-        imageTypeEnum = imageType
+        weight = weight,
+        imageType = imageType,
+        isVisible = isVisible,
+        inValues = inValues,
+        selectedSpinnerText = selectedSpinnerText,
+        enteredValue = enteredValue
 
     )
 }
@@ -81,6 +87,7 @@ val defaultData = ComponentData(
     1L,
     "",
     "Content",
+    "",
     TextFieldType.Text,
     1,
     122,
@@ -94,16 +101,15 @@ val defaultData = ComponentData(
     emptyList<String>(),
     emptyList<String>(),
     ComponentEnum.Input,
-    "",
-    true,
     false,
     "",
+    0, 0,
+    "",
     "",
     1,
-    1,
     "",
+    ImageTypeEnum.NONE,
+    listOf(),
     "",
-    backgroundColor = Color.Transparent.toArgb(),
-    imageType = ImageTypeEnum.NONE,
-    weight = ""
+    false
 )

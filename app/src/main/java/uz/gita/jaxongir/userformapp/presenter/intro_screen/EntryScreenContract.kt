@@ -1,7 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.intro_screen
 
 import kotlinx.coroutines.flow.StateFlow
-import uz.gita.jaxongir.userformapp.presenter.main.MainContract
 
 interface EntryScreenContract {
 

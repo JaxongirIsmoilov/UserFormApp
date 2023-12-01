@@ -75,9 +75,6 @@ fun SubmitedScreenContent(
                     }, tint = Color.White
             )
         }
-
-
-
         LazyColumn(content = {
             items(uiState.value.list) {
                 SelectedItem(entity = it) {
@@ -85,11 +82,7 @@ fun SubmitedScreenContent(
                 }
             }
         }, modifier = Modifier.padding(top = 66.dp))
-
-
     }
-
-
 }
 
 

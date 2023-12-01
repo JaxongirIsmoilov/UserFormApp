@@ -32,6 +32,7 @@ class DraftDetailsViewModelImpl @Inject constructor(
             is DraftScreenContract.Intent.SaveAsDraft -> {
                 viewModelScope.launch {
                     appRepository.addAsDraft(intent.entity).onEach {
+                        myLog2("successs add draft vm")
                         it.onSuccess { draftDispatcher.backToDraftsListScreen() }
                     }.launchIn(viewModelScope)
                     Toast.makeText(intent.context, "Saved as draft", Toast.LENGTH_SHORT).show()
@@ -40,8 +41,11 @@ class DraftDetailsViewModelImpl @Inject constructor(
 
             is DraftScreenContract.Intent.SaveAsSaved -> {
                 viewModelScope.launch {
+
                     appRepository.addAsSaved(intent.entity).onEach {
-                        it.onSuccess { draftDispatcher.backToDraftsListScreen() }
+                        it.onSuccess {
+                            myLog2("successs add submitted vm")
+                            draftDispatcher.backToDraftsListScreen() }
                     }.launchIn(viewModelScope)
                     Toast.makeText(intent.context, "Saved as saved", Toast.LENGTH_SHORT).show()
                 }

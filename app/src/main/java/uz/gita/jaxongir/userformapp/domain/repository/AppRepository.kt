@@ -9,8 +9,8 @@ interface AppRepository {
     fun getAllRowItemsById(rowId: String): Flow<Result<List<ComponentData>>>
     fun getDraftedItems(userID: String): Flow<Result<List<FormEntity>>>
     fun getSavedComponents(userID: String): Flow<Result<List<FormEntity>>>
-    suspend fun addAsDraft(entity: FormEntity): Flow<Result<String>>
-    suspend fun addAsSaved(entity: FormEntity): Flow<Result<String>>
+    fun addAsDraft(entity: FormEntity): Flow<Result<String>>
+    fun addAsSaved(entity: FormEntity): Flow<Result<String>>
     fun login(name: String, password: String): Flow<Result<Unit>>
     fun getComponentsByUserId(userID: String): Flow<Result<List<ComponentData>>>
     fun updateComponent(componentData: ComponentData): Flow<Result<Unit>>

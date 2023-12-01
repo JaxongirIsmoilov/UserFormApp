@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 
 @Dao
@@ -13,11 +14,11 @@ interface Dao {
 
 
     @Query("select * from formentity where isDraft = :isDraft AND userId=:userId order by id asc ")
-    suspend fun getAllDrafts(isDraft: Boolean = true, userId: String): List<FormEntity>
+     fun getAllDrafts(isDraft: Boolean = true, userId: String): Flow<List<FormEntity>>
 
 
     @Query("select * from formentity where isSubmitted = :isSubmitted AND userId=:userId order by id asc ")
-    suspend fun getAllSubmitteds(isSubmitted: Boolean = true, userId: String): List<FormEntity>
+     fun getAllSubmitteds(isSubmitted: Boolean = true, userId: String):Flow<List<FormEntity>>
 
 
 }

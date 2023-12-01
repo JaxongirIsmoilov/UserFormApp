@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
+import uz.gita.jaxongir.userformapp.utills.myLog
+import uz.gita.jaxongir.userformapp.utills.myLog2
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,6 +30,7 @@ class SubmittedDetailsViewModelImpl @Inject constructor(
             repository.getComponentsByUserId(pref.getId())
                 .onEach { result ->
                     result.onSuccess { components ->
+                        myLog2("successs submitted vm")
                         uiState.update { it.copy(submittedDetails = components) }
                     }
                     result.onFailure {

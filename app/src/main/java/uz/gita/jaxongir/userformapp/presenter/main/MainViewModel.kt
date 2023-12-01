@@ -76,6 +76,7 @@ class MainViewModel @Inject constructor(
                 }
             }
 
+
             is MainContract.Intent.ClickAsSaved -> {
                 viewModelScope.launch {
                     Toast.makeText(intent.context, "Saved as Submitted", Toast.LENGTH_SHORT).show()
@@ -96,6 +97,16 @@ class MainViewModel @Inject constructor(
                             "Equal" -> {
                                 contentVisible =
                                     uiState.value.checkedComponent?.enteredValue == intent.componentData.connectedValues[index] && contentVisible
+                            }
+
+                            "In" -> {
+                                contentVisible =
+                                    uiState.value.checkedComponent?.inValues?.contains(intent.componentData.connectedValues[index]) == true && contentVisible
+                            }
+
+                            "!In" -> {
+                                contentVisible =
+                                    uiState.value.checkedComponent?.inValues?.contains(intent.componentData.connectedValues[index]) == false && contentVisible
                             }
 
                             "Not" -> {
@@ -213,8 +224,6 @@ class MainViewModel @Inject constructor(
 
                     }.launchIn(viewModelScope)
             }
-
-
 
 
         }
