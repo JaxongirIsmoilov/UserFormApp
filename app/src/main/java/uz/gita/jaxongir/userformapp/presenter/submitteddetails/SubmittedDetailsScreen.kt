@@ -103,7 +103,10 @@ fun DetailsScreenContent(
                                                 onSelectionChanged = {},
                                                 content = data.content,
                                                 componentData = data,
-                                                deleteComp = {}, false, isDraft = true
+                                                deleteComp = {},
+                                                modifier = Modifier.fillMaxWidth(),
+                                                false,
+                                                isDraft = true
                                             )
 
                                         }
@@ -125,7 +128,9 @@ fun DetailsScreenContent(
                                                     onSaveStates = {},
                                                     componentData = data,
                                                     {},
-                                                    isEnable = false, true
+                                                    isEnable = false,
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    true
                                                 )
                                             }
                                         }
@@ -184,7 +189,8 @@ fun DetailsScreenContent(
                                                 InputField(
                                                     onEdit = { },
                                                     componentData = data,
-                                                    isEnable = false, isInDraft = true
+                                                    isEnable = false, isInDraft = true,
+                                                    modifier = Modifier.fillMaxWidth()
                                                 )
                                             }
 
@@ -197,7 +203,8 @@ fun DetailsScreenContent(
                                             DatePickerPreview(
                                                 componentData = data,
                                                 content = data.content,
-                                                isEnable = false
+                                                isEnable = false,
+                                                modifier = Modifier.fillMaxWidth()
                                             ) {
                                             }
                                         }
