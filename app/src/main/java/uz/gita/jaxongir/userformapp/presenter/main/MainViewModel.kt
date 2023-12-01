@@ -94,12 +94,12 @@ class MainViewModel @Inject constructor(
 
                             "In" -> {
                                 contentVisible =
-                                    uiState.value.checkedComponent?.inValues?.contains(intent.componentData.connectedValues[index]) == true && contentVisible
+                                    intent.componentData.inValues.contains(uiState.value.checkedComponent?.enteredValue) == true && contentVisible
                             }
 
                             "!In" -> {
                                 contentVisible =
-                                    uiState.value.checkedComponent?.inValues?.contains(intent.componentData.connectedValues[index]) == false && contentVisible
+                                    intent.componentData.inValues.contains(uiState.value.checkedComponent?.enteredValue) == false && contentVisible
                             }
 
                             "Not" -> {
