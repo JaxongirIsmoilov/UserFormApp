@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,7 +34,7 @@ fun DraftItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(84.dp)
+            .height(134.dp)
             .padding(12.dp)
             .background(Color(0xFFF6F2F7))
             .border(2.dp, Color(0xFFFF3951), RoundedCornerShape(10.dp))
@@ -43,13 +44,14 @@ fun DraftItem(
             .padding(start = 16.dp, top = 16.dp, end = 16.dp),
     ) {
 
-        Row(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "Draft ID:${entity.id}",
                 modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(bottom = 16.dp),
+//                    .align(Alignment.CenterVertically)
+//                    .padding(bottom = 16.dp)
+                ,
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontStyle = FontStyle.Normal,
@@ -60,7 +62,7 @@ fun DraftItem(
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "List size:${entity.listComponentIds.size}", modifier = Modifier
-                    .align(Alignment.CenterVertically)
+//                    .align(Alignment.CenterVertically)
                     .padding(bottom = 16.dp),
                 style = TextStyle(
                     fontSize = 16.sp,
@@ -73,8 +75,8 @@ fun DraftItem(
 
             Text(
                 text = "20:19", modifier = Modifier
-                    .align(Alignment.Bottom)
-                    .padding(bottom = 2.dp),
+//                    .align(Alignment.Bottom)
+                    .padding(start = 300.dp, bottom = 2.dp),
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontStyle = FontStyle.Normal,
@@ -88,5 +90,5 @@ fun DraftItem(
 @Preview(showBackground = true)
 @Composable
 fun DraftItemPreview() {
-    //DraftItem(onClick = {})
+    DraftItem(FormData("", emptyList(), true, ""), onClick = {})
 }

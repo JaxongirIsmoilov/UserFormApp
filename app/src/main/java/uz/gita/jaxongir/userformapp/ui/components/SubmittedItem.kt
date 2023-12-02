@@ -3,6 +3,7 @@ package uz.gita.jaxongir.userformapp.ui.components
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormData
@@ -31,20 +33,20 @@ fun SelectedItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(84.dp)
+            .height(134.dp)
             .padding(12.dp)
-            .border(2.dp, Color.Gray, RoundedCornerShape(10.dp))
+            .border(2.dp, Color.Blue, RoundedCornerShape(10.dp))
             .clickable {
                 onClick()
             }
             .padding(start = 16.dp, top = 16.dp, end = 16.dp),
     ) {
-        Row(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "Submitted FormID: ${entity.id}",
                 modifier = Modifier
-                    .align(Alignment.CenterVertically)
+//                    .align(Alignment.CenterVertically)
                     .padding(bottom = 16.dp),
                 style = TextStyle(
                     fontSize = 16.sp,
@@ -52,11 +54,12 @@ fun SelectedItem(
                     fontWeight = FontWeight.Bold
                 )
             )
-            Spacer(modifier = Modifier.width(8.dp))
+//            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "List: ${entity.listComponentIds.size}", modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(bottom = 16.dp),
+//                    .align(Alignment.CenterVertically)
+//                    .padding(bottom = 16.dp)
+                ,
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontStyle = FontStyle.Normal,
@@ -64,20 +67,29 @@ fun SelectedItem(
                 )
             )
 
-            Spacer(modifier = Modifier.weight(1f))
+//            Spacer(modifier = Modifier.weight(1f))
 
-            Text(
-                text = "now", modifier = Modifier
-                    .align(Alignment.Bottom)
-                    .padding(bottom = 2.dp),
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontStyle = FontStyle.Normal,
-                    fontWeight = FontWeight.Bold
-                )
-            )
+
         }
+        Text(
+            text = "now", modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                .padding(start = 300.dp, bottom = 2.dp),
+            style = TextStyle(
+                fontSize = 14.sp,
+                fontStyle = FontStyle.Normal,
+                fontWeight = FontWeight.Bold
+            )
+        )
 
     }
 
+}
+
+@Composable
+@Preview(showBackground = true)
+fun Selectedpreview(){
+    SelectedItem(entity = FormData("", emptyList(), true, "")) {
+        
+    }
 }
