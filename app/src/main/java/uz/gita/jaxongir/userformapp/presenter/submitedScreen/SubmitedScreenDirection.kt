@@ -21,6 +21,4 @@ class SubmitedScreenDirectionImpl @Inject constructor(
     override suspend fun moveToComponenetDetailScreen(list: List<String>) {
         appNavigator.addScreen(DetailsScreen(list))
     }
-
-
 }

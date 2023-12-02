@@ -52,22 +52,22 @@ class SubmittedDetailsViewModelImpl @Inject constructor(
                    direction.back()
                 }
             }
-            is SubmittedDetailsContract.Intent.GetComponents ->{
-                val list= arrayListOf<ComponentData>()
-                viewModelScope.launch {
-                    intent.list.forEach {
-                        repository.getComponentByComponentId(it).onEach {
-                            it.onFailure {
-
-                            }
-                            it.onSuccess {
-                                list.add(it)
-                            }
-                        }.launchIn(viewModelScope)
-                    }
-                    uiState.update { it.copy(submittedDetails = list) }
-                }
-            }
+//            is SubmittedDetailsContract.Intent.GetComponents ->{
+//                val list= arrayListOf<ComponentData>()
+//                viewModelScope.launch {
+//                    intent.list.forEach {
+//                        repository.getComponentByComponentId(it).onEach {
+//                            it.onFailure {
+//
+//                            }
+//                            it.onSuccess {
+//                                list.add(it)
+//                            }
+//                        }.launchIn(viewModelScope)
+//                    }
+//                    uiState.update { it.copy(submittedDetails = list) }
+//                }
+//            }
 
             is SubmittedDetailsContract.Intent.CheckedComponent -> {
                 var contentVisible = true

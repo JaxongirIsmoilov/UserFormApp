@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
+import uz.gita.jaxongir.userformapp.utills.myLog2
 import javax.inject.Inject
 
 
@@ -24,6 +25,17 @@ class SubmitedScreenViewModelImpl @Inject constructor(
         MutableStateFlow(SubmitedScreenContract.UIState())
 
 
+    init {
+        appRepository.getAllSavedItemsList(myPref.getId()).onEach {
+            it.onSuccess {list->
+                myLog2("")
+                uiState.update { it.copy(list = list) }
+            }
+            it.onFailure {
+
+            }
+        }.launchIn(viewModelScope)
+    }
     override fun onEventDispatcher(intent: SubmitedScreenContract.Intent) {
         when (intent) {
             SubmitedScreenContract.Intent.Back -> {
@@ -38,16 +50,6 @@ class SubmitedScreenViewModelImpl @Inject constructor(
                 }
             }
 
-            is SubmitedScreenContract.Intent.GetSubmittedItems -> {
-                appRepository.getAllSavedItemsList(myPref.getId()).onEach {
-                    it.onSuccess {list->
-                        uiState.update { it.copy(list = list) }
-                    }
-                    it.onFailure {
-
-                    }
-                }.launchIn(viewModelScope)
-            }
         }
     }
 

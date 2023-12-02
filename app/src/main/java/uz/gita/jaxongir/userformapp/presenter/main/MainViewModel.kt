@@ -65,13 +65,10 @@ class MainViewModel @Inject constructor(
                         FormRequest(intent.list, true, pref.getId())
                     ).onEach {
                         it.onSuccess {
-                            Toast.makeText(intent.context, "Saved as Draft", Toast.LENGTH_SHORT)
-                                .show()
                             mainDirection.back()
                         }
                         it.onFailure {
-                            Toast.makeText(intent.context, "exception:$it", Toast.LENGTH_SHORT)
-                                .show()
+
                         }
 
                     }.launchIn(viewModelScope)

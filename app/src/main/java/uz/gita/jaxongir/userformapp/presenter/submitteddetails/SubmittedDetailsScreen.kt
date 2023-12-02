@@ -47,6 +47,7 @@ import coil.compose.AsyncImage
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
+import uz.gita.jaxongir.userformapp.presenter.drafts_detail.DraftScreenContract
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
@@ -62,6 +63,8 @@ class DetailsScreen(val list: List<String>) : AndroidScreen() {
             uiState = viewModel.uiState.collectAsState(),
             onEventDispatchers = viewModel::onEventDispatcher,
         )
+//        viewModel.onEventDispatcher(SubmittedDetailsContract.Intent.GetComponents(list))
+
     }
 }
 

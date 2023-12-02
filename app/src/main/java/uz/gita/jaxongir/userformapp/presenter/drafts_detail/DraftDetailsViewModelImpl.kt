@@ -27,6 +27,27 @@ class DraftDetailsViewModelImpl @Inject constructor(
 ) : ViewModel(), DraftScreenContract.ViewModel {
     override val uiState =
         MutableStateFlow(DraftScreenContract.UiState())
+
+    init {
+        viewModelScope.launch {
+            appRepository.getComponentsByUserId(myShared.getId())
+                .onEach {
+                    it.onSuccess { components ->
+                        val sortedList = components.sortedBy {
+                            it.locId
+                        }
+                        uiState.update { it.copy( list = sortedList) }
+                    }
+
+                    it.onFailure {
+                        myLog("failrue viewmodle")
+                    }
+
+
+                }.launchIn(viewModelScope)
+        }
+
+    }
     override fun onEventDispatcher(intent: DraftScreenContract.Intent) {
         when (intent) {
             is DraftScreenContract.Intent.SaveAsDraft -> {
