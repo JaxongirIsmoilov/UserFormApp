@@ -68,6 +68,7 @@ fun LoginScreenContent(
     uiState: State<LoginContract.UIState>
 ) {
     var username: String by remember { mutableStateOf("") }
+    var errorText: Boolean by remember { mutableStateOf(true) }
     var password: String by remember { mutableStateOf("") }
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
@@ -121,7 +122,11 @@ fun LoginScreenContent(
         OutlinedTextField(
             value = password,
             onValueChange = {
-                password = it
+               if(it.length < 16) {
+                   password = it
+                   errorText = false
+               }
+
             },
             modifier = Modifier
                 .padding(vertical = 12.dp, horizontal = 16.dp)
@@ -151,6 +156,17 @@ fun LoginScreenContent(
                 unfocusedBorderColor = Color(0xFFFF7686),
             )
         )
+        if (!errorText){
+            Text(text = "Password should be less than 16",
+                color = Color.White,
+            modifier = Modifier
+                .padding(horizontal = 12.dp))
+        }else{
+            Text(text = "Password should be less than 16",
+                color = Color.Red,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp))
+        }
         Spacer(modifier = Modifier.height(72.dp))
 
         Button(
