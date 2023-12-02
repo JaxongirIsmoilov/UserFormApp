@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 interface SubmitedScreenDirection {
     suspend fun back()
-    suspend fun moveToComponenetDetailScreen(list: List<ComponentData>)
+    suspend fun moveToComponenetDetailScreen(list: List<String>)
 }
 
 
@@ -18,7 +18,7 @@ class SubmitedScreenDirectionImpl @Inject constructor(
         appNavigator.back()
     }
 
-    override suspend fun moveToComponenetDetailScreen(list: List<ComponentData>) {
+    override suspend fun moveToComponenetDetailScreen(list: List<String>) {
         appNavigator.addScreen(DetailsScreen(list))
     }
 

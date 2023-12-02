@@ -30,6 +30,7 @@ import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.ui.components.DraftItem
+import uz.gita.jaxongir.userformapp.utills.myLog2
 
 class DraftScreen : AndroidScreen() {
     @Composable
@@ -78,6 +79,7 @@ fun DraftsScreenComponent(
                 .fillMaxSize()
                 .background(color = Color.White)
         ) {
+            myLog2("list size: ${uiState.value.list}")
             items(uiState.value.list) {
                 DraftItem(entity = it) {
                     onEventDispatcher.invoke(DraftContract.Intent.ClickItem(it.listComponentIds))

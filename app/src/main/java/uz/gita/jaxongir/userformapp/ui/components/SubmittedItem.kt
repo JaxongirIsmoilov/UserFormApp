@@ -54,7 +54,7 @@ fun SelectedItem(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "List: ${entity.listComponents.size}", modifier = Modifier
+                text = "List: ${entity.listComponentIds.size}", modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(bottom = 16.dp),
                 style = TextStyle(

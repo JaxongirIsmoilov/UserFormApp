@@ -4,9 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-@Entity
 data class FormData(
-    @PrimaryKey(autoGenerate = true)
     val id: String,
     val listComponentIds: List<String>,
     val isDraft: Boolean,

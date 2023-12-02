@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
+import uz.gita.jaxongir.userformapp.utills.myLog2
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,8 +23,9 @@ class DraftViewModelImpl @Inject constructor(
     override val uiState = MutableStateFlow(DraftContract.UIState())
 
     init {
-        repository.getAllSavedItemsList(myPref.getId()).onEach {
+        repository.getAllDraftedItemsList(myPref.getId()).onEach {
             it.onSuccess { list ->
+                myLog2("size repo:${list.size}")
                 uiState.update { it.copy(list) }
             }
             it.onFailure {

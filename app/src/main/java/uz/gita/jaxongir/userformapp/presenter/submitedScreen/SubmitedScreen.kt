@@ -77,7 +77,7 @@ fun SubmitedScreenContent(
         LazyColumn(content = {
             items(uiState.value.list) {
                 SelectedItem(entity = it) {
-                    onEventDispatcher.invoke(SubmitedScreenContract.Intent.ClickItem(it.listComponents))
+                    onEventDispatcher.invoke(SubmitedScreenContract.Intent.ClickItem(it.listComponentIds))
                 }
             }
         }, modifier = Modifier.padding(top = 66.dp))

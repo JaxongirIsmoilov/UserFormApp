@@ -1,5 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.main
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -81,6 +82,7 @@ class MainScreen @Inject constructor(val myPref: MyPref) : AndroidScreen() {
     }
 }
 
+@SuppressLint("MutableCollectionMutableState")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreenContent(
@@ -97,9 +99,7 @@ fun MainScreenContent(
     var shouldShowError by remember {
         mutableStateOf(false)
     }
-    var componentsId by remember {
-
-    }
+    var componentsId by remember { mutableStateOf(arrayListOf<String>()) }
     val density = LocalDensity.current
     val weight = LocalConfiguration.current.screenWidthDp
     Box(modifier = Modifier.fillMaxSize()) {
@@ -149,8 +149,9 @@ fun MainScreenContent(
                                 .wrapContentHeight()
                                 .padding(top = 10.dp)
                         ) {
-                            val uuid=UUID.randomUUID().toString()
+                            val uuid = UUID.randomUUID().toString()
                             uiState.value.components.forEach { data ->
+                                componentsId.add(data.id)
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
@@ -607,7 +608,9 @@ fun MainScreenContent(
 
                                                                     onSelectionChanged = {
                                                                         onEventDispatchers.invoke(
-                                                                            MainContract.Intent.UpdateComponent(data)
+                                                                            MainContract.Intent.UpdateComponent(
+                                                                                data
+                                                                            )
                                                                         )
                                                                         if (data.operators.isNotEmpty()) {
                                                                             myLog("spinner compo")
@@ -863,7 +866,7 @@ fun MainScreenContent(
                                             uiState.value.components.forEach { data ->
                                                 onEventDispatchers.invoke(
                                                     MainContract.Intent.ClickAsDraft(
-
+                                                        componentsId, context
                                                     )
                                                 )
                                             }
@@ -878,10 +881,10 @@ fun MainScreenContent(
                                             )
                                         ), onClick = {
                                             if (!shouldShowError) {
-                                                uiState.value.components.forEach {data->
+                                                uiState.value.components.forEach { data ->
                                                     onEventDispatchers.invoke(
                                                         MainContract.Intent.ClickAsSaved(
-                                                            data, "", "saved", uuid, context
+                                                            componentsId, context
                                                         )
                                                     )
                                                 }

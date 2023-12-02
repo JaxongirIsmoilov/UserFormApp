@@ -28,6 +28,7 @@ interface DraftScreenContract {
         data class UpdateComponent(val componentData: ComponentData) : Intent
         data class UpdateList(val list: List<String>) : Intent
         data class CheckedComponent(val component: ComponentData) : Intent
+        data class GetComponents(val list: List<String>):Intent
 
 
     }

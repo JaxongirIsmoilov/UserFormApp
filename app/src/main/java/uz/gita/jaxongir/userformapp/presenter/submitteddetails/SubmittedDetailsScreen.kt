@@ -47,13 +47,12 @@ import coil.compose.AsyncImage
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
-import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
 
-class DetailsScreen(val list: List<ComponentData>) : AndroidScreen() {
+class DetailsScreen(val list: List<String>) : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     override fun Content() {
@@ -62,7 +61,6 @@ class DetailsScreen(val list: List<ComponentData>) : AndroidScreen() {
         DetailsScreenContent(
             uiState = viewModel.uiState.collectAsState(),
             onEventDispatchers = viewModel::onEventDispatcher,
-            list
         )
     }
 }
@@ -72,7 +70,6 @@ class DetailsScreen(val list: List<ComponentData>) : AndroidScreen() {
 fun DetailsScreenContent(
     uiState: State<SubmittedDetailsContract.UIState>,
     onEventDispatchers: (SubmittedDetailsContract.Intent) -> Unit,
-    list: List<ComponentData>
 ) {
     val density = LocalDensity.current
     val weight = LocalConfiguration.current.screenWidthDp
@@ -84,7 +81,7 @@ fun DetailsScreenContent(
         ) {
 
             Box(modifier = Modifier.fillMaxSize()) {
-                if (list.isEmpty()) {
+                if (uiState.value.submittedDetails.isEmpty()) {
                     Text(
                         text = "There is no components yet!",
                         fontSize = 22.sp,
@@ -107,7 +104,7 @@ fun DetailsScreenContent(
                                 .wrapContentHeight()
                                 .padding(top = 10.dp)
                         ) {
-                            list.forEach { data ->
+                            uiState.value.submittedDetails.forEach { data ->
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {

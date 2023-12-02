@@ -59,7 +59,7 @@ fun DraftItem(
 
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "List size:${entity.listComponents.size}", modifier = Modifier
+                text = "List size:${entity.listComponentIds.size}", modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(bottom = 16.dp),
                 style = TextStyle(
@@ -72,7 +72,7 @@ fun DraftItem(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = entity.date, modifier = Modifier
+                text = "20:19", modifier = Modifier
                     .align(Alignment.Bottom)
                     .padding(bottom = 2.dp),
                 style = TextStyle(

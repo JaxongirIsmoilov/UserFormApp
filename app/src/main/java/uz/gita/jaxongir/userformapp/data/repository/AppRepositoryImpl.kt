@@ -14,30 +14,30 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
+import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
-import uz.gita.jaxongir.userformapp.data.local.room.dao.Dao
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormData
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormRequest
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
+import uz.gita.jaxongir.userformapp.utills.myLog2
 import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val pref: MyPref,
-    private val dao: Dao,
     @ApplicationContext val context: Context
 ) : AppRepository {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     private val converter = Gson()
     override fun addDraftedItems(request: FormRequest): Flow<Result<String>> = callbackFlow {
-        firestore.collection("Drafts").add(request).addOnSuccessListener {
-            Toast.makeText(context, "Successfully saved as draft!", Toast.LENGTH_SHORT).show()
+        firestore.collection("Forms").add(request).addOnSuccessListener {
+//            Toast.makeText(context, "Successfully saved as draft!", Toast.LENGTH_SHORT).show()
             trySend(Result.success("Success"))
         }
             .addOnFailureListener {
-                Toast.makeText(context, "Failed to save", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Failed to save", Toast.LENGTH_SHORT).show()
                 trySend(Result.failure(IllegalArgumentException("Failed")))
             }
 
@@ -45,12 +45,10 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     override fun addSavedItems(request: FormRequest): Flow<Result<String>> = callbackFlow {
-        firestore.collection("Drafts").add(request).addOnSuccessListener {
+        firestore.collection("Forms").add(request).addOnSuccessListener {
             trySend(Result.success("Success"))
-            Toast.makeText(context, "Successfully saved as submitted!", Toast.LENGTH_SHORT).show()
         }
             .addOnFailureListener {
-                Toast.makeText(context, "Failed to save", Toast.LENGTH_SHORT).show()
                 trySend(Result.failure(IllegalArgumentException("Failed")))
             }
 
@@ -60,7 +58,7 @@ class AppRepositoryImpl @Inject constructor(
 
     override fun getAllSavedItemsList(userID: String): Flow<Result<List<FormData>>> = callbackFlow {
         val savedItemList = arrayListOf<FormData>()
-        firestore.collection("Forms").whereEqualTo("isDraft", false).get()
+        firestore.collection("Forms").whereEqualTo("draft", false).get()
             .addOnSuccessListener {
                 it.documents.forEach {
                     savedItemList.add(
@@ -86,10 +84,11 @@ class AppRepositoryImpl @Inject constructor(
     override fun getAllDraftedItemsList(userID: String): Flow<Result<List<FormData>>> =
         callbackFlow {
             val draftedItemsList = arrayListOf<FormData>()
-            firestore.collection("Forms").whereEqualTo("isDraft", true).get()
+            firestore.collection("Forms").whereEqualTo("draft", true).get()
                 .addOnSuccessListener {
                     it.documents.forEach {
-                        draftedItemsList.add(
+                        myLog2("list document $it")
+                      val state=  draftedItemsList.add(
                             FormData(
                                 it.id,
                                 converter.fromJson(
@@ -100,7 +99,9 @@ class AppRepositoryImpl @Inject constructor(
                                 userID
                             )
                         )
+                        myLog2("state:$state")
                     }
+                    myLog2("size2 :${draftedItemsList.size}")
                     trySend(Result.success(draftedItemsList))
                 }
                 .addOnFailureListener {
@@ -115,7 +116,7 @@ class AppRepositoryImpl @Inject constructor(
         callbackFlow {
             val componentList = arrayListOf<ComponentData>()
             firestore.collection("Components")
-                .whereEqualTo("componentId", componentId)
+                .whereEqualTo("id", componentId)
                 .get()
                 .addOnSuccessListener {
                     it.documents.forEach {
@@ -207,11 +208,22 @@ class AppRepositoryImpl @Inject constructor(
                                     .toString().toInt(),
                                 rowId = it.data?.getOrDefault("rowId", "0").toString(),
                                 weight = it.data?.getOrDefault("weight", "").toString(),
-                                draftId = it.data?.getOrDefault(
-                                    "draftId",
+                                selectedSpinnerText = it.data?.getOrDefault(
+                                    "selectedSpinnerText",
                                     ""
                                 ).toString(),
-                            )
+                                imageType = converter.fromJson(
+                                    it.data?.getOrDefault(
+                                        "imageType",
+                                        ImageTypeEnum.NONE.toString()
+                                    ).toString(), ImageTypeEnum::class.java
+                                ),
+                                inValues = converter.fromJson(
+                                    it.data?.getOrDefault("inValues", "[]").toString(),
+                                    Array<String>::class.java
+                                ).asList(),
+
+                                )
 
                         )
                     }
@@ -343,15 +355,18 @@ class AppRepositoryImpl @Inject constructor(
                                     .toString().toInt(),
                                 rowId = it.data?.getOrDefault("rowId", "0").toString(),
                                 weight = it.data?.getOrDefault("weight", "").toString(),
-                                draftId = it.data?.getOrDefault(
-                                    "draftId",
+                                selectedSpinnerText = it.data?.getOrDefault(
+                                    "selectedSpinnerText",
                                     ""
                                 ).toString(),
+                                imageType = ImageTypeEnum.NONE,
+                                inValues = converter.fromJson(
+                                    it.data?.getOrDefault("inValues", "[]").toString(),
+                                    Array<String>::class.java
+                                ).asList(),
                             )
                         )
                     }
-
-
                     trySend(Result.success(resultList))
                 }
                 .addOnFailureListener {

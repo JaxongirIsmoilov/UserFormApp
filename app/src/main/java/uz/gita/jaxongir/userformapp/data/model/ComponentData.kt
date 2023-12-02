@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
-import uz.gita.jaxongir.userformapp.data.local.room.entity.ComponentEntity
 
 data class ComponentData(
     val id: String = "",
@@ -40,46 +39,8 @@ data class ComponentData(
     val imageType: ImageTypeEnum = ImageTypeEnum.NONE,
     val inValues: List<String> = listOf(),
     val isVisible: Boolean,
-    val draftId: String,
-) {
-    private val converter = Gson()
+)
 
-    fun toEntity(): ComponentEntity = ComponentEntity(
-        id = id,
-        userId = userId,
-        locId = locId,
-        idEnteredByUser = idEnteredByUser,
-        content = content,
-        textFieldType = textFieldType,
-        maxLines = maxLines,
-        maxLength = maxLength,
-        minLength = minLength,
-        maxValue = maxValue,
-        minValue = minValue,
-        isMulti = isMulti,
-        variants = variants,
-        selected = selected,
-        connectedValues = connectedValues,
-        connectedIds = connectedIds,
-        operators = operators,
-        type = type,
-
-        isRequired = isRequired,
-        imgUri = imgUri,
-        ratioX = ratioX,
-        ratioY = ratioY,
-        customHeight = customHeight,
-        rowId = rowId,
-        backgroundColor = backgroundColor,
-        weight = weight,
-        imageType = imageType,
-        isVisible = isVisible,
-        inValues = inValues,
-        enteredValue = enteredValue,
-        draftId = draftId,
-        selectedSpinnerText = selectedSpinnerText
-    )
-}
 
 val defaultData = ComponentData(
     "1",
@@ -111,6 +72,5 @@ val defaultData = ComponentData(
     "",
     ImageTypeEnum.NONE,
     listOf(),
-    false,
-    ""
+    false
 )

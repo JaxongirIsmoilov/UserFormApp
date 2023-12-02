@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormRequest
+import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import uz.gita.jaxongir.userformapp.utills.myLog
 import uz.gita.jaxongir.userformapp.utills.myLog2
@@ -26,7 +27,6 @@ class DraftDetailsViewModelImpl @Inject constructor(
 ) : ViewModel(), DraftScreenContract.ViewModel {
     override val uiState =
         MutableStateFlow(DraftScreenContract.UiState())
-
     override fun onEventDispatcher(intent: DraftScreenContract.Intent) {
         when (intent) {
             is DraftScreenContract.Intent.SaveAsDraft -> {
@@ -70,6 +70,23 @@ class DraftDetailsViewModelImpl @Inject constructor(
             DraftScreenContract.Intent.Back -> {
                 viewModelScope.launch {
                     draftDispatcher.backToDraftsListScreen()
+                }
+            }
+
+            is DraftScreenContract.Intent.GetComponents ->{
+                val list= arrayListOf<ComponentData>()
+                viewModelScope.launch {
+                    intent.list.forEach {
+                        appRepository.getComponentByComponentId(it).onEach {
+                            it.onFailure {
+
+                            }
+                            it.onSuccess {
+                                list.add(it)
+                            }
+                        }.launchIn(viewModelScope)
+                    }
+                    uiState.update { it.copy(list = list) }
                 }
             }
 
