@@ -1,6 +1,7 @@
 package uz.gita.jaxongir.userformapp.presenter.drafts_list
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -41,6 +42,7 @@ class DraftScreen : AndroidScreen() {
             vm.uiState.collectAsState(),
             onEventDispatcher = vm::onEventDispatcher
         )
+
     }
 }
 
@@ -49,6 +51,8 @@ fun DraftsScreenComponent(
     uiState: State<DraftContract.UIState>,
     onEventDispatcher: (DraftContract.Intent) -> Unit
 ) {
+
+
     Column {
         Box(
             modifier = Modifier
@@ -76,14 +80,16 @@ fun DraftsScreenComponent(
             )
         }
 //        if (uiState.value.isLoading) {
+//            Log.d("TTT", "DraftsScreenComponent: ${uiState.value.isLoading}")
 //            CircularProgressIndicator(
-//                modifier = Modifier.padding(2.dp)
+//                modifier = Modifier
+//                    .padding(2.dp)
 //                    .align(Alignment.CenterHorizontally)
-//                    .padding(top  = 200.dp),
+//                    .padding(top = 200.dp),
 //                color = Color.Red,
 //                strokeWidth = 4.dp
 //            )
-//        }else{
+//        } else {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
