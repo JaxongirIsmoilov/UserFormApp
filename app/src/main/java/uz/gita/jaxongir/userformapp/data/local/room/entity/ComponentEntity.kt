@@ -32,6 +32,7 @@ data class ComponentEntity(
     val type: ComponentEnum,
     val isRequired: Boolean = false,
     val imgUri: String = "",
+    val selectedSpinnerText: String,
     val ratioX: Int,
     val enteredValue: String,
     val ratioY: Int,
@@ -75,6 +76,7 @@ data class ComponentEntity(
         imageType = imageType,
         inValues = inValues,
         isVisible = isVisible,
-        draftId = draftId
+        draftId = draftId,
+        selectedSpinnerText = selectedSpinnerText
     )
 }

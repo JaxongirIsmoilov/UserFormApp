@@ -25,17 +25,7 @@ class SubmitedScreenViewModelImpl @Inject constructor(
         MutableStateFlow(SubmitedScreenContract.UIState())
 
     init {
-        appRepository.getSavedComponents().onEach {
-            it.onSuccess { list ->
-                myLog2("success get saved list:$list")
-                uiState.update {
-                    it.copy(list = list)
-                }
-            }
-            it.onFailure {
-                myLog2("exception:${it.localizedMessage}")
-            }
-        }.launchIn(viewModelScope)
+
     }
 
 
@@ -51,6 +41,20 @@ class SubmitedScreenViewModelImpl @Inject constructor(
                 viewModelScope.launch {
                     direction.moveToComponenetDetailScreen(intent.list)
                 }
+            }
+
+            is SubmitedScreenContract.Intent.GetSubmittedItems -> {
+                appRepository.getSavedComponents(intent.draftId, intent.userId).onEach {
+                    it.onSuccess { list ->
+                        myLog2("success get saved list:$list")
+                        uiState.update {
+                            it.copy(list = list)
+                        }
+                    }
+                    it.onFailure {
+                        myLog2("exception:${it.localizedMessage}")
+                    }
+                }.launchIn(viewModelScope)
             }
         }
     }

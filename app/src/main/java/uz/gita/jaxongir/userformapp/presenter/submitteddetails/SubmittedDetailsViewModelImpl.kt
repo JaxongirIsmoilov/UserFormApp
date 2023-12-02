@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
+import uz.gita.jaxongir.userformapp.presenter.submitedScreen.SubmitedScreenContract
 import uz.gita.jaxongir.userformapp.utills.myLog
 import uz.gita.jaxongir.userformapp.utills.myLog2
 import javax.inject.Inject
@@ -50,6 +51,19 @@ class SubmittedDetailsViewModelImpl @Inject constructor(
                    direction.back()
                 }
             }
+
+            is SubmittedDetailsContract.Intent.GetSubmittedItems -> {
+                repository.getSavedComponents(intent.draftId, intent.userId).onEach {
+                    it.onSuccess { list ->
+                        myLog2("success get saved list:$list")
+                        uiState.update {
+                            it.copy(list = list)
+                        }
+                    }
+                    it.onFailure {
+                        myLog2("exception:${it.localizedMessage}")
+                    }
+                }.launchIn(viewModelScope)
         }
     }
 }

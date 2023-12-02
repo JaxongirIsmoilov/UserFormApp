@@ -5,9 +5,9 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import uz.gita.jaxongir.userformapp.data.local.room.dao.Dao
 import uz.gita.jaxongir.userformapp.data.local.room.entity.ComponentEntity
-import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormData
 
-@Database([ComponentEntity::class, FormEntity::class], version = 1, exportSchema = false)
+@Database([ComponentEntity::class, FormData::class], version = 1, exportSchema = false)
 @TypeConverters(Converter::class)
 abstract class Database : RoomDatabase() {
     abstract fun getDao(): Dao

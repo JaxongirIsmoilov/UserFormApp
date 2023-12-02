@@ -2,6 +2,7 @@ package uz.gita.jaxongir.userformapp.presenter.submitteddetails
 
 import kotlinx.coroutines.flow.StateFlow
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
+import uz.gita.jaxongir.userformapp.presenter.submitedScreen.SubmitedScreenContract
 
 interface SubmittedDetailsContract {
     interface ViewModel{
@@ -11,9 +12,10 @@ interface SubmittedDetailsContract {
 
     interface Intent {
         object BackToSubmits: Intent
-        data class SubmittedDetails(
-            val componentData: ComponentData
-        ): Intent
+        data class GetSubmittedItems(val userId: String, val draftId: String) :
+            Intent
+
+
     }
 
     data class UIState(

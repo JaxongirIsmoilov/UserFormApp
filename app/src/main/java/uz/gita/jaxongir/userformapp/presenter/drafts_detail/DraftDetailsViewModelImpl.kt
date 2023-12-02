@@ -1,7 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.drafts_detail
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormRequest
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import uz.gita.jaxongir.userformapp.utills.myLog
 import uz.gita.jaxongir.userformapp.utills.myLog2
@@ -31,23 +31,39 @@ class DraftDetailsViewModelImpl @Inject constructor(
         when (intent) {
             is DraftScreenContract.Intent.SaveAsDraft -> {
                 viewModelScope.launch {
-                    appRepository.addAsDraft(intent.entity).onEach {
-                        myLog2("successs add draft vm")
-                        it.onSuccess { draftDispatcher.backToDraftsListScreen() }
+                    appRepository.addSavedItems(
+                        FormRequest(
+                            intent.list,
+                            isDraft = true,
+                            myShared.getId()
+                        )
+                    ).onEach {
+                        it.onSuccess {
+                            draftDispatcher.backToDraftsListScreen()
+                        }
+                        it.onFailure {
+
+                        }
                     }.launchIn(viewModelScope)
-                    Toast.makeText(intent.context, "Saved as draft", Toast.LENGTH_SHORT).show()
                 }
             }
 
             is DraftScreenContract.Intent.SaveAsSaved -> {
                 viewModelScope.launch {
-
-                    appRepository.addAsSaved(intent.entity).onEach {
+                    appRepository.addSavedItems(
+                        FormRequest(
+                            intent.list,
+                            isDraft = false,
+                            myShared.getId()
+                        )
+                    ).onEach {
                         it.onSuccess {
-                            myLog2("successs add submitted vm")
-                            draftDispatcher.backToDraftsListScreen() }
+                            draftDispatcher.backToDraftsListScreen()
+                        }
+                        it.onFailure {
+
+                        }
                     }.launchIn(viewModelScope)
-                    Toast.makeText(intent.context, "Saved as saved", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -141,7 +157,7 @@ class DraftDetailsViewModelImpl @Inject constructor(
 
 
             is DraftScreenContract.Intent.UpdateList -> {
-                uiState.update { it.copy(list = intent.list) }
+                uiState.update { it.copy(listIds = intent.list) }
             }
 
 

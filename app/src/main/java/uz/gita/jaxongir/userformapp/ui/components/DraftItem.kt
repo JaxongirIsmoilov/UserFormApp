@@ -23,11 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormData
 
 @Composable
 fun DraftItem(
-    entity: FormEntity,
+    entity: FormData,
     onClick: () -> Unit
 ) {
     Box(

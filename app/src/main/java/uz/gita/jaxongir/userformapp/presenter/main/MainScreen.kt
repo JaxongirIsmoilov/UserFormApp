@@ -59,7 +59,6 @@ import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
-import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
@@ -97,6 +96,9 @@ fun MainScreenContent(
     systemUiController.setStatusBarColor(color = Color(0xFFFF3951))
     var shouldShowError by remember {
         mutableStateOf(false)
+    }
+    var componentsId by remember {
+
     }
     val density = LocalDensity.current
     val weight = LocalConfiguration.current.screenWidthDp
@@ -861,7 +863,7 @@ fun MainScreenContent(
                                             uiState.value.components.forEach { data ->
                                                 onEventDispatchers.invoke(
                                                     MainContract.Intent.ClickAsDraft(
-                                                        data, "", "draft", id, context
+
                                                     )
                                                 )
                                             }

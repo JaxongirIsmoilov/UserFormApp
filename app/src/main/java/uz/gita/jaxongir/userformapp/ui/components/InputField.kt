@@ -74,13 +74,11 @@ fun InputField(
                             newContentForNumber = ""
                             onEdit("0")
                         } else {
-                            if (input.toInt() < minValue) {
-                                newContentForNumber = minValue.toString()
+                            if (input.toInt() > maxValue) {
+                                newContentForNumber = newContentForNumber
                                 onEdit(newContentForNumber)
-                            } else if (input.toInt() in minValue..maxValue) {
-                                newContentForNumber = input
-                                onEdit(newContentForNumber)
-                            } else {
+                            }
+                            else {
                                 newContentForNumber = maxValue.toString()
                                 onEdit(newContentForNumber)
                             }

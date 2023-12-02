@@ -80,7 +80,7 @@ fun DraftsScreenComponent(
         ) {
             items(uiState.value.list) {
                 DraftItem(entity = it) {
-                    onEventDispatcher.invoke(DraftContract.Intent.ClickItem(it.listComponents))
+                    onEventDispatcher.invoke(DraftContract.Intent.ClickItem(it.listComponentIds))
                 }
             }
         }

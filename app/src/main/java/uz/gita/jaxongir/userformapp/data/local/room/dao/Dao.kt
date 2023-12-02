@@ -5,20 +5,20 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormData
 
 @Dao
 interface Dao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertDatas(entity: FormEntity)
+    suspend fun insertDatas(entity: FormData)
 
 
     @Query("select * from formentity where isDraft = :isDraft AND userId=:userId order by id asc ")
-     fun getAllDrafts(isDraft: Boolean = true, userId: String): Flow<List<FormEntity>>
+     fun getAllDrafts(isDraft: Boolean = true, userId: String): Flow<List<FormData>>
 
 
     @Query("select * from formentity where isSubmitted = :isSubmitted AND userId=:userId order by id asc ")
-     fun getAllSubmitteds(isSubmitted: Boolean = true, userId: String):Flow<List<FormEntity>>
+     fun getAllSubmitteds(isSubmitted: Boolean = true, userId: String):Flow<List<FormData>>
 
 
 }

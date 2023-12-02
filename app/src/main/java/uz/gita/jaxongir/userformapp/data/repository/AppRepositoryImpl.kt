@@ -1,10 +1,13 @@
 package uz.gita.jaxongir.userformapp.data.repository
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -14,8 +17,9 @@ import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.dao.Dao
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormData
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormRequest
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
-import uz.gita.jaxongir.userformapp.data.model.DraftModel
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import javax.inject.Inject
 
@@ -23,117 +27,201 @@ class AppRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val pref: MyPref,
     private val dao: Dao,
+    @ApplicationContext val context: Context
 ) : AppRepository {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    private val converter = Gson()
+    override fun addDraftedItems(request: FormRequest): Flow<Result<String>> = callbackFlow {
+        firestore.collection("Drafts").add(request).addOnSuccessListener {
+            Toast.makeText(context, "Successfully saved as draft!", Toast.LENGTH_SHORT).show()
+            trySend(Result.success("Success"))
+        }
+            .addOnFailureListener {
+                Toast.makeText(context, "Failed to save", Toast.LENGTH_SHORT).show()
+                trySend(Result.failure(IllegalArgumentException("Failed")))
+            }
 
-    override fun getDraftedItems(draftId: String, userID: String): Flow<Result<List<DraftModel>>> =
+        awaitClose()
+    }
+
+    override fun addSavedItems(request: FormRequest): Flow<Result<String>> = callbackFlow {
+        firestore.collection("Drafts").add(request).addOnSuccessListener {
+            trySend(Result.success("Success"))
+            Toast.makeText(context, "Successfully saved as submitted!", Toast.LENGTH_SHORT).show()
+        }
+            .addOnFailureListener {
+                Toast.makeText(context, "Failed to save", Toast.LENGTH_SHORT).show()
+                trySend(Result.failure(IllegalArgumentException("Failed")))
+            }
+
+        awaitClose()
+    }
+
+
+    override fun getAllSavedItemsList(userID: String): Flow<Result<List<FormData>>> = callbackFlow {
+        val savedItemList = arrayListOf<FormData>()
+        firestore.collection("Forms").whereEqualTo("isDraft", false).get()
+            .addOnSuccessListener {
+                it.documents.forEach {
+                    savedItemList.add(
+                        FormData(
+                            it.id, converter.fromJson(
+                                it.data?.getOrDefault("listComponentIds", "[]").toString(),
+                                Array<String>::class.java
+                            ).asList(), isDraft = false, userID
+                        )
+                    )
+                }
+                trySend(Result.success(savedItemList))
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Failed to get", Toast.LENGTH_SHORT).show()
+                trySend(Result.failure(IllegalArgumentException("Failed to get")))
+            }
+
+        awaitClose()
+    }
+
+
+    override fun getAllDraftedItemsList(userID: String): Flow<Result<List<FormData>>> =
         callbackFlow {
-            firestore.collection("Drafts")
-                .whereEqualTo("draftId", draftId)
-                .get()
+            val draftedItemsList = arrayListOf<FormData>()
+            firestore.collection("Forms").whereEqualTo("isDraft", true).get()
                 .addOnSuccessListener {
-                    val list = arrayListOf<DraftModel>()
-
                     it.documents.forEach {
-                        list.add(
-                            DraftModel(
-                                id = it.data?.getOrDefault("draftId", "").toString(),
-                                componentId = it.data?.getOrDefault("componentId", "").toString(),
-                                value = it.data?.getOrDefault("value", "").toString(),
-                                locId = it.data?.getOrDefault("locId", "0").toString().toLong(),
-                                name = it.data?.getOrDefault("name", "").toString()
+                        draftedItemsList.add(
+                            FormData(
+                                it.id,
+                                converter.fromJson(
+                                    it.data?.getOrDefault("listComponentIds", "[]").toString(),
+                                    Array<String>::class.java
+                                ).asList(),
+                                isDraft = true,
+                                userID
                             )
                         )
                     }
-                    trySend(Result.success(list))
+                    trySend(Result.success(draftedItemsList))
                 }
                 .addOnFailureListener {
-                    trySend(Result.failure(it))
+                    Toast.makeText(context, "Failed to get", Toast.LENGTH_SHORT).show()
+                    trySend(Result.failure(IllegalArgumentException("Failed to get")))
                 }
 
             awaitClose()
         }
 
-    override fun getSavedComponents(
-        draftId: String,
-        userID: String
-    ): Flow<Result<List<DraftModel>>> = callbackFlow {
-        firestore.collection("Submits")
-            .whereEqualTo("draftId", draftId)
-            .get()
-            .addOnSuccessListener {
-                val list = arrayListOf<DraftModel>()
+    override fun getComponentByComponentId(componentId: String): Flow<Result<ComponentData>> =
+        callbackFlow {
+            val componentList = arrayListOf<ComponentData>()
+            firestore.collection("Components")
+                .whereEqualTo("componentId", componentId)
+                .get()
+                .addOnSuccessListener {
+                    it.documents.forEach {
+                        componentList.add(
+                            ComponentData(
+                                id = it.id,
+                                userId = it.data?.getOrDefault("userId", "null").toString(),
+                                locId = it.data?.getOrDefault("locId", "0").toString()
+                                    .toLong(),
+                                idEnteredByUser = it.data?.getOrDefault(
+                                    "idEnteredByUser",
+                                    "null"
+                                )
+                                    .toString(),
+                                content = it.data?.getOrDefault("content", "null")
+                                    .toString(),
+                                textFieldType = converter.fromJson(
+                                    it.data?.getOrDefault(
+                                        "textFieldType",
+                                        "null"
+                                    ).toString(), TextFieldType::class.java
+                                ),
+                                maxLines = Integer.parseInt(
+                                    it.data?.getOrDefault("maxLines", "0").toString()
+                                ),
+                                maxLength = Integer.parseInt(
+                                    it.data?.getOrDefault("maxLength", "0").toString()
+                                ),
+                                minLength = Integer.parseInt(
+                                    it.data?.getOrDefault("minLength", "0").toString()
+                                ),
+                                maxValue = Integer.parseInt(
+                                    it.data?.getOrDefault("maxValue", "0").toString()
+                                ),
+                                minValue = Integer.parseInt(
+                                    it.data?.getOrDefault("minValue", "0").toString()
+                                ),
+                                isMulti = it.data?.getOrDefault("isMulti", "false")
+                                    .toString() == "true",
+                                variants = converter.fromJson(
+                                    it.data?.getOrDefault("variants", "[]").toString(),
+                                    Array<String>::class.java
+                                ).asList(),
+                                selected = converter.fromJson(
+                                    it.data?.getOrDefault("selected", "[]").toString(),
+                                    Array<Boolean>::class.java
+                                ).asList(),
+                                connectedIds = converter.fromJson(
+                                    it.data?.getOrDefault(
+                                        "connectedIds",
+                                        ""
+                                    ).toString(), Array<String>::class.java
+                                ).asList(),
+                                connectedValues = converter.fromJson(
+                                    it.data?.getOrDefault(
+                                        "connectedValues",
+                                        ""
+                                    ).toString(), Array<String>::class.java
+                                ).asList(),
+                                operators = converter.fromJson(
+                                    it.data?.getOrDefault(
+                                        "operators",
+                                        ""
+                                    ).toString(), object : TypeToken<List<String>>() {}.type
+                                ),
+                                type = converter.fromJson(
+                                    it.data?.getOrDefault("type", "").toString(),
+                                    ComponentEnum::class.java
+                                ),
+                                enteredValue = it.data?.getOrDefault("enteredValue", "")
+                                    .toString(),
+                                isVisible = it.data?.getOrDefault("visible", "true")
+                                    .toString() == "true",
+                                isRequired = it.data?.getOrDefault("required", false)
+                                    .toString() == "true",
+                                imgUri = it.data?.getOrDefault("imgUri", "").toString(),
+                                ratioX = Integer.parseInt(
+                                    it.data?.getOrDefault("ratioX", "0").toString()
+                                ),
+                                ratioY = Integer.parseInt(
+                                    it.data?.getOrDefault("ratioY", "0").toString()
+                                ),
+                                customHeight = it.data?.getOrDefault("customHeight", "0")
+                                    .toString(),
+                                backgroundColor = it.data?.getOrDefault(
+                                    "backgroundColor",
+                                    "${Color.Transparent.toArgb()}"
+                                )
+                                    .toString().toInt(),
+                                rowId = it.data?.getOrDefault("rowId", "0").toString(),
+                                weight = it.data?.getOrDefault("weight", "").toString(),
+                                draftId = it.data?.getOrDefault(
+                                    "draftId",
+                                    ""
+                                ).toString(),
+                            )
 
-                it.documents.forEach {
-                    list.add(
-                        DraftModel(
-                            id = it.data?.getOrDefault("draftId", "").toString(),
-                            componentId = it.data?.getOrDefault("componentId", "").toString(),
-                            value = it.data?.getOrDefault("value", "").toString(),
-                            locId = it.data?.getOrDefault("locId", "0").toString().toLong(),
-                            name = it.data?.getOrDefault("name", "").toString()
                         )
-                    )
+                    }
+                    trySend(Result.success(componentList.first()))
                 }
-                trySend(Result.success(list))
-            }
-            .addOnFailureListener {
-                trySend(Result.failure(it))
-            }
-
-        awaitClose()
-
-    }
-
-    override fun addAsDraft(
-        componentData: ComponentData,
-        value: String,
-        name: String,
-        draftId: String,
-    ): Flow<Result<String>> = callbackFlow {
-        firestore.collection("Drafts")
-            .add(
-                DraftModel(
-                    id = draftId,
-                    componentId = componentData.id,
-                    value = value,
-                    locId = componentData.locId,
-                    name = name
-                )
-            )
-            .addOnSuccessListener {
-                trySend(Result.success("Success"))
-            }
-            .addOnFailureListener {
-                trySend(Result.failure(it))
-            }
-        awaitClose()
-    }
-
-    override fun addAsSaved(
-        componentData: ComponentData,
-        value: String,
-        name: String,
-        draftId: String,
-    ): Flow<Result<String>> = callbackFlow {
-        firestore.collection("Submits")
-            .add(
-                DraftModel(
-                    id = draftId,
-                    componentId = componentData.id,
-                    value = value,
-                    locId = componentData.locId,
-                    name = name
-                )
-            )
-            .addOnSuccessListener {
-                trySend(Result.success("Success"))
-            }
-            .addOnFailureListener {
-                trySend(Result.failure(it))
-            }
-        awaitClose()
-    }
+                .addOnFailureListener {
+                    trySend(Result.failure(it))
+                }
+            awaitClose()
+        }
 
 
     override fun login(name: String, password: String): Flow<Result<Unit>> = callbackFlow {
@@ -300,57 +388,5 @@ class AppRepositoryImpl @Inject constructor(
         awaitClose()
     }
 
-    override fun getSavedComponentsById(componentId: String): Flow<Result<List<DraftModel>>> =
-        callbackFlow {
-            val resultData = arrayListOf<DraftModel>()
-            firestore.collection("Submits")
-                .whereEqualTo("componentId", componentId)
-                .get()
-                .addOnSuccessListener {
-                    it.documents.forEach {
-                        resultData.add(
-                            DraftModel(
-                                id = it.id,
-                                componentId = componentId,
-                                value = it.data?.getOrDefault("value", "").toString(),
-                                locId = it.data?.getOrDefault("data", "").toString().toLong(),
-                                name = it.data?.getOrDefault("name", "").toString()
-                            )
-                        )
-                        trySend(
-                            Result.success(resultData)
-                        )
-                    }
-                }
-                .addOnFailureListener {
-                    trySend(Result.failure(it))
-                }
-        }
 
-    override fun getDraftedComponentsById(componentId: String): Flow<Result<List<DraftModel>>> =
-        callbackFlow {
-            val resultData = arrayListOf<DraftModel>()
-            firestore.collection("Drafts")
-                .whereEqualTo("componentId", componentId)
-                .get()
-                .addOnSuccessListener {
-                    it.documents.forEach {
-                        resultData.add(
-                            DraftModel(
-                                id = it.id,
-                                componentId = componentId,
-                                value = it.data?.getOrDefault("value", "").toString(),
-                                locId = it.data?.getOrDefault("data", "").toString().toLong(),
-                                name = it.data?.getOrDefault("name", "").toString()
-                            )
-                        )
-                        trySend(
-                            Result.success(resultData)
-                        )
-                    }
-                }
-                .addOnFailureListener {
-                    trySend(Result.failure(it))
-                }
-        }
 }

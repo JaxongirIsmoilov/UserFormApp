@@ -33,17 +33,12 @@ interface MainContract {
         object Load : Intent
 
         data class ClickAsSaved(
-            val componentData: ComponentData,
-            val value: String,
-            val name: String,
-            val savedId: String, val context: Context
+            val list: List<String>,
+            val context: Context
         ) : Intent
 
         data class ClickAsDraft(
-            val componentData: ComponentData,
-            val value: String,
-            val name: String,
-            val draftId: String,
+            val list: List<String>,
             val context: Context
         ) : Intent
 

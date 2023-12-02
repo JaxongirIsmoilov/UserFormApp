@@ -7,7 +7,6 @@ import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.room.entity.ComponentEntity
-import java.io.Serializable
 
 data class ComponentData(
     val id: String = "",
@@ -28,6 +27,7 @@ data class ComponentData(
     val connectedValues: List<String> = listOf(),
     val connectedIds: List<String> = listOf(),
     val operators: List<String> = listOf(),
+    val selectedSpinnerText: String,
     val type: ComponentEnum = ComponentEnum.SampleText,
     val isRequired: Boolean = false,
     val imgUri: String = "",
@@ -63,6 +63,7 @@ data class ComponentData(
         connectedIds = connectedIds,
         operators = operators,
         type = type,
+
         isRequired = isRequired,
         imgUri = imgUri,
         ratioX = ratioX,
@@ -75,7 +76,8 @@ data class ComponentData(
         isVisible = isVisible,
         inValues = inValues,
         enteredValue = enteredValue,
-        draftId = draftId
+        draftId = draftId,
+        selectedSpinnerText = selectedSpinnerText
     )
 }
 
@@ -98,6 +100,7 @@ val defaultData = ComponentData(
     emptyList<String>(),
     emptyList<String>(),
     emptyList<String>(),
+    "",
     ComponentEnum.Input,
     false,
     "",

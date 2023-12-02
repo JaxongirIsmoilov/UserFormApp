@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FormRequest
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import uz.gita.jaxongir.userformapp.utills.myLog
 import javax.inject.Inject
@@ -34,8 +35,6 @@ class MainViewModel @Inject constructor(
 
 
     init {
-
-
         uiState.update { it.copy(userName = pref.getUserName()) }
         viewModelScope.launch {
             uiState.update { it.copy(loading = true) }
@@ -62,18 +61,20 @@ class MainViewModel @Inject constructor(
         when (intent) {
             is MainContract.Intent.ClickAsDraft -> {
                 viewModelScope.launch {
-                    appRepository.addAsDraft(
-                        intent.componentData,
-                        intent.value,
-                        intent.name,
-                        intent.draftId
+                    appRepository.addDraftedItems(
+                        FormRequest(intent.list, true, pref.getId())
                     ).onEach {
+                        it.onSuccess {
+                            Toast.makeText(intent.context, "Saved as Draft", Toast.LENGTH_SHORT)
+                                .show()
+                            mainDirection.back()
+                        }
+                        it.onFailure {
+                            Toast.makeText(intent.context, "exception:$it", Toast.LENGTH_SHORT)
+                                .show()
+                        }
 
                     }.launchIn(viewModelScope)
-                    Toast.makeText(intent.context, "Saved as Draft", Toast.LENGTH_SHORT).show()
-                    mainDirection.back()
-
-
                 }
             }
 
@@ -81,15 +82,17 @@ class MainViewModel @Inject constructor(
             is MainContract.Intent.ClickAsSaved -> {
                 viewModelScope.launch {
                     Toast.makeText(intent.context, "Saved as Submitted", Toast.LENGTH_SHORT).show()
-                    appRepository.addAsSaved(
-                        intent.componentData,
-                        intent.value,
-                        intent.name,
-                        intent.draftId
+                    appRepository.addSavedItems(
+                        FormRequest(intent.list, isDraft = false, pref.getId())
                     ).onEach {
-
+                        it.onSuccess {
+                            mainDirection.back()
+                        }
+                        it.onFailure {
+                            Toast.makeText(intent.context,"exception:$it", Toast.LENGTH_SHORT).show()
+                        }
                     }.launchIn(viewModelScope)
-                    mainDirection.back()
+
                 }
             }
 

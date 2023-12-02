@@ -4,5 +4,5 @@ import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
 interface DraftDirection {
     suspend fun backToMain()
-    suspend fun draftDetails(list: List<ComponentData>)
+    suspend fun draftDetails(list: List<String>)
 }

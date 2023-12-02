@@ -60,8 +60,6 @@ import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
-import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
-import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
@@ -70,7 +68,7 @@ import uz.gita.jaxongir.userformapp.utills.myLog
 import javax.inject.Inject
 
 class DraftDetails @Inject constructor(
-    private val list: List<ComponentData>,
+    private val list: List<String>,
     private val myPref: MyPref
 ) : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -863,14 +861,8 @@ fun DraftDetailsContent(
                                                         ), onClick = {
                                                             onEventDispatchers.invoke(
                                                                 DraftScreenContract.Intent.SaveAsDraft(
-                                                                    FormEntity(
-                                                                        id = 0,
-                                                                        uiState.value.list,
-                                                                        isDraft = true,
-                                                                        isSubmitted = false,
-                                                                        myPref.getId(),
-                                                                        date = ""
-                                                                    ), context
+                                                                    list = uiState.value.listIds,
+                                                                    context
                                                                 )
                                                             )
                                                         }) {
@@ -886,14 +878,8 @@ fun DraftDetailsContent(
                                                             if (!shouldShowError) {
                                                                 onEventDispatchers.invoke(
                                                                     DraftScreenContract.Intent.SaveAsSaved(
-                                                                        FormEntity(
-                                                                            id = 0,
-                                                                            listComponents = uiState.value.list,
-                                                                            isDraft = false,
-                                                                            isSubmitted = true,
-                                                                            myPref.getId(),
-                                                                            date = ""
-                                                                        ), context
+                                                                        uiState.value.listIds,
+                                                                        context
                                                                     )
                                                                 )
                                                             } else {
@@ -931,14 +917,7 @@ fun DraftDetailsContent(
                                             ), onClick = {
                                                 onEventDispatchers.invoke(
                                                     DraftScreenContract.Intent.SaveAsDraft(
-                                                        FormEntity(
-                                                            id = 0,
-                                                            uiState.value.list,
-                                                            isDraft = true,
-                                                            isSubmitted = false,
-                                                            myPref.getId(),
-                                                            date = ""
-                                                        ), context = context
+                                                        uiState.value.listIds, context = context
                                                     )
                                                 )
                                             }) {
@@ -954,14 +933,7 @@ fun DraftDetailsContent(
                                                 if (!shouldShowError) {
                                                     onEventDispatchers.invoke(
                                                         DraftScreenContract.Intent.SaveAsSaved(
-                                                            FormEntity(
-                                                                id = 0,
-                                                                listComponents = uiState.value.list,
-                                                                isDraft = false,
-                                                                isSubmitted = true,
-                                                                myPref.getId(),
-                                                                date = ""
-                                                            ), context
+                                                            uiState.value.listIds, context
                                                         )
                                                     )
 

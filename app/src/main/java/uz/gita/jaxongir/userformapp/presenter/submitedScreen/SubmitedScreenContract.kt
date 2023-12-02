@@ -1,8 +1,8 @@
 package uz.gita.jaxongir.userformapp.presenter.submitedScreen
 
 import kotlinx.coroutines.flow.StateFlow
-import uz.gita.jaxongir.userformapp.data.local.room.entity.FormEntity
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
+import uz.gita.jaxongir.userformapp.data.model.DraftModel
 
 interface SubmitedScreenContract {
 
@@ -14,12 +14,13 @@ interface SubmitedScreenContract {
 
 
     data class UIState(
-        val list: List<FormEntity> = listOf()
+        val list: List<DraftModel> = listOf()
     )
 
 
     interface Intent {
         object Back : Intent
-        data class ClickItem(val list: List<ComponentData>):Intent
+        data class ClickItem(val list: List<ComponentData>) : Intent
+        data class GetSubmittedItems(val userId: String, val draftId: String) : Intent
     }
 }
