@@ -156,17 +156,17 @@ fun LoginScreenContent(
                 unfocusedBorderColor = Color(0xFFFF7686),
             )
         )
-        if (!errorText){
-            Text(text = "Password should be less than 16",
-                color = Color.White,
-            modifier = Modifier
-                .padding(horizontal = 12.dp))
-        }else{
-            Text(text = "Password should be less than 16",
-                color = Color.Red,
-                modifier = Modifier
-                    .padding(horizontal = 12.dp))
-        }
+//        if (!errorText){
+//            Text(text = "Password should be less than 16",
+//                color = Color.White,
+//            modifier = Modifier
+//                .padding(horizontal = 12.dp))
+//        }else{
+//            Text(text = "Password should be less than 16",
+//                color = Color.Red,
+//                modifier = Modifier
+//                    .padding(horizontal = 12.dp))
+//        }
         Spacer(modifier = Modifier.height(72.dp))
 
         Button(
