@@ -16,6 +16,7 @@ interface LoginContract {
 
     interface Intent {
         data class OnLogin(val name: String, val password: String, val context: Context):Intent
+        data class ProgressState(val state: Boolean) : Intent
     }
 
 

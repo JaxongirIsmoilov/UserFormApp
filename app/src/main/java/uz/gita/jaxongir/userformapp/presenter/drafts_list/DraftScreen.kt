@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -74,20 +75,31 @@ fun DraftsScreenComponent(
                     }, tint = Color.White
             )
         }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.White)
-        ) {
-            myLog2("list size: ${uiState.value.list}")
-            items(uiState.value.list) {
-                DraftItem(entity = it) {
-                    onEventDispatcher.invoke(DraftContract.Intent.ClickItem(it.listComponentIds))
+//        if (uiState.value.isLoading) {
+//            CircularProgressIndicator(
+//                modifier = Modifier.padding(2.dp)
+//                    .align(Alignment.CenterHorizontally)
+//                    .padding(top  = 200.dp),
+//                color = Color.Red,
+//                strokeWidth = 4.dp
+//            )
+//        }else{
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color.White)
+            ) {
+                myLog2("list size: ${uiState.value.list}")
+                items(uiState.value.list) {
+                    DraftItem(entity = it) {
+                        onEventDispatcher.invoke(DraftContract.Intent.ClickItem(it.listComponentIds))
+                    }
                 }
             }
         }
+
     }
-}
+
 
 @SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)

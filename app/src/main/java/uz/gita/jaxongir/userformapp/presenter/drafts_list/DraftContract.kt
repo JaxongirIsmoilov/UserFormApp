@@ -19,7 +19,8 @@ interface DraftContract {
     }
 
     data class UIState(
-        val list: List<FormData> = listOf()
+        val list: List<FormData> = listOf(),
+        val isLoading:Boolean = false
     )
 
 }

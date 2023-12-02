@@ -22,6 +22,7 @@ interface SubmittedDetailsContract {
     data class UIState(
         val submittedDetails: List<ComponentData> = emptyList(),
         val listIds: List<String> = listOf(),
+        val isLoading :Boolean  = false,
         val checkedComponent: ComponentData = defaultData
     )
 

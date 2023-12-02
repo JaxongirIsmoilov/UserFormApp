@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.ui.components.SelectedItem
+import uz.gita.jaxongir.userformapp.ui.theme.Purple80
 
 
 class SubmitedScreen : AndroidScreen() {
@@ -74,6 +76,17 @@ fun SubmitedScreenContent(
                     }, tint = Color.White
             )
         }
+//        if (uiState.value.isLoading) {
+//            CircularProgressIndicator(
+//                modifier = Modifier.padding(2.dp)
+//                    .align(Alignment.Center)
+//                    .padding(top  = 200.dp),
+//                color = Color.Red,
+//                strokeWidth = 4.dp
+//            )
+//        }
+//        else{
+
         LazyColumn(content = {
             items(uiState.value.list) {
                 SelectedItem(entity = it) {
@@ -81,8 +94,8 @@ fun SubmitedScreenContent(
                 }
             }
         }, modifier = Modifier.padding(top = 66.dp))
-    }
-}
+    }}
+
 
 
 @SuppressLint("UnrememberedMutableState")

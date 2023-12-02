@@ -15,7 +15,7 @@ interface MainContract {
         val userName: String = "User",
         val userId: String = "",
         val components: List<ComponentData> = emptyList(),
-        val rowComponenets: List<ComponentData> = listOf(),
+        val rowComponents: List<ComponentData> = listOf(),
         val checkedComponent: ComponentData? = null,
         val isLoading: Boolean = false
     )

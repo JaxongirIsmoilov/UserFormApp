@@ -39,6 +39,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             uiState.update { it.copy(loading = true) }
             appRepository.getComponentsByUserId(pref.getId())
+                .onStart { uiState.update { it.copy(isLoading = true) } }
+                .onCompletion { uiState.update { it.copy(isLoading = false) } }
                 .onEach {
                     it.onSuccess { components ->
                         val sortedList = components.sortedBy {
@@ -48,7 +50,7 @@ class MainViewModel @Inject constructor(
                     }
 
                     it.onFailure {
-                        myLog("failrue viewmodle")
+                        myLog("failrue viewmodel")
                     }
 
                     uiState.update { it.copy(loading = false) }
@@ -221,7 +223,7 @@ class MainViewModel @Inject constructor(
                     .onEach {
                         it.onSuccess { list ->
                             uiState.update {
-                                it.copy(rowComponenets = list)
+                                it.copy(rowComponents = list)
                             }
                         }
                         it.onFailure {

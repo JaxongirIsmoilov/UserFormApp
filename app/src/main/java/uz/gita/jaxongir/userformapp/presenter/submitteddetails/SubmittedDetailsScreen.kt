@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -52,6 +53,7 @@ import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
+import uz.gita.jaxongir.userformapp.ui.theme.Purple80
 
 class DetailsScreen(val list: List<String>) : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -91,7 +93,18 @@ fun DetailsScreenContent(
                         modifier = Modifier.align(Alignment.Center)
                     )
 
-                } else {
+                }
+
+
+//                if (uiState.value.isLoading) {
+//                    CircularProgressIndicator(
+//                        modifier = Modifier.padding(2.dp)
+//                            .align(Alignment.Center)
+//                            ,
+//                        color = Color.Red,
+//                        strokeWidth = 4.dp
+//                    )
+//                } else {
                     Column(modifier = Modifier.padding(horizontal = 15.dp)) {
                         Text(
                             text = "Components",
@@ -348,4 +361,4 @@ fun DetailsScreenContent(
             }
         }
     }
-}
+
