@@ -42,9 +42,6 @@ class DraftViewModelImpl @Inject constructor(
     override fun onEventDispatcher(intent: DraftContract.Intent) {
         when (intent) {
 
-
-
-
             DraftContract.Intent.BackToMain -> {
                 viewModelScope.launch {
                     direction.backToMain()

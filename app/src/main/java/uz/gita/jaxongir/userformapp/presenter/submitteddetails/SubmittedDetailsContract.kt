@@ -15,8 +15,6 @@ interface SubmittedDetailsContract {
         data class UpdateList(val list: List<String>) : SubmittedDetailsContract.Intent
         data class CheckedComponent(val component: ComponentData) : SubmittedDetailsContract.Intent
         data class GetComponents(val list: List<String>) : SubmittedDetailsContract.Intent
-
-
     }
 
     data class UIState(

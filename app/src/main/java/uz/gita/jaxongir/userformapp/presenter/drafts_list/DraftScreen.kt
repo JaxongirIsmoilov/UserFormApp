@@ -77,17 +77,6 @@ fun DraftsScreenComponent(
                     }, tint = Color.White
             )
         }
-//        if (uiState.value.isLoading) {
-//            Log.d("TTT", "DraftsScreenComponent: ${uiState.value.isLoading}")
-//            CircularProgressIndicator(
-//                modifier = Modifier
-//                    .padding(2.dp)
-//                    .align(Alignment.CenterHorizontally)
-//                    .padding(top = 200.dp),
-//                color = Color.Red,
-//                strokeWidth = 4.dp
-//            )
-//        } else {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
