@@ -80,7 +80,6 @@ class MainViewModel @Inject constructor(
 
             is MainContract.Intent.ClickAsSaved -> {
                 viewModelScope.launch {
-                    Toast.makeText(intent.context, "Saved as Submitted", Toast.LENGTH_SHORT).show()
                     appRepository.addSavedItems(
                         FormRequest(intent.list, isDraft = false, pref.getId())
                     ).onEach {

@@ -158,13 +158,12 @@ fun MainScreenContent(
                                             SampleSpinnerPreview(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
-
                                                 onSelectionChanged = {
-//                                                    onEventDispatchers.invoke(
-////                                                        MainContract.Intent.UpdateComponent(
-////                                                            data.copy(selectedSpinnerText = it)
-////                                                        )
-//                                                    )
+                                                    onEventDispatchers.invoke(
+                                                        MainContract.Intent.UpdateComponent(
+                                                            data.copy(selectedSpinnerText = it)
+                                                        )
+                                                    )
                                                     if (data.operators.isNotEmpty()) {
                                                         myLog("spinner compo")
                                                         onEventDispatchers.invoke(

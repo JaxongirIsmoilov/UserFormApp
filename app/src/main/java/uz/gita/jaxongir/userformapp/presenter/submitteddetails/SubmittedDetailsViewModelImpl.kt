@@ -14,12 +14,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
-import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
-import uz.gita.jaxongir.userformapp.presenter.drafts_detail.DraftScreenContract
-import uz.gita.jaxongir.userformapp.presenter.submitedScreen.SubmitedScreenContract
 import uz.gita.jaxongir.userformapp.utills.myLog
-import uz.gita.jaxongir.userformapp.utills.myLog2
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +34,7 @@ class SubmittedDetailsViewModelImpl @Inject constructor(
                 .onCompletion { uiState.update { it.copy(isLoading = false) } }
                 .onEach { result ->
                     result.onSuccess { components ->
-                        uiState.update { it.copy(submittedDetails = components) }
+                        uiState.update { it.copy(submittedDetails = components.sortedBy { it.locId }) }
                     }
                     result.onFailure {
 
@@ -53,7 +49,7 @@ class SubmittedDetailsViewModelImpl @Inject constructor(
         when (intent) {
             SubmittedDetailsContract.Intent.BackToSubmits -> {
                 viewModelScope.launch {
-                   direction.back()
+                    direction.back()
                 }
             }
 

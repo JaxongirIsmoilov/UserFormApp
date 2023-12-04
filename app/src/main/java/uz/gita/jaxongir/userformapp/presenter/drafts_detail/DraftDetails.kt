@@ -901,50 +901,6 @@ fun DraftDetailsContent(
                                     }
 
                                 }
-                                item {
-                                    Row(
-                                        modifier = Modifier
-                                            .padding(top = 10.dp)
-                                            .fillMaxWidth()
-                                            .height(80.dp)
-                                            .align(Alignment.CenterHorizontally)
-                                    ) {
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Button(
-                                            colors = ButtonDefaults.buttonColors(
-                                                containerColor = Color(
-                                                    0xFFFA1466
-                                                )
-                                            ), onClick = {
-                                                onEventDispatchers.invoke(
-                                                    DraftScreenContract.Intent.SaveAsDraft(
-                                                        uiState.value.listIds, context = context
-                                                    )
-                                                )
-                                            }) {
-                                            Text(text = "Save As Draft")
-                                        }
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Button(
-                                            colors = ButtonDefaults.buttonColors(
-                                                containerColor = Color(
-                                                    0xFFFA1466
-                                                )
-                                            ), onClick = {
-                                                if (!shouldShowError) {
-                                                    onEventDispatchers.invoke(
-                                                        DraftScreenContract.Intent.SaveAsSaved(
-                                                            uiState.value.listIds, context
-                                                        )
-                                                    )
-
-                                                }
-                                            }) {
-                                            Text(text = "Save as Saved")
-                                        }
-                                        Spacer(modifier = Modifier.weight(1f))
-                                    }
-                                }
 
                             }
                         }
