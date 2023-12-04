@@ -30,7 +30,7 @@ class LoginViewModelImpl @Inject constructor(
                     uiState.update { it.copy(loading = true) }
                     appRepository.login(intent.name, intent.password)
                         .onStart { uiState.update { it.copy(loading = true) } }
-                        .onCompletion { uiState.update { it.copy(loading = true) } }
+                        .onCompletion { uiState.update { it.copy(loading = false) } }
                         .onEach {
                             it.onSuccess {
                                 pref.saveUserName(intent.name)
@@ -40,7 +40,7 @@ class LoginViewModelImpl @Inject constructor(
                             it.onFailure {
                                 Toast.makeText(
                                     intent.context,
-                                    "Something went wrong",
+                                    it.message?:"Something wrong",
                                     Toast.LENGTH_SHORT
                                 )
                                     .show()

@@ -251,6 +251,8 @@ class AppRepositoryImpl @Inject constructor(
                         ) {
                             pref.saveId(it.id)
                             trySend(Result.success(Unit))
+                        }else{
+                            trySend(Result.failure(Exception("Password does not match")))
                         }
                     }
 
