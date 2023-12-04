@@ -33,11 +33,9 @@ class AppRepositoryImpl @Inject constructor(
     private val converter = Gson()
     override fun addDraftedItems(request: FormRequest): Flow<Result<String>> = callbackFlow {
         firestore.collection("Forms").add(request).addOnSuccessListener {
-//            Toast.makeText(context, "Successfully saved as draft!", Toast.LENGTH_SHORT).show()
             trySend(Result.success("Success"))
         }
             .addOnFailureListener {
-//                Toast.makeText(context, "Failed to save", Toast.LENGTH_SHORT).show()
                 trySend(Result.failure(IllegalArgumentException("Failed")))
             }
 
@@ -89,7 +87,7 @@ class AppRepositoryImpl @Inject constructor(
                 .addOnSuccessListener {
                     it.documents.forEach {
                         myLog2("list document $it")
-                      val state=  draftedItemsList.add(
+                     draftedItemsList.add(
                             FormData(
                                 it.id,
                                 converter.fromJson(
@@ -100,7 +98,7 @@ class AppRepositoryImpl @Inject constructor(
                                 userID
                             )
                         )
-                        myLog2("state:$state")
+
                     }
                     myLog2("size2 :${draftedItemsList.size}")
                     trySend(Result.success(draftedItemsList))

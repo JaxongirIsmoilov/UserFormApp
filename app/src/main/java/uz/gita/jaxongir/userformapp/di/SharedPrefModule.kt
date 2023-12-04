@@ -13,7 +13,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class SharedPrefModule {
-
     @[Provides Singleton]
     fun preferenceProvider(@ApplicationContext context: Context): SharedPreferences =
         context.getSharedPreferences("myPref", Context.MODE_PRIVATE)

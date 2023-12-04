@@ -1,7 +1,6 @@
 package uz.gita.jaxongir.userformapp.presenter.drafts_list
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +37,7 @@ class DraftScreen : AndroidScreen() {
     override fun Content() {
         val vm: DraftContract.ViewModel = getViewModel<DraftViewModelImpl>()
         DraftsScreenComponent(
-            vm.uiState.collectAsState(),
+            uiState = vm.uiState.collectAsState(),
             onEventDispatcher = vm::onEventDispatcher
         )
 
@@ -90,21 +88,21 @@ fun DraftsScreenComponent(
 //                strokeWidth = 4.dp
 //            )
 //        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = Color.White)
-            ) {
-                myLog2("list size: ${uiState.value.list}")
-                items(uiState.value.list) {
-                    DraftItem(entity = it) {
-                        onEventDispatcher.invoke(DraftContract.Intent.ClickItem(it.listComponentIds))
-                    }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.White)
+        ) {
+            myLog2("list size: ${uiState.value.list}")
+            items(uiState.value.list) {
+                DraftItem(entity = it) {
+                    onEventDispatcher.invoke(DraftContract.Intent.ClickItem(it.listComponentIds))
                 }
             }
         }
-
     }
+
+}
 
 
 @SuppressLint("UnrememberedMutableState")

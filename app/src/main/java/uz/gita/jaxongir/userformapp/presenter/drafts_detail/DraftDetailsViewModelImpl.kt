@@ -166,7 +166,6 @@ class DraftDetailsViewModelImpl @Inject constructor(
                         }
 
                     }
-
                     appRepository.updateComponent(
                         intent.component.copy(
                             isVisible = contentVisible,

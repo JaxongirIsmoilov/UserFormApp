@@ -26,7 +26,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -65,7 +64,6 @@ import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
-import uz.gita.jaxongir.userformapp.ui.theme.Purple80
 import uz.gita.jaxongir.userformapp.utills.myLog
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -185,7 +183,6 @@ fun MainScreenContent(
                                                 true,
                                                 isDraft = false
                                             )
-
                                         }
                                     }
 
@@ -865,13 +862,12 @@ fun MainScreenContent(
                                                 0xFFFA1466
                                             )
                                         ), onClick = {
-                                            uiState.value.components.forEach { data ->
                                                 onEventDispatchers.invoke(
                                                     MainContract.Intent.ClickAsDraft(
                                                         componentsId, context
                                                     )
                                                 )
-                                            }
+
                                         }) {
                                         Text(text = "Save As Draft")
                                     }
@@ -883,14 +879,11 @@ fun MainScreenContent(
                                             )
                                         ), onClick = {
                                             if (!shouldShowError) {
-                                                uiState.value.components.forEach { data ->
-                                                    onEventDispatchers.invoke(
-                                                        MainContract.Intent.ClickAsSaved(
-                                                            componentsId, context
-                                                        )
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.ClickAsSaved(
+                                                        componentsId, context
                                                     )
-                                                }
-
+                                                )
                                             } else {
                                                 Toast.makeText(
                                                     context,
