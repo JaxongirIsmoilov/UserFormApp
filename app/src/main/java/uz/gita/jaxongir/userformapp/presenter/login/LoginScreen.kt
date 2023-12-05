@@ -50,13 +50,10 @@ class LoginScreen : AndroidScreen() {
     @Composable
     override fun Content() {
         val vm: LoginContract.ViewModel = getViewModel<LoginViewModelImpl>()
-        val progressState by remember {
-            mutableStateOf(false)
-        }
-        val context = LocalContext.current
+
         LoginScreenContent(
             onEventDispatcher = vm::onEventDispatcher,
-            uiState = vm.uiState.collectAsState()
+            uiState = vm.uiState.collectAsState(),
         )
     }
 }
@@ -65,7 +62,8 @@ class LoginScreen : AndroidScreen() {
 @Composable
 fun LoginScreenContent(
     onEventDispatcher: (LoginContract.Intent) -> Unit,
-    uiState: State<LoginContract.UIState>
+    uiState: State<LoginContract.UIState>,
+
 ) {
     var username: String by remember { mutableStateOf("") }
     var errorText: Boolean by remember { mutableStateOf(true) }
@@ -95,7 +93,7 @@ fun LoginScreenContent(
         Spacer(modifier = Modifier.height(32.dp))
         OutlinedTextField(
             value = username, onValueChange = {
-                username = it
+                if (it.length<16) username = it
             }, modifier = Modifier
                 .padding(vertical = 12.dp, horizontal = 16.dp)
                 .height(58.dp)
@@ -106,6 +104,7 @@ fun LoginScreenContent(
                 focusedBorderColor = Color(0xFFFF3951),
                 unfocusedBorderColor = Color(0xFFFF7686),
             ),
+            singleLine  = true,
             trailingIcon = {
                 Image(
                     painter = painterResource(id = R.drawable.name_icon),
@@ -199,11 +198,12 @@ fun LoginScreenContent(
                 ))
             )
         ) {
-
             if (uiState.value.loading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.padding(2.dp),
-                    color = Purple80,
+                    modifier = Modifier.padding(2.dp)
+                        .align(Alignment.CenterVertically)
+                        .padding(start  = 200.dp),
+                    color = Color.Red,
                     strokeWidth = 4.dp
                 )
             } else {

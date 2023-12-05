@@ -28,26 +28,7 @@ class DraftDetailsViewModelImpl @Inject constructor(
     override val uiState =
         MutableStateFlow(DraftScreenContract.UiState())
 
-    init {
-        viewModelScope.launch {
-            appRepository.getComponentsByUserId(myShared.getId())
-                .onEach {
-                    it.onSuccess { components ->
-                        val sortedList = components.sortedBy {
-                            it.locId
-                        }
-                        uiState.update { it.copy( list = sortedList) }
-                    }
 
-                    it.onFailure {
-                        myLog("failrue viewmodle")
-                    }
-
-
-                }.launchIn(viewModelScope)
-        }
-
-    }
     override fun onEventDispatcher(intent: DraftScreenContract.Intent) {
         when (intent) {
             is DraftScreenContract.Intent.SaveAsDraft -> {
@@ -56,7 +37,10 @@ class DraftDetailsViewModelImpl @Inject constructor(
                         FormRequest(
                             intent.list,
                             isDraft = true,
-                            myShared.getId()
+                            myShared.getId(),
+                            intent.enteredValuesList,
+                            intent.selectedValuesList,
+                            intent.selectedStateList
                         )
                     ).onEach {
                         it.onSuccess {
@@ -75,7 +59,10 @@ class DraftDetailsViewModelImpl @Inject constructor(
                         FormRequest(
                             intent.list,
                             isDraft = false,
-                            myShared.getId()
+                            myShared.getId(),
+                            intent.enteredValuesList,
+                            intent.selectedValuesList,
+                            intent.selectedStateList
                         )
                     ).onEach {
                         it.onSuccess {
@@ -94,8 +81,8 @@ class DraftDetailsViewModelImpl @Inject constructor(
                 }
             }
 
-            is DraftScreenContract.Intent.GetComponents ->{
-                val list= arrayListOf<ComponentData>()
+            is DraftScreenContract.Intent.GetComponents -> {
+                val list = arrayListOf<ComponentData>()
                 viewModelScope.launch {
                     intent.list.forEach {
                         appRepository.getComponentByComponentId(it).onEach {
@@ -166,7 +153,6 @@ class DraftDetailsViewModelImpl @Inject constructor(
                         }
 
                     }
-
                     appRepository.updateComponent(
                         intent.component.copy(
                             isVisible = contentVisible,
@@ -195,7 +181,7 @@ class DraftDetailsViewModelImpl @Inject constructor(
 
 
             is DraftScreenContract.Intent.UpdateList -> {
-                uiState.update { it.copy(listIds = intent.list) }
+                uiState.update { it.copy(list = intent.list) }
             }
 
 

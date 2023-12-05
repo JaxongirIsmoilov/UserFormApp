@@ -39,6 +39,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             uiState.update { it.copy(loading = true) }
             appRepository.getComponentsByUserId(pref.getId())
+                .onStart { uiState.update { it.copy(isLoading = true) } }
+                .onCompletion { uiState.update { it.copy(isLoading = false) } }
                 .onEach {
                     it.onSuccess { components ->
                         val sortedList = components.sortedBy {
@@ -48,7 +50,7 @@ class MainViewModel @Inject constructor(
                     }
 
                     it.onFailure {
-                        myLog("failrue viewmodle")
+                        myLog("failrue viewmodel")
                     }
 
                     uiState.update { it.copy(loading = false) }
@@ -62,31 +64,31 @@ class MainViewModel @Inject constructor(
             is MainContract.Intent.ClickAsDraft -> {
                 viewModelScope.launch {
                     appRepository.addDraftedItems(
-                        FormRequest(intent.list, true, pref.getId())
+                        FormRequest(intent.list, true, pref.getId(), listOf(), listOf(), listOf())
                     ).onEach {
                         it.onSuccess {
                             mainDirection.back()
                         }
-                        it.onFailure {
-
-                        }
-
+                        it.onFailure {}
                     }.launchIn(viewModelScope)
                 }
+            }
+            is MainContract.Intent.addComponentData ->{
+
             }
 
 
             is MainContract.Intent.ClickAsSaved -> {
                 viewModelScope.launch {
-                    Toast.makeText(intent.context, "Saved as Submitted", Toast.LENGTH_SHORT).show()
                     appRepository.addSavedItems(
-                        FormRequest(intent.list, isDraft = false, pref.getId())
+                        FormRequest(intent.list, isDraft = false, pref.getId(), listOf(), listOf(), listOf())
                     ).onEach {
                         it.onSuccess {
                             mainDirection.back()
                         }
                         it.onFailure {
-                            Toast.makeText(intent.context,"exception:$it", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(intent.context, "exception:$it", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }.launchIn(viewModelScope)
 
@@ -221,17 +223,14 @@ class MainViewModel @Inject constructor(
                     .onEach {
                         it.onSuccess { list ->
                             uiState.update {
-                                it.copy(rowComponenets = list)
+                                it.copy(rowComponents = list)
                             }
                         }
                         it.onFailure {
                             Toast.makeText(context, "Cannot be loaded!", Toast.LENGTH_SHORT).show()
                         }
-
                     }.launchIn(viewModelScope)
             }
-
-
         }
     }
 

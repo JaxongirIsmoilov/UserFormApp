@@ -60,6 +60,7 @@ import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
+import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
@@ -68,7 +69,7 @@ import uz.gita.jaxongir.userformapp.utills.myLog
 import javax.inject.Inject
 
 class DraftDetails @Inject constructor(
-    private val list: List<String>,
+    private val list: List<ComponentData>,
     private val myPref: MyPref
 ) : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -76,7 +77,6 @@ class DraftDetails @Inject constructor(
     override fun Content() {
         val vm: DraftScreenContract.ViewModel = getViewModel<DraftDetailsViewModelImpl>()
         DraftDetailsContent(vm.uiState.collectAsState(), vm::onEventDispatcher, myPref)
-//        vm.onEventDispatcher(DraftScreenContract.Intent.GetComponents(list))
         vm.onEventDispatcher(DraftScreenContract.Intent.UpdateList(list))
     }
 }
@@ -226,7 +226,6 @@ fun DraftDetailsContent(
 
                                         ComponentEnum.SampleText -> {
                                             item {
-                                                myLog("sample text")
                                                 if (data.operators.isNotEmpty()) {
                                                     onEventDispatchers.invoke(
                                                         DraftScreenContract.Intent.CheckedComponent(
@@ -251,7 +250,12 @@ fun DraftDetailsContent(
                                                                     horizontal = 16.dp,
                                                                     vertical = 5.dp
                                                                 )
-                                                            else Modifier.size(0.dp)
+                                                            else Modifier
+                                                                .size(0.dp)
+                                                                .border(
+                                                                    width = 0.dp,
+                                                                    color = Color.White
+                                                                )
                                                         ),
                                                     verticalAlignment = Alignment.CenterVertically
                                                 ) {
@@ -862,8 +866,8 @@ fun DraftDetailsContent(
                                                         ), onClick = {
                                                             onEventDispatchers.invoke(
                                                                 DraftScreenContract.Intent.SaveAsDraft(
-                                                                    list = uiState.value.listIds,
-                                                                    context
+                                                                    list = listOf(),
+                                                                   listOf(),  listOf(), listOf(), context,
                                                                 )
                                                             )
                                                         }) {
@@ -879,8 +883,8 @@ fun DraftDetailsContent(
                                                             if (!shouldShowError) {
                                                                 onEventDispatchers.invoke(
                                                                     DraftScreenContract.Intent.SaveAsSaved(
-                                                                        uiState.value.listIds,
-                                                                        context
+                                                                        listOf(),
+                                                                        context, listOf(), listOf(), listOf()
                                                                     )
                                                                 )
                                                             } else {
@@ -900,50 +904,6 @@ fun DraftDetailsContent(
                                         }
                                     }
 
-                                }
-                                item {
-                                    Row(
-                                        modifier = Modifier
-                                            .padding(top = 10.dp)
-                                            .fillMaxWidth()
-                                            .height(80.dp)
-                                            .align(Alignment.CenterHorizontally)
-                                    ) {
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Button(
-                                            colors = ButtonDefaults.buttonColors(
-                                                containerColor = Color(
-                                                    0xFFFA1466
-                                                )
-                                            ), onClick = {
-                                                onEventDispatchers.invoke(
-                                                    DraftScreenContract.Intent.SaveAsDraft(
-                                                        uiState.value.listIds, context = context
-                                                    )
-                                                )
-                                            }) {
-                                            Text(text = "Save As Draft")
-                                        }
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Button(
-                                            colors = ButtonDefaults.buttonColors(
-                                                containerColor = Color(
-                                                    0xFFFA1466
-                                                )
-                                            ), onClick = {
-                                                if (!shouldShowError) {
-                                                    onEventDispatchers.invoke(
-                                                        DraftScreenContract.Intent.SaveAsSaved(
-                                                            uiState.value.listIds, context
-                                                        )
-                                                    )
-
-                                                }
-                                            }) {
-                                            Text(text = "Save as Saved")
-                                        }
-                                        Spacer(modifier = Modifier.weight(1f))
-                                    }
                                 }
 
                             }

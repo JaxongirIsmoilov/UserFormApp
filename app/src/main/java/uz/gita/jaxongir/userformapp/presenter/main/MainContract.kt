@@ -15,7 +15,7 @@ interface MainContract {
         val userName: String = "User",
         val userId: String = "",
         val components: List<ComponentData> = emptyList(),
-        val rowComponenets: List<ComponentData> = listOf(),
+        val rowComponents: List<ComponentData> = listOf(),
         val checkedComponent: ComponentData? = null,
         val isLoading: Boolean = false
     )
@@ -29,16 +29,17 @@ interface MainContract {
         data class CheckRowComponent(val componentData: ComponentData) : Intent
 
         data class UpdateComponent(val componentData: ComponentData) : Intent
+        data class addComponentData(val componentData: ComponentData) : Intent
 
         object Load : Intent
 
         data class ClickAsSaved(
-            val list: List<String>,
+            val list: List<ComponentData>,
             val context: Context
         ) : Intent
 
         data class ClickAsDraft(
-            val list: List<String>,
+            val list: List<ComponentData>,
             val context: Context
         ) : Intent
 

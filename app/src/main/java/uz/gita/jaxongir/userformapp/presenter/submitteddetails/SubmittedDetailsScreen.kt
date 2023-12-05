@@ -47,13 +47,14 @@ import coil.compose.AsyncImage
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
-import uz.gita.jaxongir.userformapp.presenter.drafts_detail.DraftScreenContract
+import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
+import uz.gita.jaxongir.userformapp.ui.components.TextComponent
 
-class DetailsScreen(val list: List<String>) : AndroidScreen() {
+class DetailsScreen(val list: List<ComponentData>) : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     override fun Content() {
@@ -63,7 +64,7 @@ class DetailsScreen(val list: List<String>) : AndroidScreen() {
             uiState = viewModel.uiState.collectAsState(),
             onEventDispatchers = viewModel::onEventDispatcher,
         )
-//        viewModel.onEventDispatcher(SubmittedDetailsContract.Intent.GetComponents(list))
+        viewModel.onEventDispatcher(SubmittedDetailsContract.Intent.UpdateList(list))
 
     }
 }
@@ -91,256 +92,335 @@ fun DetailsScreenContent(
                         modifier = Modifier.align(Alignment.Center)
                     )
 
-                } else {
-                    Column(modifier = Modifier.padding(horizontal = 15.dp)) {
-                        Text(
-                            text = "Components",
-                            modifier = Modifier
-                                .padding(top = 15.dp)
-                                .align(Alignment.CenterHorizontally),
-                            fontWeight = FontWeight.Black,
-                            fontSize = 25.sp
-                        )
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentHeight()
-                                .padding(top = 10.dp)
-                        ) {
-                            uiState.value.submittedDetails.forEach { data ->
-                                when (data.type) {
-                                    ComponentEnum.Spinner -> {
-                                        item {
-                                            SampleSpinnerPreview(
-                                                list = data.variants ?: listOf(),
-                                                preselected = data.variants[0] ?: "",
-                                                onSelectionChanged = {},
-                                                content = data.content,
-                                                componentData = data,
-                                                deleteComp = {},
-                                                modifier = Modifier.fillMaxWidth(),
-                                                false,
-                                                isDraft = true
-                                            )
-
-                                        }
-                                    }
-
-                                    ComponentEnum.Selector -> {
-                                        item {
-                                            Column {
-                                                SelectorItem(
-                                                    question = data.content,
-                                                    list = data.variants,
-                                                    onSaveStates = {},
-                                                    componentData = data,
-                                                    {},
-                                                    isEnable = false,
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    true
-                                                )
-                                            }
-                                        }
-                                    }
-
-                                    ComponentEnum.SampleText -> {
-                                        item {
-                                            Row(
-                                                modifier = Modifier
-                                                    .then(
-                                                        if (data.isVisible) Modifier
-                                                            .fillMaxWidth()
-                                                            .clip(RoundedCornerShape(12.dp))
-                                                            .border(
-                                                                1.dp,
-                                                                Color(0xFFFF7686),
-                                                                RoundedCornerShape(12.dp)
-                                                            )
-                                                            .background(Color(0x33C4C4C4))
-                                                            .padding(
-                                                                horizontal = 16.dp,
-                                                                vertical = 5.dp
-                                                            )
-                                                        else Modifier.size(0.dp)
-                                                    ),
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Text(
-                                                    text = data.content,
-                                                    fontSize = 22.sp,
-                                                    modifier = Modifier
-                                                        .padding(bottom = 10.dp)
-                                                )
-                                            }
-                                            Spacer(modifier = Modifier.height(16.dp))
-
-                                        }
-                                    }
-
-                                    ComponentEnum.Input -> {
-                                        item {
-                                            var inputVal by remember {
-                                                mutableStateOf(data.enteredValue)
-                                            }
-
-                                            Column(modifier = Modifier.fillMaxWidth()) {
-                                                Spacer(modifier = Modifier.size(10.dp))
-                                                if (data.isRequired) {
-                                                    Text(
-                                                        text = "This Field is required",
-                                                        fontWeight = FontWeight(600),
-                                                        color = Color(0xFFff7686)
-                                                    )
-                                                }
-                                                Spacer(modifier = Modifier.size(10.dp))
-                                                InputField(
-                                                    onEdit = { },
-                                                    componentData = data,
-                                                    isEnable = false, isInDraft = true,
-                                                    modifier = Modifier.fillMaxWidth()
-                                                )
-                                            }
-
-                                        }
-                                    }
-
-                                    ComponentEnum.Dater -> {
-                                        item {
-
-                                            DatePickerPreview(
-                                                componentData = data,
-                                                content = data.content,
-                                                isEnable = false,
-                                                modifier = Modifier.fillMaxWidth()
-                                            ) {
-                                            }
-                                        }
-                                    }
-
-
-                                    ComponentEnum.Image -> {
-                                        val height =
-                                            when (data.customHeight) {
-                                                "w/3" -> {
-                                                    weight.dp / 3
-                                                }
-
-                                                "w/2" -> {
-                                                    weight.dp / 2
-                                                }
-
-                                                "w" -> {
-                                                    weight.dp
-                                                }
-
-                                                "2w" -> {
-                                                    weight.dp * 2
-                                                }
-
-                                                else -> {
-                                                    0.dp
-                                                }
-
-                                            }
-                                        item {
-                                            if (data.imageType == ImageTypeEnum.GALLERY) {
-                                                Box(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .background(
-                                                            color = Color(
-                                                                data.backgroundColor.red,
-                                                                data.backgroundColor.green,
-                                                                data.backgroundColor.blue
-
-                                                            )
-                                                        )
-                                                )
-                                                {
-                                                    AsyncImage(
-                                                        model = data.imgUri,
-                                                        contentDescription = null,
-                                                        modifier = Modifier
-                                                            .then(
-                                                                if (data.ratioX != 0) {
-                                                                    Modifier.aspectRatio(
-                                                                        data.ratioX.toFloat() / data.ratioY.toFloat()
-                                                                    )
-                                                                } else if (data.customHeight != "") {
-                                                                    Modifier.height(
-                                                                        height = height
-                                                                    )
-                                                                } else {
-                                                                    Modifier
-                                                                }
-                                                            )
-                                                    )
-                                                }
-                                            } else {
-                                                var uri by remember {
-                                                    mutableStateOf("")
-                                                }
-                                                Column(
-                                                    Modifier
-                                                        .fillMaxWidth()
-                                                        .background(
-                                                            color = Color(
-                                                                data.backgroundColor.red,
-                                                                data.backgroundColor.green,
-                                                                data.backgroundColor.blue
-                                                            )
-                                                        )
-                                                ) {
-                                                    OutlinedTextField(
-                                                        value = "",
-                                                        onValueChange = {
-                                                            uri = it
-                                                        },
-                                                        singleLine = true,
-                                                        label = {
-                                                            Text(text = "Rasm Uri kiriting")
-                                                        },
-                                                        modifier = Modifier.fillMaxWidth(),
-                                                        colors = OutlinedTextFieldDefaults.colors(
-                                                            focusedBorderColor = Color(
-                                                                0xFFFF3951
-                                                            ),
-                                                            unfocusedBorderColor = Color(
-                                                                0xFFFF7686
-                                                            )
-                                                        ),
-                                                        maxLines = 1,
-                                                    )
-
-                                                    AsyncImage(
-                                                        model = Uri.parse(uri),
-                                                        contentDescription = null,
-                                                        modifier = Modifier
-                                                            .then(
-                                                                if (data.ratioX != 0) {
-                                                                    Modifier.aspectRatio(
-                                                                        data.ratioX.toFloat() / data.ratioY.toFloat()
-                                                                    )
-                                                                } else if (data.customHeight != "") {
-                                                                    Modifier.height(
-                                                                        height = height
-                                                                    )
-                                                                } else {
-                                                                    Modifier
-                                                                }
-                                                            ),
-                                                        error = painterResource(
-                                                            id = R.drawable.cats
-                                                        )
-                                                    )
-                                                }
-                                            }
-                                        }
+                }
+                Column(modifier = Modifier.padding(horizontal = 15.dp)) {
+                    Text(
+                        text = "Components",
+                        modifier = Modifier
+                            .padding(top = 15.dp)
+                            .align(Alignment.CenterHorizontally),
+                        fontWeight = FontWeight.Black,
+                        fontSize = 25.sp
+                    )
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(top = 10.dp)
+                    ) {
+                        uiState.value.submittedDetails.forEach { data ->
+                            when (data.type) {
+                                ComponentEnum.Spinner -> {
+                                    item {
+                                        SampleSpinnerPreview(
+                                            list = data.variants ?: listOf(),
+                                            preselected = data.variants[0] ?: "",
+                                            onSelectionChanged = {},
+                                            content = data.content,
+                                            componentData = data,
+                                            deleteComp = {},
+                                            modifier = Modifier.fillMaxWidth(),
+                                            false,
+                                            isDraft = true
+                                        )
 
                                     }
-
-                                    else -> {}
                                 }
+
+                                ComponentEnum.Selector -> {
+                                    item {
+                                        Column {
+                                            SelectorItem(
+                                                question = data.content,
+                                                list = data.variants,
+                                                onSaveStates = {},
+                                                componentData = data,
+                                                {},
+                                                isEnable = false,
+                                                modifier = Modifier.fillMaxWidth(),
+                                                true
+                                            )
+                                        }
+                                    }
+                                }
+
+                                ComponentEnum.SampleText -> {
+                                    item {
+                                        Row(
+                                            modifier = Modifier
+                                                .then(
+                                                    if (data.isVisible) Modifier
+                                                        .fillMaxWidth()
+                                                        .clip(RoundedCornerShape(12.dp))
+                                                        .border(
+                                                            1.dp,
+                                                            Color(0xFFFF7686),
+                                                            RoundedCornerShape(12.dp)
+                                                        )
+                                                        .background(Color(0x33C4C4C4))
+                                                        .padding(
+                                                            horizontal = 16.dp,
+                                                            vertical = 5.dp
+                                                        )
+                                                    else Modifier.size(0.dp)
+                                                ),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text(
+                                                text = data.content,
+                                                fontSize = 22.sp,
+                                                modifier = Modifier
+                                                    .padding(bottom = 10.dp)
+                                            )
+                                        }
+                                        Spacer(modifier = Modifier.height(16.dp))
+
+                                    }
+                                }
+
+                                ComponentEnum.Input -> {
+                                    item {
+                                        var inputVal by remember {
+                                            mutableStateOf(data.enteredValue)
+                                        }
+
+                                        Column(modifier = Modifier.fillMaxWidth()) {
+                                            Spacer(modifier = Modifier.size(10.dp))
+                                            if (data.isRequired) {
+                                                Text(
+                                                    text = "This Field is required",
+                                                    fontWeight = FontWeight(600),
+                                                    color = Color(0xFFff7686)
+                                                )
+                                            }
+                                            Spacer(modifier = Modifier.size(10.dp))
+                                            InputField(
+                                                onEdit = { },
+                                                componentData = data,
+                                                isEnable = false, isInDraft = true,
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
+                                        }
+
+                                    }
+                                }
+
+                                ComponentEnum.Dater -> {
+                                    item {
+
+                                        DatePickerPreview(
+                                            componentData = data,
+                                            content = data.content,
+                                            isEnable = false,
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                        }
+                                    }
+                                }
+
+
+                                ComponentEnum.Image -> {
+                                    val height =
+                                        when (data.customHeight) {
+                                            "w/3" -> {
+                                                weight.dp / 3
+                                            }
+
+                                            "w/2" -> {
+                                                weight.dp / 2
+                                            }
+
+                                            "w" -> {
+                                                weight.dp
+                                            }
+
+                                            "2w" -> {
+                                                weight.dp * 2
+                                            }
+
+                                            else -> {
+                                                0.dp
+                                            }
+
+                                        }
+                                    item {
+                                        if (data.imageType == ImageTypeEnum.GALLERY) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .background(
+                                                        color = Color(
+                                                            data.backgroundColor.red,
+                                                            data.backgroundColor.green,
+                                                            data.backgroundColor.blue
+
+                                                        )
+                                                    )
+                                            )
+                                            {
+                                                AsyncImage(
+                                                    model = data.imgUri,
+                                                    contentDescription = null,
+                                                    modifier = Modifier
+                                                        .then(
+                                                            if (data.ratioX != 0) {
+                                                                Modifier.aspectRatio(
+                                                                    data.ratioX.toFloat() / data.ratioY.toFloat()
+                                                                )
+                                                            } else if (data.customHeight != "") {
+                                                                Modifier.height(
+                                                                    height = height
+                                                                )
+                                                            } else {
+                                                                Modifier
+                                                            }
+                                                        )
+                                                )
+                                            }
+                                        } else {
+                                            var uri by remember {
+                                                mutableStateOf("")
+                                            }
+                                            Column(
+                                                Modifier
+                                                    .fillMaxWidth()
+                                                    .background(
+                                                        color = Color(
+                                                            data.backgroundColor.red,
+                                                            data.backgroundColor.green,
+                                                            data.backgroundColor.blue
+                                                        )
+                                                    )
+                                            ) {
+                                                OutlinedTextField(
+                                                    value = "",
+                                                    onValueChange = {
+                                                        uri = it
+                                                    },
+                                                    singleLine = true,
+                                                    label = {
+                                                        Text(text = "Rasm Uri kiriting")
+                                                    },
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    colors = OutlinedTextFieldDefaults.colors(
+                                                        focusedBorderColor = Color(
+                                                            0xFFFF3951
+                                                        ),
+                                                        unfocusedBorderColor = Color(
+                                                            0xFFFF7686
+                                                        )
+                                                    ),
+                                                    maxLines = 1,
+                                                )
+
+                                                AsyncImage(
+                                                    model = Uri.parse(uri),
+                                                    contentDescription = null,
+                                                    modifier = Modifier
+                                                        .then(
+                                                            if (data.ratioX != 0) {
+                                                                Modifier.aspectRatio(
+                                                                    data.ratioX.toFloat() / data.ratioY.toFloat()
+                                                                )
+                                                            } else if (data.customHeight != "") {
+                                                                Modifier.height(
+                                                                    height = height
+                                                                )
+                                                            } else {
+                                                                Modifier
+                                                            }
+                                                        ),
+                                                    error = painterResource(
+                                                        id = R.drawable.cats
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                                ComponentEnum.LazyRow -> {
+                                    item {
+                                        Row(modifier = Modifier.fillMaxWidth()) {
+                                            uiState.value.submittedDetails.filter {
+                                                it.rowId == data.idEnteredByUser
+                                            }.forEach {
+                                                when (it.type) {
+                                                    ComponentEnum.Selector -> {
+                                                        Box(modifier = Modifier.weight(it.weight.toFloat())) {
+                                                            SelectorItem(
+                                                                question = data.content,
+                                                                list = data.variants,
+                                                                { (data.selected) },
+                                                                componentData = data,
+                                                                modifier = Modifier,
+                                                                deleteComp = {},
+                                                                isEnable = false,
+                                                                isInDraft = true,
+                                                            )
+                                                        }
+                                                    }
+
+                                                    ComponentEnum.SampleText -> {
+                                                        Box(modifier = Modifier.weight(it.weight.toFloat())) {
+                                                            TextComponent(
+                                                                componentData = data
+                                                            )
+                                                            Spacer(modifier = Modifier.height(10.dp))
+                                                        }
+                                                    }
+
+                                                    ComponentEnum.Spinner -> {
+                                                        Box(modifier = Modifier.weight(it.weight.toFloat())) {
+                                                            SampleSpinnerPreview(
+                                                                list = data.variants,
+                                                                preselected = data.variants[0],
+                                                                onSelectionChanged = {},
+                                                                content = data.content,
+                                                                componentData = data,
+                                                                modifier = Modifier,
+                                                                deleteComp = {},
+                                                                isEnable = false,
+                                                                isDraft = true
+                                                            )
+                                                        }
+                                                    }
+
+                                                    ComponentEnum.Input -> {
+                                                        Box(modifier = Modifier.weight(it.weight.toFloat())) {
+                                                            InputField(
+                                                                onEdit = { data.enteredValue },
+                                                                componentData = data,
+                                                                isEnable = false,
+                                                                modifier = Modifier.fillMaxWidth(),
+                                                                isInDraft = true
+                                                            )
+                                                        }
+
+                                                    }
+
+                                                    ComponentEnum.Dater -> {
+                                                        Box(modifier = Modifier.weight(it.weight.toFloat())) {
+                                                            DatePickerPreview(
+                                                                componentData = data,
+                                                                content = data.content,
+                                                                isEnable = false,
+                                                                modifier = Modifier.fillMaxWidth(),
+                                                            )
+                                                        }
+                                                    }
+
+                                                    else -> {
+
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
                             }
                         }
                     }
@@ -349,3 +429,4 @@ fun DetailsScreenContent(
         }
     }
 }
+

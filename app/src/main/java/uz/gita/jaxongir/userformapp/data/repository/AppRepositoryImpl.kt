@@ -19,6 +19,7 @@ import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormData
 import uz.gita.jaxongir.userformapp.data.local.room.entity.FormRequest
+import uz.gita.jaxongir.userformapp.data.local.room.entity.FromRes
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import uz.gita.jaxongir.userformapp.utills.myLog2
@@ -32,20 +33,20 @@ class AppRepositoryImpl @Inject constructor(
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     private val converter = Gson()
     override fun addDraftedItems(request: FormRequest): Flow<Result<String>> = callbackFlow {
-        firestore.collection("Forms").add(request).addOnSuccessListener {
-//            Toast.makeText(context, "Successfully saved as draft!", Toast.LENGTH_SHORT).show()
-            trySend(Result.success("Success"))
-        }
+        firestore.collection("Forms").add(FromRes(Gson().toJson(request.copy(isDraft = true))))
+            .addOnSuccessListener {
+                trySend(Result.success("Success"))
+            }
             .addOnFailureListener {
-//                Toast.makeText(context, "Failed to save", Toast.LENGTH_SHORT).show()
                 trySend(Result.failure(IllegalArgumentException("Failed")))
             }
 
         awaitClose()
     }
 
+
     override fun addSavedItems(request: FormRequest): Flow<Result<String>> = callbackFlow {
-        firestore.collection("Forms").add(request).addOnSuccessListener {
+        firestore.collection("Forms").add(request.copy(isDraft = false)).addOnSuccessListener {
             trySend(Result.success("Success"))
         }
             .addOnFailureListener {
@@ -60,16 +61,26 @@ class AppRepositoryImpl @Inject constructor(
         val savedItemList = arrayListOf<FormData>()
         firestore.collection("Forms").whereEqualTo("draft", false).get()
             .addOnSuccessListener {
-                myLog2("saved list")
                 it.documents.forEach {
+                    val data = if (it.data?.getOrDefault("data", "") == null)
+                        FormRequest()
+                    else
+                        Gson().fromJson(
+                            it.data?.getOrDefault("data", "").toString(),
+                            object : TypeToken<FormRequest>() {}.type
+                        )
                     savedItemList.add(
                         FormData(
-                            it.id, converter.fromJson(
-                                it.data?.getOrDefault("listComponentIds", "[]").toString(),
-                                Array<String>::class.java
-                            ).asList(), isDraft = false, userID
+                            id = it.id,
+                            listComponentIds = data.listComponentIds,
+                            isDraft = data.isDraft,
+                            userId = userID,
+                            enteredValues = data.enteredValues,
+                            selectedStates = data.selectedStates,
+                            selectedValue = data.selectedValue
                         )
                     )
+
                 }
                 trySend(Result.success(savedItemList))
             }
@@ -85,22 +96,28 @@ class AppRepositoryImpl @Inject constructor(
     override fun getAllDraftedItemsList(userID: String): Flow<Result<List<FormData>>> =
         callbackFlow {
             val draftedItemsList = arrayListOf<FormData>()
-            firestore.collection("Forms").whereEqualTo("draft", true).get()
+            firestore.collection("Forms").get()
                 .addOnSuccessListener {
                     it.documents.forEach {
-                        myLog2("list document $it")
-                      val state=  draftedItemsList.add(
+                        val data = if (it.data?.getOrDefault("data", "") == null)
+                            FormRequest()
+                        else
+                            Gson().fromJson(
+                                it.data?.getOrDefault("data", "").toString(),
+                                object : TypeToken<FormRequest>() {}.type
+                            )
+                        draftedItemsList.add(
                             FormData(
-                                it.id,
-                                converter.fromJson(
-                                    it.data?.getOrDefault("listComponentIds", "[]").toString(),
-                                    Array<String>::class.java
-                                ).asList(),
-                                isDraft = true,
-                                userID
+                                id = it.id,
+                                listComponentIds = data.listComponentIds,
+                                isDraft = data.isDraft,
+                                userId = userID,
+                                enteredValues = data.enteredValues,
+                                selectedStates = data.selectedStates,
+                                selectedValue = data.selectedValue
                             )
                         )
-                        myLog2("state:$state")
+
                     }
                     myLog2("size2 :${draftedItemsList.size}")
                     trySend(Result.success(draftedItemsList))
@@ -157,10 +174,7 @@ class AppRepositoryImpl @Inject constructor(
                                 ),
                                 isMulti = it.data?.getOrDefault("isMulti", "false")
                                     .toString() == "true",
-                                variants = converter.fromJson(
-                                    it.data?.getOrDefault("variants", "[]").toString(),
-                                    Array<String>::class.java
-                                ).asList(),
+                                variants = listOf(),
                                 selected = converter.fromJson(
                                     it.data?.getOrDefault("selected", "[]").toString(),
                                     Array<Boolean>::class.java
@@ -249,8 +263,11 @@ class AppRepositoryImpl @Inject constructor(
                         if (it.data?.getOrDefault("password", "").toString()
                             == password
                         ) {
+                            myLog2("user id saved:${it.id}")
                             pref.saveId(it.id)
                             trySend(Result.success(Unit))
+                        } else {
+                            trySend(Result.failure(Exception("Password does not match")))
                         }
                     }
 
@@ -264,23 +281,18 @@ class AppRepositoryImpl @Inject constructor(
             val resultList = arrayListOf<ComponentData>()
             val converter = Gson()
             firestore.collection("Components")
-                .whereEqualTo("userId", userID)
                 .get()
-                .addOnSuccessListener {
-                    it.documents.forEach {
+                .addOnSuccessListener { data ->
+                    data.documents.forEach {
                         resultList.add(
                             ComponentData(
                                 id = it.id,
                                 userId = it.data?.getOrDefault("userId", "null").toString(),
-                                locId = it.data?.getOrDefault("locId", "0").toString()
-                                    .toLong(),
-                                idEnteredByUser = it.data?.getOrDefault(
-                                    "idEnteredByUser",
-                                    "null"
-                                )
+                                locId =
+                                it.data?.getOrDefault("locId", "0").toString().toLong(),
+                                idEnteredByUser = it.data?.getOrDefault("idEnteredByUser", "null")
                                     .toString(),
-                                content = it.data?.getOrDefault("content", "null")
-                                    .toString(),
+                                content = it.data?.getOrDefault("content", "null").toString(),
                                 textFieldType = converter.fromJson(
                                     it.data?.getOrDefault(
                                         "textFieldType",
@@ -304,7 +316,7 @@ class AppRepositoryImpl @Inject constructor(
                                 ),
                                 isMulti = it.data?.getOrDefault("isMulti", "false")
                                     .toString() == "true",
-                                variants = converter.fromJson(
+                                variants  = converter.fromJson(
                                     it.data?.getOrDefault("variants", "[]").toString(),
                                     Array<String>::class.java
                                 ).asList(),
@@ -324,20 +336,17 @@ class AppRepositoryImpl @Inject constructor(
                                         ""
                                     ).toString(), Array<String>::class.java
                                 ).asList(),
+
                                 operators = converter.fromJson(
                                     it.data?.getOrDefault(
                                         "operators",
                                         ""
-                                    ).toString(), object : TypeToken<List<String>>() {}.type
-                                ),
+                                    ).toString(), Array<String>::class.java
+                                ).asList(),
                                 type = converter.fromJson(
                                     it.data?.getOrDefault("type", "").toString(),
                                     ComponentEnum::class.java
                                 ),
-                                enteredValue = it.data?.getOrDefault("enteredValue", "")
-                                    .toString(),
-                                isVisible = it.data?.getOrDefault("visible", "true")
-                                    .toString() == "true",
                                 isRequired = it.data?.getOrDefault("required", false)
                                     .toString() == "true",
                                 imgUri = it.data?.getOrDefault("imgUri", "").toString(),
@@ -352,29 +361,21 @@ class AppRepositoryImpl @Inject constructor(
                                 backgroundColor = it.data?.getOrDefault(
                                     "backgroundColor",
                                     "${Color.Transparent.toArgb()}"
-                                )
-                                    .toString().toInt(),
+                                ).toString().toInt(),
                                 rowId = it.data?.getOrDefault("rowId", "0").toString(),
-                                weight = it.data?.getOrDefault("weight", "").toString(),
-                                selectedSpinnerText = it.data?.getOrDefault(
-                                    "selectedSpinnerText",
-                                    ""
-                                ).toString(),
-                                imageType = ImageTypeEnum.NONE,
-                                inValues = converter.fromJson(
-                                    it.data?.getOrDefault("inValues", "[]").toString(),
-                                    Array<String>::class.java
-                                ).asList(),
+                                weight = it.data?.getOrDefault("weight", "0").toString(),
+                                imageType =ImageTypeEnum.GALLERY
                             )
                         )
+
                     }
-                    trySend(Result.success(resultList))
+                    trySend(Result.success(resultList.sortedBy { it.userId == userID }))
                 }
                 .addOnFailureListener {
                     trySend(Result.failure(it))
                 }
-
             awaitClose()
+
         }
 
     override fun updateComponent(componentData: ComponentData): Flow<Result<Unit>> =
@@ -388,16 +389,18 @@ class AppRepositoryImpl @Inject constructor(
                 .addOnFailureListener {
                     trySend(Result.failure(it))
                 }
-
             awaitClose()
         }
 
     override fun hasUserInFireBase(userID: String): Flow<Boolean> = callbackFlow {
+        var result = false
         firestore.collection("Users")
-            .whereEqualTo("userId", userID)
             .get()
             .addOnSuccessListener {
-                trySend(true)
+                it.documents.forEach {
+                    result = it.id == userID
+                }
+                trySend(result)
             }
             .addOnFailureListener { trySend(false) }
 

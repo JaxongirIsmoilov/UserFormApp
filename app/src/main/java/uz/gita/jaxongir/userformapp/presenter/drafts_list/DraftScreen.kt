@@ -37,9 +37,10 @@ class DraftScreen : AndroidScreen() {
     override fun Content() {
         val vm: DraftContract.ViewModel = getViewModel<DraftViewModelImpl>()
         DraftsScreenComponent(
-            vm.uiState.collectAsState(),
+            uiState = vm.uiState.collectAsState(),
             onEventDispatcher = vm::onEventDispatcher
         )
+
     }
 }
 
@@ -48,6 +49,8 @@ fun DraftsScreenComponent(
     uiState: State<DraftContract.UIState>,
     onEventDispatcher: (DraftContract.Intent) -> Unit
 ) {
+
+
     Column {
         Box(
             modifier = Modifier
@@ -87,7 +90,9 @@ fun DraftsScreenComponent(
             }
         }
     }
+
 }
+
 
 @SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)

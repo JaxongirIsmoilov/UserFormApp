@@ -13,13 +13,15 @@ interface DraftContract {
 
     interface Intent {
         object BackToMain : Intent
+        object LoadData:Intent
         data class ClickItem(
-            val list: List<String>
+            val list: List<ComponentData>
         ) : Intent
     }
 
     data class UIState(
-        val list: List<FormData> = listOf()
+        val list: List<FormData> = listOf(),
+        val isLoading:Boolean = false
     )
 
 }

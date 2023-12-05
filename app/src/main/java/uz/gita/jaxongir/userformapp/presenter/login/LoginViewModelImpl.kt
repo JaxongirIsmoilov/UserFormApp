@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
@@ -27,6 +29,8 @@ class LoginViewModelImpl @Inject constructor(
                 viewModelScope.launch {
                     uiState.update { it.copy(loading = true) }
                     appRepository.login(intent.name, intent.password)
+                        .onStart { uiState.update { it.copy(loading = true) } }
+                        .onCompletion { uiState.update { it.copy(loading = false) } }
                         .onEach {
                             it.onSuccess {
                                 pref.saveUserName(intent.name)
@@ -36,7 +40,7 @@ class LoginViewModelImpl @Inject constructor(
                             it.onFailure {
                                 Toast.makeText(
                                     intent.context,
-                                    "Something went wrong",
+                                    it.message?:"Something wrong",
                                     Toast.LENGTH_SHORT
                                 )
                                     .show()
@@ -47,6 +51,8 @@ class LoginViewModelImpl @Inject constructor(
 
                 }
             }
+
+
         }
     }
 }

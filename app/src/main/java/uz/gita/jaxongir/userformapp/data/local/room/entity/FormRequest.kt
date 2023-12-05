@@ -1,12 +1,12 @@
 package uz.gita.jaxongir.userformapp.data.local.room.entity
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
-@Entity
 data class FormRequest(
-    @PrimaryKey(autoGenerate = true)
-    val listComponentIds: List<String>,
-    val isDraft: Boolean,
-    val userId: String,
+    val listComponentIds: List<ComponentData> = listOf(),
+    val isDraft: Boolean = false,
+    val userId: String = "",
+    val enteredValues: List<String> = listOf(),
+    val selectedValue: List<String> = listOf(),
+    val selectedStates: List<Boolean> = listOf()
 )
