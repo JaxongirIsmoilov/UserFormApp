@@ -35,7 +35,7 @@ interface MainContract {
 
         data class ClickAsSaved(
             val list: List<ComponentData>,
-            val context: Context
+            val context: Context,
         ) : Intent
 
         data class ClickAsDraft(
