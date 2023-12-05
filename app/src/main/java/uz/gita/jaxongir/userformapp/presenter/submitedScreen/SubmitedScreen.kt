@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.ui.components.SelectedItem
 import uz.gita.jaxongir.userformapp.ui.theme.Purple80
@@ -49,6 +50,8 @@ fun SubmitedScreenContent(
     uiState: State<SubmitedScreenContract.UIState>,
     onEventDispatcher: (SubmitedScreenContract.Intent) -> Unit
 ) {
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(color = Color(0xFFFF7686))
     Box(modifier = Modifier.fillMaxSize()) {
 
         Box(

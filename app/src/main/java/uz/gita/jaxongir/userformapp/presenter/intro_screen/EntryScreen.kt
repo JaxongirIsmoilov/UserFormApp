@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import uz.gita.jaxongir.userformapp.R
 
 class EntryScreen : AndroidScreen() {
@@ -50,6 +51,8 @@ fun EntryScreenContent(
     uiState: State<EntryScreenContract.UIState>,
     onEventDispatchers: (EntryScreenContract.Intent) -> Unit
 ) {
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(color = Color(0xFFFF7686))
     Column {
         Box(
             modifier = Modifier

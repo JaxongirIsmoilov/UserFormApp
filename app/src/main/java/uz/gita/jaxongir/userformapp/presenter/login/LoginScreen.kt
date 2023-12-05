@@ -96,7 +96,7 @@ fun LoginScreenContent(
                 if (it.length<16) username = it
             }, modifier = Modifier
                 .padding(vertical = 12.dp, horizontal = 16.dp)
-                .height(58.dp)
+                .height(70.dp)
                 .fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             label = { Text(text = "Username") },
@@ -129,7 +129,7 @@ fun LoginScreenContent(
             },
             modifier = Modifier
                 .padding(vertical = 12.dp, horizontal = 16.dp)
-                .height(58.dp)
+                .height(70.dp)
                 .fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),

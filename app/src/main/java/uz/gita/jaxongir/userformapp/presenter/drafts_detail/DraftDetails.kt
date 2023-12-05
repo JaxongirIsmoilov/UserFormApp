@@ -56,6 +56,7 @@ import androidx.core.graphics.red
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import coil.compose.AsyncImage
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
@@ -91,6 +92,8 @@ fun DraftDetailsContent(
     var shouldShowError by remember {
         mutableStateOf(false)
     }
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(color = Color(0xFFFF7686))
     val density = LocalDensity.current
     val weight = LocalConfiguration.current.screenWidthDp
     val context = LocalContext.current
