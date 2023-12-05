@@ -90,5 +90,7 @@ fun DraftItem(
 @Preview(showBackground = true)
 @Composable
 fun DraftItemPreview() {
-    DraftItem(FormData("", emptyList(), true, ""), onClick = {})
+    DraftItem(FormData("", emptyList(), true, "", enteredValues = emptyList(), emptyList(),
+        emptyList()
+    ), onClick = {})
 }

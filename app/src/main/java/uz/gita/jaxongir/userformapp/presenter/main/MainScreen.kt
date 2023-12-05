@@ -159,28 +159,31 @@ fun MainScreenContent(
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
-                                            SampleSpinnerPreview(
-                                                list = data.variants ?: listOf(),
-                                                preselected = data.variants[0] ?: "",
-                                                onSelectionChanged = {
-                                                    if (data.operators.isNotEmpty()) {
-                                                        myLog("spinner compo")
-                                                        onEventDispatchers.invoke(
-                                                            MainContract.Intent.CheckedComponent(
-                                                                data
+                                            if (data.variants.isNotEmpty()){
+                                                SampleSpinnerPreview(
+                                                    list = data.variants ?: listOf(),
+                                                    preselected = data.variants[0] ?: "",
+                                                    onSelectionChanged = {
+                                                        if (data.operators.isNotEmpty()) {
+                                                            myLog("spinner compo")
+                                                            onEventDispatchers.invoke(
+                                                                MainContract.Intent.CheckedComponent(
+                                                                    data
+                                                                )
                                                             )
-                                                        )
-                                                    }
-                                                },
-                                                content = data.content,
-                                                componentData = data,
-                                                {},
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(horizontal = 15.dp),
-                                                true,
-                                                isDraft = false
-                                            )
+                                                        }
+                                                    },
+                                                    content = data.content,
+                                                    componentData = data,
+                                                    {},
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(horizontal = 15.dp),
+                                                    true,
+                                                    isDraft = false
+                                                )
+                                            }
+
                                         }
                                     }
 

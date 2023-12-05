@@ -89,7 +89,9 @@ fun SelectedItem(
 @Composable
 @Preview(showBackground = true)
 fun Selectedpreview(){
-    SelectedItem(entity = FormData("", emptyList(), true, "")) {
+    SelectedItem(entity = FormData("", emptyList(), true, "", emptyList(), emptyList(),
+        emptyList()
+    )) {
         
     }
 }
