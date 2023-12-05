@@ -76,16 +76,6 @@ fun SubmitedScreenContent(
                     }, tint = Color.White
             )
         }
-//        if (uiState.value.isLoading) {
-//            CircularProgressIndicator(
-//                modifier = Modifier.padding(2.dp)
-//                    .align(Alignment.Center)
-//                    .padding(top  = 200.dp),
-//                color = Color.Red,
-//                strokeWidth = 4.dp
-//            )
-//        }
-//        else{
 
         LazyColumn(content = {
             items(uiState.value.list) {

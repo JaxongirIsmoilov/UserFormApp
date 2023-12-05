@@ -20,7 +20,6 @@ class SplashViewModelImpl @Inject constructor(
 ) : ViewModel() {
     init {
         viewModelScope.launch {
-            repository.hasUserInFireBase(pref.getId()).onEach {
                 if (pref.isLogin()) {
                     delay(1000L)
                     direction.moveToEntry()
@@ -28,7 +27,6 @@ class SplashViewModelImpl @Inject constructor(
                     delay(1500L)
                     direction.moveToLogin()
                 }
-            }.launchIn(viewModelScope)
         }
     }
 }

@@ -22,7 +22,7 @@ interface SubmitedScreenContract {
 
     interface Intent {
         object Back : Intent
-        data class ClickItem(val list: List<String>) : Intent
+        data class ClickItem(val list: List<ComponentData>) : Intent
         data class GetSubmittedItems(val userId: String, val draftId: String) : Intent
     }
 }

@@ -26,7 +26,6 @@ class SubmittedDetailsViewModelImpl @Inject constructor(
 ) : SubmittedDetailsContract.ViewModel, ViewModel() {
     override val uiState = MutableStateFlow(SubmittedDetailsContract.UIState())
 
-
     init {
         viewModelScope.launch {
             repository.getComponentsByUserId(pref.getId())

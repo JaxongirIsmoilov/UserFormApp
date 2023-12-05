@@ -47,13 +47,14 @@ import coil.compose.AsyncImage
 import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
+import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
 import uz.gita.jaxongir.userformapp.ui.components.SelectorItem
 import uz.gita.jaxongir.userformapp.ui.components.TextComponent
 
-class DetailsScreen(val list: List<String>) : AndroidScreen() {
+class DetailsScreen(val list: List<ComponentData>) : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     override fun Content() {
@@ -405,7 +406,6 @@ fun DetailsScreenContent(
                                                                 content = data.content,
                                                                 isEnable = false,
                                                                 modifier = Modifier.fillMaxWidth(),
-                                                                deleteComp = {}
                                                             )
                                                         }
                                                     }

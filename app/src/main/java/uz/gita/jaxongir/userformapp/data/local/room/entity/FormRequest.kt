@@ -1,7 +1,9 @@
 package uz.gita.jaxongir.userformapp.data.local.room.entity
 
+import uz.gita.jaxongir.userformapp.data.model.ComponentData
+
 data class FormRequest(
-    val listComponentIds: List<String>,
+    val listComponentIds: List<ComponentData>,
     val isDraft: Boolean,
     val userId: String,
     val enteredValues: List<String>,

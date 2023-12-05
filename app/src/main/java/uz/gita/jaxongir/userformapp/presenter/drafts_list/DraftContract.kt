@@ -15,7 +15,7 @@ interface DraftContract {
         object BackToMain : Intent
         object LoadData:Intent
         data class ClickItem(
-            val list: List<String>
+            val list: List<ComponentData>
         ) : Intent
     }
 

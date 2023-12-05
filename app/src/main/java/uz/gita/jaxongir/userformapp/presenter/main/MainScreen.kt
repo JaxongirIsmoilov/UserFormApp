@@ -60,6 +60,7 @@ import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
+import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
@@ -71,7 +72,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 class MainScreen @Inject constructor(val myPref: MyPref) : AndroidScreen() {
-
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     override fun Content() {
@@ -92,8 +92,8 @@ fun MainScreenContent(
     val id = UUID.randomUUID().toString()
     val sdf = SimpleDateFormat("dd MMM, yyyy - HH:mm")
     val currentDateAndTime: String = sdf.format(Date())
-    var componentIds by remember {
-        mutableStateOf(arrayListOf<String>())
+    var componentsList by remember {
+        mutableStateOf(arrayListOf<ComponentData>())
     }
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
@@ -101,10 +101,13 @@ fun MainScreenContent(
     var shouldShowError by remember {
         mutableStateOf(false)
     }
-    var enteredValuesList by remember {
-        mutableStateOf(arrayListOf<String>())
+    var enteredValue by remember {
+        mutableStateOf("")
     }
-    var selectedValuesList by remember { mutableStateOf(arrayListOf<String>()) }
+    var selectedValue by remember { mutableStateOf("") }
+    var selectedStatesList by remember {
+        mutableStateOf(arrayListOf<Boolean>())
+    }
     val density = LocalDensity.current
     val weight = LocalConfiguration.current.screenWidthDp
     Box(modifier = Modifier.fillMaxSize()) {
@@ -155,7 +158,6 @@ fun MainScreenContent(
                         ) {
                             val uuid = UUID.randomUUID().toString()
                             uiState.value.components.forEach { data ->
-                                componentIds.add(data.id)
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
@@ -164,6 +166,7 @@ fun MainScreenContent(
                                                     list = data.variants ?: listOf(),
                                                     preselected = data.variants[0] ?: "",
                                                     onSelectionChanged = {
+                                                        selectedValue=it
                                                         if (data.operators.isNotEmpty()) {
                                                             myLog("spinner compo")
                                                             onEventDispatchers.invoke(
@@ -182,6 +185,7 @@ fun MainScreenContent(
                                                     true,
                                                     isDraft = false
                                                 )
+                                                componentsList.add(data.copy(selectedSpinnerText = selectedValue))
                                             }
 
                                         }
@@ -200,7 +204,7 @@ fun MainScreenContent(
                                                     list = data.variants,
                                                     componentData = data,
                                                     onSaveStates = {
-
+                                                                   selectedStatesList.addAll(it)
                                                     },
                                                     deleteComp = {
                                                         onEventDispatchers.invoke(
@@ -222,6 +226,8 @@ fun MainScreenContent(
                                                         .padding(horizontal = 15.dp),
                                                     isInDraft = false
                                                 )
+                                                componentsList.add(data.copy(selected = selectedStatesList))
+
                                             }
                                         }
                                     }
@@ -253,7 +259,12 @@ fun MainScreenContent(
                                                                 horizontal = 16.dp,
                                                                 vertical = 5.dp
                                                             )
-                                                        else Modifier.size(0.dp)
+                                                        else Modifier
+                                                            .size(0.dp)
+                                                            .border(
+                                                                width = 0.dp,
+                                                                color = Color.White
+                                                            )
                                                     ),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
@@ -285,10 +296,6 @@ fun MainScreenContent(
                                                         .padding(horizontal = 15.dp)
                                                 ) {
                                                     Spacer(modifier = Modifier.size(10.dp))
-                                                    Log.d(
-                                                        "DDD",
-                                                        "MainScreenContent: ${data.isRequired}"
-                                                    )
                                                     if (data.isRequired) {
                                                         if (data.enteredValue == "") {
                                                             shouldShowError = true
@@ -302,11 +309,11 @@ fun MainScreenContent(
                                                     Spacer(modifier = Modifier.size(10.dp))
                                                     InputField(
                                                         onEdit = {
-
+                                                            enteredValue=it
                                                             if (data.operators.isNotEmpty()) {
                                                                 onEventDispatchers.invoke(
                                                                     MainContract.Intent.CheckedComponent(
-                                                                        data
+                                                                        data.copy(enteredValue=it)
                                                                     )
                                                                 )
                                                             }
@@ -317,6 +324,7 @@ fun MainScreenContent(
                                                         modifier = Modifier.fillMaxWidth(),
                                                         isInDraft = false
                                                     )
+                                                    componentsList.add(data.copy(enteredValue=enteredValue))
                                                 }
 
                                             }
@@ -339,19 +347,16 @@ fun MainScreenContent(
                                                     .padding(horizontal = 15.dp),
                                                 isEnable = true
                                             ) {
-                                                onEventDispatchers.invoke(
-                                                    MainContract.Intent.UpdateComponent(
-                                                        data.copy(enteredValue = "asdfdsa")
-                                                    )
-                                                )
+                                                enteredValue=it
                                                 if (data.operators.isNotEmpty()) {
                                                     onEventDispatchers.invoke(
                                                         MainContract.Intent.CheckedComponent(
-                                                            data
+                                                            data.copy(enteredValue=it)
                                                         )
                                                     )
                                                 }
                                             }
+                                            componentsList.add(data.copy(enteredValue=enteredValue))
                                         }
                                     }
 
@@ -856,7 +861,7 @@ fun MainScreenContent(
                                         ), onClick = {
                                             onEventDispatchers.invoke(
                                                 MainContract.Intent.ClickAsDraft(
-                                                    componentIds, context
+                                                    componentsList, context
                                                 )
                                             )
 
@@ -873,7 +878,7 @@ fun MainScreenContent(
                                             if (!shouldShowError) {
                                                 onEventDispatchers.invoke(
                                                     MainContract.Intent.ClickAsSaved(
-                                                        componentIds, context
+                                                        componentsList, context
                                                     )
                                                 )
                                             } else {

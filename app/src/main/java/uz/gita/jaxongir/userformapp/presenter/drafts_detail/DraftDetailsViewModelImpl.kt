@@ -201,7 +201,7 @@ class DraftDetailsViewModelImpl @Inject constructor(
 
 
             is DraftScreenContract.Intent.UpdateList -> {
-                uiState.update { it.copy(listIds = intent.list) }
+//                uiState.update { it.copy(listIds = intent.list) }
             }
 
 

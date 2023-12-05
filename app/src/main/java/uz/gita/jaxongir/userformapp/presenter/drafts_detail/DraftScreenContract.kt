@@ -23,7 +23,7 @@ interface DraftScreenContract {
     interface Intent {
         object Back : Intent
         data class SaveAsDraft(
-            val list: List<String>,
+            val list: List<ComponentData>,
             val enteredValuesList: List<String>,
             val selectedValuesList: List<String>,
             val selectedStateList: List<Boolean>,
@@ -31,14 +31,14 @@ interface DraftScreenContract {
         ) : Intent
 
         data class SaveAsSaved(
-            val list: List<String>, val context: Context,
+            val list: List<ComponentData>, val context: Context,
             val enteredValuesList: List<String>,
             val selectedValuesList: List<String>,
             val selectedStateList: List<Boolean>,
         ) : Intent
 
         data class UpdateComponent(val componentData: ComponentData) : Intent
-        data class UpdateList(val list: List<String>) : Intent
+        data class UpdateList(val list: List<ComponentData>) : Intent
         data class CheckedComponent(val component: ComponentData) : Intent
         data class GetComponents(val list: List<String>) : Intent
 

@@ -2,7 +2,9 @@ package uz.gita.jaxongir.userformapp.data.local.pref
 
 import android.content.SharedPreferences
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MyPref @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) {

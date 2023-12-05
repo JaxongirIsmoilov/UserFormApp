@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
@@ -55,6 +56,7 @@ class AppRepositoryImpl @Inject constructor(
     }
 
 
+
     override fun getAllSavedItemsList(userID: String): Flow<Result<List<FormData>>> = callbackFlow {
         val savedItemList = arrayListOf<FormData>()
         firestore.collection("Forms").whereEqualTo("draft", false).get()
@@ -66,7 +68,7 @@ class AppRepositoryImpl @Inject constructor(
                             it.id,
                             converter.fromJson(
                                 it.data?.getOrDefault("listComponentIds", "[]").toString(),
-                                Array<String>::class.java
+                                Array<ComponentData>::class.java
                             ).asList(),
                             isDraft = false,
                             userID,
@@ -106,7 +108,7 @@ class AppRepositoryImpl @Inject constructor(
                                 it.id,
                                 converter.fromJson(
                                     it.data?.getOrDefault("listComponentIds", "[]").toString(),
-                                    Array<String>::class.java
+                                    Array<ComponentData>::class.java
                                 ).asList(),
                                 isDraft = true,
                                 userID, enteredValues = converter.fromJson(
@@ -270,6 +272,7 @@ class AppRepositoryImpl @Inject constructor(
                         if (it.data?.getOrDefault("password", "").toString()
                             == password
                         ) {
+                            myLog2("user id saved:${it.id}")
                             pref.saveId(it.id)
                             trySend(Result.success(Unit))
                         } else {
@@ -411,16 +414,18 @@ class AppRepositoryImpl @Inject constructor(
                 .addOnFailureListener {
                     trySend(Result.failure(it))
                 }
-
             awaitClose()
         }
 
     override fun hasUserInFireBase(userID: String): Flow<Boolean> = callbackFlow {
+        var result = false
         firestore.collection("Users")
-            .whereEqualTo("userId", userID)
             .get()
             .addOnSuccessListener {
-                trySend(true)
+                it.documents.forEach {
+                    result = it.id == userID
+                }
+                trySend(result)
             }
             .addOnFailureListener { trySend(false) }
 

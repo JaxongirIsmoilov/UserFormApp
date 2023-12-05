@@ -48,7 +48,7 @@ fun DatePickerPreview(
     content: String,
     isEnable: Boolean,
     modifier: Modifier,
-    deleteComp: () -> Unit = {}
+    gettingDate: (String) -> Unit = {}
 ) {
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
@@ -61,6 +61,7 @@ fun DatePickerPreview(
                 .format(pickedDate)
         }
     }
+    gettingDate.invoke(formattedDate)
 
     val dateDialogState = rememberMaterialDialogState()
 

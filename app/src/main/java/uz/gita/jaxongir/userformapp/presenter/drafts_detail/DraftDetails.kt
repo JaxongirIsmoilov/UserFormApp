@@ -60,6 +60,7 @@ import uz.gita.jaxongir.userformapp.R
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
+import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
@@ -68,7 +69,7 @@ import uz.gita.jaxongir.userformapp.utills.myLog
 import javax.inject.Inject
 
 class DraftDetails @Inject constructor(
-    private val list: List<String>,
+    private val list: List<ComponentData>,
     private val myPref: MyPref
 ) : AndroidScreen() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -866,7 +867,7 @@ fun DraftDetailsContent(
                                                         ), onClick = {
                                                             onEventDispatchers.invoke(
                                                                 DraftScreenContract.Intent.SaveAsDraft(
-                                                                    list = uiState.value.listIds,
+                                                                    list = listOf(),
                                                                    listOf(),  listOf(), listOf(), context,
                                                                 )
                                                             )
@@ -883,7 +884,7 @@ fun DraftDetailsContent(
                                                             if (!shouldShowError) {
                                                                 onEventDispatchers.invoke(
                                                                     DraftScreenContract.Intent.SaveAsSaved(
-                                                                        uiState.value.listIds,
+                                                                        listOf(),
                                                                         context, listOf(), listOf(), listOf()
                                                                     )
                                                                 )
