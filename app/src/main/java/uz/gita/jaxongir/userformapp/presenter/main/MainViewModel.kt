@@ -64,7 +64,7 @@ class MainViewModel @Inject constructor(
             is MainContract.Intent.ClickAsDraft -> {
                 viewModelScope.launch {
                     appRepository.addDraftedItems(
-                        FormRequest(intent.list, true, pref.getId())
+                        FormRequest(intent.list, true, pref.getId(), listOf(), listOf(), listOf())
                     ).onEach {
                         it.onSuccess {
                             mainDirection.back()
@@ -81,7 +81,7 @@ class MainViewModel @Inject constructor(
             is MainContract.Intent.ClickAsSaved -> {
                 viewModelScope.launch {
                     appRepository.addSavedItems(
-                        FormRequest(intent.list, isDraft = false, pref.getId())
+                        FormRequest(intent.list, isDraft = false, pref.getId(), listOf(), listOf(), listOf())
                     ).onEach {
                         it.onSuccess {
                             mainDirection.back()

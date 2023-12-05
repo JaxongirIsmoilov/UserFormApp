@@ -92,6 +92,9 @@ fun MainScreenContent(
     val id = UUID.randomUUID().toString()
     val sdf = SimpleDateFormat("dd MMM, yyyy - HH:mm")
     val currentDateAndTime: String = sdf.format(Date())
+    var componentIds by remember {
+        mutableStateOf(arrayListOf<String>())
+    }
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(color = Color(0xFFFF3951))
@@ -152,6 +155,7 @@ fun MainScreenContent(
                         ) {
                             val uuid = UUID.randomUUID().toString()
                             uiState.value.components.forEach { data ->
+                                componentIds.add(data.id)
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
@@ -736,7 +740,6 @@ fun MainScreenContent(
                                                                                     data.backgroundColor.red,
                                                                                     data.backgroundColor.green,
                                                                                     data.backgroundColor.blue
-
                                                                                 )
                                                                             )
                                                                     )
@@ -850,7 +853,7 @@ fun MainScreenContent(
                                         ), onClick = {
                                             onEventDispatchers.invoke(
                                                 MainContract.Intent.ClickAsDraft(
-                                                    uiState.value.components, context
+                                                    componentIds, context
                                                 )
                                             )
 
@@ -867,7 +870,7 @@ fun MainScreenContent(
                                             if (!shouldShowError) {
                                                 onEventDispatchers.invoke(
                                                     MainContract.Intent.ClickAsSaved(
-                                                        uiState.value.components, context
+                                                        componentIds, context
                                                     )
                                                 )
                                             } else {

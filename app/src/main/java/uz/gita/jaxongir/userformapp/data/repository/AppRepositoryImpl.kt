@@ -383,7 +383,7 @@ class AppRepositoryImpl @Inject constructor(
                                     "selectedSpinnerText",
                                     ""
                                 ).toString(),
-                                imageType = ImageTypeEnum.NONE,
+                                imageType = ImageTypeEnum.GALLERY,
                                 inValues = converter.fromJson(
                                     it.data?.getOrDefault("inValues", "[]").toString(),
                                     Array<String>::class.java
