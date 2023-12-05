@@ -95,6 +95,9 @@ fun MainScreenContent(
     var componentsList by remember {
         mutableStateOf(arrayListOf<ComponentData>())
     }
+    var draftBtn by remember {
+        mutableStateOf(true)
+    }
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(color = Color(0xFFFF3951))
@@ -842,8 +845,6 @@ fun MainScreenContent(
                                     }
                                 }
                             }
-
-
                             item {
                                 Row(
                                     modifier = Modifier
@@ -859,13 +860,17 @@ fun MainScreenContent(
                                                 0xFFFA1466
                                             )
                                         ), onClick = {
-                                            onEventDispatchers.invoke(
-                                                MainContract.Intent.ClickAsDraft(
-                                                    componentsList, context
+                                            if (shouldShowError) {
+                                                draftBtn = true
+                                                onEventDispatchers.invoke(
+                                                    MainContract.Intent.ClickAsDraft(
+                                                        componentsList, context
+                                                    )
                                                 )
-                                            )
-
-                                        }) {
+                                            } else {
+                                                draftBtn = false
+                                            }
+                                        }, enabled = draftBtn) {
                                         Text(text = "Save As Draft")
                                     }
                                     Spacer(modifier = Modifier.weight(1f))

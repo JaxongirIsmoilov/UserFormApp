@@ -61,6 +61,7 @@ import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.local.pref.MyPref
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
+import uz.gita.jaxongir.userformapp.presenter.main.MainContract
 import uz.gita.jaxongir.userformapp.ui.components.DatePickerPreview
 import uz.gita.jaxongir.userformapp.ui.components.InputField
 import uz.gita.jaxongir.userformapp.ui.components.SampleSpinnerPreview
@@ -90,6 +91,9 @@ fun DraftDetailsContent(
 ) {
     var shouldShowError by remember {
         mutableStateOf(false)
+    }
+    var draftBtn by remember {
+        mutableStateOf(true)
     }
     val density = LocalDensity.current
     val weight = LocalConfiguration.current.screenWidthDp
@@ -332,25 +336,39 @@ fun DraftDetailsContent(
                                                         data
                                                     )
                                                 )
-                                                DatePickerPreview(
-                                                    componentData = data,
-                                                    content = data.content,
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    isEnable = true
-                                                ) {
-                                                    onEventDispatchers.invoke(
-                                                        DraftScreenContract.Intent.UpdateComponent(
-                                                            data.copy(enteredValue = "asdfdsa")
-                                                        )
-                                                    )
-                                                    if (data.operators.isNotEmpty()) {
-                                                        onEventDispatchers.invoke(
-                                                            DraftScreenContract.Intent.CheckedComponent(
-                                                                data
-                                                            )
+                                                Column {
+                                                    if (data.isRequired) {
+                                                        if (data.enteredValue == "") {
+                                                            shouldShowError = true
+                                                        }
+                                                        Text(
+                                                            text = "This Field is required",
+                                                            fontWeight = FontWeight(600),
+                                                            color = Color(0xFFff7686)
                                                         )
                                                     }
+                                                    Spacer(modifier = Modifier.size(10.dp))
+                                                    DatePickerPreview(
+                                                        componentData = data,
+                                                        content = data.content,
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        isEnable = true
+                                                    ) {
+                                                        onEventDispatchers.invoke(
+                                                            DraftScreenContract.Intent.UpdateComponent(
+                                                                data.copy(enteredValue = "asdfdsa")
+                                                            )
+                                                        )
+                                                        if (data.operators.isNotEmpty()) {
+                                                            onEventDispatchers.invoke(
+                                                                DraftScreenContract.Intent.CheckedComponent(
+                                                                    data
+                                                                )
+                                                            )
+                                                        }
+                                                    }
                                                 }
+
                                             }
                                         }
 
@@ -864,13 +882,21 @@ fun DraftDetailsContent(
                                                                 0xFFFA1466
                                                             )
                                                         ), onClick = {
-                                                            onEventDispatchers.invoke(
-                                                                DraftScreenContract.Intent.SaveAsDraft(
-                                                                    list = listOf(),
-                                                                   listOf(),  listOf(), listOf(), context,
+                                                            if (shouldShowError) {
+                                                                draftBtn = true
+                                                                onEventDispatchers.invoke(
+                                                                    DraftScreenContract.Intent.SaveAsDraft(
+                                                                        list = listOf(),
+                                                                        listOf(),
+                                                                        listOf(),
+                                                                        listOf(),
+                                                                        context,
+                                                                    )
                                                                 )
-                                                            )
-                                                        }) {
+                                                            } else {
+                                                                draftBtn = false
+                                                            }
+                                                        }, enabled = draftBtn) {
                                                         Text(text = "Save As Draft")
                                                     }
                                                     Spacer(modifier = Modifier.weight(1f))
@@ -884,7 +910,10 @@ fun DraftDetailsContent(
                                                                 onEventDispatchers.invoke(
                                                                     DraftScreenContract.Intent.SaveAsSaved(
                                                                         listOf(),
-                                                                        context, listOf(), listOf(), listOf()
+                                                                        context,
+                                                                        listOf(),
+                                                                        listOf(),
+                                                                        listOf()
                                                                     )
                                                                 )
                                                             } else {
