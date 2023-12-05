@@ -61,7 +61,6 @@ class AppRepositoryImpl @Inject constructor(
         val savedItemList = arrayListOf<FormData>()
         firestore.collection("Forms").whereEqualTo("draft", false).get()
             .addOnSuccessListener {
-                myLog2("saved list")
                 it.documents.forEach {
                     val data = if (it.data?.getOrDefault("data", "") == null)
                         FormRequest()
