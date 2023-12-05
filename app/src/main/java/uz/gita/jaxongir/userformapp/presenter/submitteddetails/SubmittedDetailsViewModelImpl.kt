@@ -6,10 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
@@ -25,23 +22,6 @@ class SubmittedDetailsViewModelImpl @Inject constructor(
     private val pref: MyPref
 ) : SubmittedDetailsContract.ViewModel, ViewModel() {
     override val uiState = MutableStateFlow(SubmittedDetailsContract.UIState())
-
-    init {
-        viewModelScope.launch {
-            repository.getComponentsByUserId(pref.getId())
-                .onStart { uiState.update { it.copy(isLoading = true) } }
-                .onCompletion { uiState.update { it.copy(isLoading = false) } }
-                .onEach { result ->
-                    result.onSuccess { components ->
-                        uiState.update { it.copy(submittedDetails = components.sortedBy { it.locId }) }
-                    }
-                    result.onFailure {
-
-                    }
-
-                }.launchIn(viewModelScope)
-        }
-    }
 
 
     override fun onEventDispatcher(intent: SubmittedDetailsContract.Intent) {
@@ -135,7 +115,7 @@ class SubmittedDetailsViewModelImpl @Inject constructor(
 
 
             is SubmittedDetailsContract.Intent.UpdateList -> {
-                uiState.update { it.copy(listIds = intent.list) }
+                uiState.update { it.copy(submittedDetails = intent.list) }
             }
         }
 

@@ -2,7 +2,6 @@ package uz.gita.jaxongir.userformapp.data.model
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import com.google.gson.Gson
 import uz.gita.jaxongir.userformapp.data.enums.ComponentEnum
 import uz.gita.jaxongir.userformapp.data.enums.ImageTypeEnum
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
@@ -14,19 +13,19 @@ data class ComponentData(
     val idEnteredByUser: String = "",
     val content: String = "",
     val enteredValue: String = "",
-    val textFieldType: TextFieldType,
-    val maxLines: Int,
-    val maxLength: Int,
-    val minLength: Int,
-    val maxValue: Int,
-    val minValue: Int,
-    val isMulti: Boolean,
+    val textFieldType: TextFieldType = TextFieldType.Text,
+    val maxLines: Int = 0,
+    val maxLength: Int = 0,
+    val minLength: Int = 0,
+    val maxValue: Int = 0,
+    val minValue: Int = 0,
+    val isMulti: Boolean = false,
     val variants: List<String> = listOf(),
-    var selected: List<Boolean> = listOf(),
+    val selected: List<Boolean> = listOf(),
     val connectedValues: List<String> = listOf(),
     val connectedIds: List<String> = listOf(),
     val operators: List<String> = listOf(),
-    var selectedSpinnerText: String,
+    val selectedSpinnerText: String = "",
     val type: ComponentEnum = ComponentEnum.SampleText,
     val isRequired: Boolean = false,
     val imgUri: String = "",
@@ -35,10 +34,10 @@ data class ComponentData(
     val customHeight: String = "",
     val rowId: String = "",
     val backgroundColor: Int = Color.Transparent.toArgb(),
-    val weight: String,
+    val weight: String = "",
     val imageType: ImageTypeEnum = ImageTypeEnum.NONE,
     val inValues: List<String> = listOf(),
-    val isVisible: Boolean,
+    val isVisible: Boolean = false,
 )
 
 

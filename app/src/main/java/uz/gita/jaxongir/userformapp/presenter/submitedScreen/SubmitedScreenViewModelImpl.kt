@@ -34,7 +34,7 @@ class SubmitedScreenViewModelImpl @Inject constructor(
             .onEach {
             it.onSuccess {list->
                 myLog2("")
-                uiState.update { it.copy(list = list) }
+                uiState.update { it.copy(list = list.sortedBy { !it.isDraft }) }
             }
             it.onFailure {
 

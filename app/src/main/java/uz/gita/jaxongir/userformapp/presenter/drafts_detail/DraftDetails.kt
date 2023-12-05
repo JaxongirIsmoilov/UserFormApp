@@ -77,7 +77,6 @@ class DraftDetails @Inject constructor(
     override fun Content() {
         val vm: DraftScreenContract.ViewModel = getViewModel<DraftDetailsViewModelImpl>()
         DraftDetailsContent(vm.uiState.collectAsState(), vm::onEventDispatcher, myPref)
-//        vm.onEventDispatcher(DraftScreenContract.Intent.GetComponents(list))
         vm.onEventDispatcher(DraftScreenContract.Intent.UpdateList(list))
     }
 }

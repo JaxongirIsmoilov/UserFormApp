@@ -11,6 +11,4 @@ data class FormData(
     val enteredValues: List<String>,
     val selectedValue: List<String>,
     val selectedStates: List<Boolean>
-
-
 )

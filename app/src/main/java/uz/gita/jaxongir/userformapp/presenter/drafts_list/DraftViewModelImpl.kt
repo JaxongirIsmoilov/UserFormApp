@@ -31,7 +31,7 @@ class DraftViewModelImpl @Inject constructor(
             .onEach {
             it.onSuccess { list ->
                 myLog2("size repo:${list.size}")
-                uiState.update { it.copy(list) }
+                uiState.update { it.copy(list.sortedBy { it.isDraft }) }
             }
             it.onFailure {
 

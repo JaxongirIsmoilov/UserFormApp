@@ -64,6 +64,7 @@ class DetailsScreen(val list: List<ComponentData>) : AndroidScreen() {
             uiState = viewModel.uiState.collectAsState(),
             onEventDispatchers = viewModel::onEventDispatcher,
         )
+        viewModel.onEventDispatcher(SubmittedDetailsContract.Intent.UpdateList(list))
 
     }
 }
