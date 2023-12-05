@@ -226,7 +226,6 @@ fun DraftDetailsContent(
 
                                         ComponentEnum.SampleText -> {
                                             item {
-                                                myLog("sample text")
                                                 if (data.operators.isNotEmpty()) {
                                                     onEventDispatchers.invoke(
                                                         DraftScreenContract.Intent.CheckedComponent(
@@ -251,7 +250,12 @@ fun DraftDetailsContent(
                                                                     horizontal = 16.dp,
                                                                     vertical = 5.dp
                                                                 )
-                                                            else Modifier.size(0.dp)
+                                                            else Modifier
+                                                                .size(0.dp)
+                                                                .border(
+                                                                    width = 0.dp,
+                                                                    color = Color.White
+                                                                )
                                                         ),
                                                     verticalAlignment = Alignment.CenterVertically
                                                 ) {
@@ -863,7 +867,7 @@ fun DraftDetailsContent(
                                                             onEventDispatchers.invoke(
                                                                 DraftScreenContract.Intent.SaveAsDraft(
                                                                     list = uiState.value.listIds,
-                                                                    context
+                                                                   listOf(),  listOf(), listOf(), context,
                                                                 )
                                                             )
                                                         }) {
@@ -880,7 +884,7 @@ fun DraftDetailsContent(
                                                                 onEventDispatchers.invoke(
                                                                     DraftScreenContract.Intent.SaveAsSaved(
                                                                         uiState.value.listIds,
-                                                                        context
+                                                                        context, listOf(), listOf(), listOf()
                                                                     )
                                                                 )
                                                             } else {
