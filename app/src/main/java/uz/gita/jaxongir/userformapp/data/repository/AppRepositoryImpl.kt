@@ -32,7 +32,7 @@ class AppRepositoryImpl @Inject constructor(
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     private val converter = Gson()
     override fun addDraftedItems(request: FormRequest): Flow<Result<String>> = callbackFlow {
-        firestore.collection("Forms").add(request).addOnSuccessListener {
+        firestore.collection("Forms").add(request.copy(isDraft = true)).addOnSuccessListener {
             trySend(Result.success("Success"))
         }
             .addOnFailureListener {
@@ -42,8 +42,9 @@ class AppRepositoryImpl @Inject constructor(
         awaitClose()
     }
 
+
     override fun addSavedItems(request: FormRequest): Flow<Result<String>> = callbackFlow {
-        firestore.collection("Forms").add(request).addOnSuccessListener {
+        firestore.collection("Forms").add(request.copy(isDraft = false)).addOnSuccessListener {
             trySend(Result.success("Success"))
         }
             .addOnFailureListener {
@@ -62,10 +63,23 @@ class AppRepositoryImpl @Inject constructor(
                 it.documents.forEach {
                     savedItemList.add(
                         FormData(
-                            it.id, converter.fromJson(
+                            it.id,
+                            converter.fromJson(
                                 it.data?.getOrDefault("listComponentIds", "[]").toString(),
                                 Array<String>::class.java
-                            ).asList(), isDraft = false, userID
+                            ).asList(),
+                            isDraft = false,
+                            userID,
+                            enteredValues = converter.fromJson(
+                                it.data?.getOrDefault("enteredValues", "[]").toString(),
+                                Array<String>::class.java
+                            ).asList(), selectedValue = converter.fromJson(
+                                it.data?.getOrDefault("selectedValue", "[]").toString(),
+                                Array<String>::class.java
+                            ).asList(), selectedStates = converter.fromJson(
+                                it.data?.getOrDefault("selectedStates", "[]").toString(),
+                                Array<Boolean>::class.java
+                            ).asList()
                         )
                     )
                 }
@@ -87,7 +101,7 @@ class AppRepositoryImpl @Inject constructor(
                 .addOnSuccessListener {
                     it.documents.forEach {
                         myLog2("list document $it")
-                     draftedItemsList.add(
+                        draftedItemsList.add(
                             FormData(
                                 it.id,
                                 converter.fromJson(
@@ -95,7 +109,16 @@ class AppRepositoryImpl @Inject constructor(
                                     Array<String>::class.java
                                 ).asList(),
                                 isDraft = true,
-                                userID
+                                userID, enteredValues = converter.fromJson(
+                                    it.data?.getOrDefault("enteredValues", "[]").toString(),
+                                    Array<String>::class.java
+                                ).asList(), selectedValue = converter.fromJson(
+                                    it.data?.getOrDefault("selectedValue", "[]").toString(),
+                                    Array<String>::class.java
+                                ).asList(), selectedStates = converter.fromJson(
+                                    it.data?.getOrDefault("selectedStates", "[]").toString(),
+                                    Array<Boolean>::class.java
+                                ).asList()
                             )
                         )
 
@@ -249,7 +272,7 @@ class AppRepositoryImpl @Inject constructor(
                         ) {
                             pref.saveId(it.id)
                             trySend(Result.success(Unit))
-                        }else{
+                        } else {
                             trySend(Result.failure(Exception("Password does not match")))
                         }
                     }

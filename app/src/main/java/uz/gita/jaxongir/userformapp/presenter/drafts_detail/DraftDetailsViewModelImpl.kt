@@ -36,7 +36,7 @@ class DraftDetailsViewModelImpl @Inject constructor(
                         val sortedList = components.sortedBy {
                             it.locId
                         }
-                        uiState.update { it.copy( list = sortedList) }
+                        uiState.update { it.copy(list = sortedList) }
                     }
 
                     it.onFailure {
@@ -48,6 +48,7 @@ class DraftDetailsViewModelImpl @Inject constructor(
         }
 
     }
+
     override fun onEventDispatcher(intent: DraftScreenContract.Intent) {
         when (intent) {
             is DraftScreenContract.Intent.SaveAsDraft -> {
@@ -56,7 +57,10 @@ class DraftDetailsViewModelImpl @Inject constructor(
                         FormRequest(
                             intent.list,
                             isDraft = true,
-                            myShared.getId()
+                            myShared.getId(),
+                            intent.enteredValuesList,
+                            intent.selectedValuesList,
+                            intent.selectedStateList
                         )
                     ).onEach {
                         it.onSuccess {
@@ -75,7 +79,10 @@ class DraftDetailsViewModelImpl @Inject constructor(
                         FormRequest(
                             intent.list,
                             isDraft = false,
-                            myShared.getId()
+                            myShared.getId(),
+                            intent.enteredValuesList,
+                            intent.selectedValuesList,
+                            intent.selectedStateList
                         )
                     ).onEach {
                         it.onSuccess {
@@ -94,8 +101,8 @@ class DraftDetailsViewModelImpl @Inject constructor(
                 }
             }
 
-            is DraftScreenContract.Intent.GetComponents ->{
-                val list= arrayListOf<ComponentData>()
+            is DraftScreenContract.Intent.GetComponents -> {
+                val list = arrayListOf<ComponentData>()
                 viewModelScope.launch {
                     intent.list.forEach {
                         appRepository.getComponentByComponentId(it).onEach {

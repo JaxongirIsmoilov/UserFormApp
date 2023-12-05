@@ -69,12 +69,12 @@ class MainViewModel @Inject constructor(
                         it.onSuccess {
                             mainDirection.back()
                         }
-                        it.onFailure {
-
-                        }
-
+                        it.onFailure {}
                     }.launchIn(viewModelScope)
                 }
+            }
+            is MainContract.Intent.addComponentData ->{
+
             }
 
 
@@ -87,7 +87,8 @@ class MainViewModel @Inject constructor(
                             mainDirection.back()
                         }
                         it.onFailure {
-                            Toast.makeText(intent.context,"exception:$it", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(intent.context, "exception:$it", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }.launchIn(viewModelScope)
 
@@ -228,11 +229,8 @@ class MainViewModel @Inject constructor(
                         it.onFailure {
                             Toast.makeText(context, "Cannot be loaded!", Toast.LENGTH_SHORT).show()
                         }
-
                     }.launchIn(viewModelScope)
             }
-
-
         }
     }
 

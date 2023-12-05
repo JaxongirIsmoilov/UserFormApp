@@ -78,7 +78,6 @@ class MainScreen @Inject constructor(val myPref: MyPref) : AndroidScreen() {
         val vm: MainContract.ViewModel = getViewModel<MainViewModel>()
         vm.onEventDispatcher(MainContract.Intent.LoadList)
         MainScreenContent(vm.uiState.collectAsState(), vm::onEventDispatcher, myPref)
-
     }
 }
 
@@ -99,7 +98,10 @@ fun MainScreenContent(
     var shouldShowError by remember {
         mutableStateOf(false)
     }
-    var componentsId by remember { mutableStateOf(arrayListOf<String>()) }
+    var enteredValuesList by remember {
+        mutableStateOf(arrayListOf<String>())
+    }
+    var selectedValuesList by remember { mutableStateOf(arrayListOf<String>()) }
     val density = LocalDensity.current
     val weight = LocalConfiguration.current.screenWidthDp
     Box(modifier = Modifier.fillMaxSize()) {
@@ -126,7 +128,6 @@ fun MainScreenContent(
 
             Box(modifier = Modifier.fillMaxSize()) {
                 if (uiState.value.components.isEmpty()) {
-
                     Text(
                         text = "There is no components yet!",
                         fontSize = 22.sp,
@@ -151,7 +152,6 @@ fun MainScreenContent(
                         ) {
                             val uuid = UUID.randomUUID().toString()
                             uiState.value.components.forEach { data ->
-                                componentsId.add(data.id)
                                 when (data.type) {
                                     ComponentEnum.Spinner -> {
                                         item {
@@ -159,11 +159,6 @@ fun MainScreenContent(
                                                 list = data.variants ?: listOf(),
                                                 preselected = data.variants[0] ?: "",
                                                 onSelectionChanged = {
-                                                    onEventDispatchers.invoke(
-                                                        MainContract.Intent.UpdateComponent(
-                                                            data.copy(selectedSpinnerText = it)
-                                                        )
-                                                    )
                                                     if (data.operators.isNotEmpty()) {
                                                         myLog("spinner compo")
                                                         onEventDispatchers.invoke(
@@ -198,11 +193,7 @@ fun MainScreenContent(
                                                     list = data.variants,
                                                     componentData = data,
                                                     onSaveStates = {
-                                                        onEventDispatchers.invoke(
-                                                            MainContract.Intent.UpdateComponent(
-                                                                componentData = data.copy(selected = it)
-                                                            )
-                                                        )
+
                                                     },
                                                     deleteComp = {
                                                         onEventDispatchers.invoke(
@@ -304,11 +295,7 @@ fun MainScreenContent(
                                                     Spacer(modifier = Modifier.size(10.dp))
                                                     InputField(
                                                         onEdit = {
-                                                            onEventDispatchers.invoke(
-                                                                MainContract.Intent.UpdateComponent(
-                                                                    data.copy(enteredValue = it)
-                                                                )
-                                                            )
+
                                                             if (data.operators.isNotEmpty()) {
                                                                 onEventDispatchers.invoke(
                                                                     MainContract.Intent.CheckedComponent(
@@ -861,11 +848,11 @@ fun MainScreenContent(
                                                 0xFFFA1466
                                             )
                                         ), onClick = {
-                                                onEventDispatchers.invoke(
-                                                    MainContract.Intent.ClickAsDraft(
-                                                        componentsId, context
-                                                    )
+                                            onEventDispatchers.invoke(
+                                                MainContract.Intent.ClickAsDraft(
+                                                    uiState.value.components, context
                                                 )
+                                            )
 
                                         }) {
                                         Text(text = "Save As Draft")
@@ -880,7 +867,7 @@ fun MainScreenContent(
                                             if (!shouldShowError) {
                                                 onEventDispatchers.invoke(
                                                     MainContract.Intent.ClickAsSaved(
-                                                        componentsId, context
+                                                        uiState.value.components, context
                                                     )
                                                 )
                                             } else {
