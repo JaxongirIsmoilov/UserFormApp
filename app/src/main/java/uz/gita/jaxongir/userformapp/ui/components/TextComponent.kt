@@ -34,7 +34,7 @@ fun TextComponent(
 ) {
     Card(
         modifier = Modifier
-            .padding(vertical = 10.dp, horizontal = 15.dp)
+            .padding(vertical = 10.dp, horizontal = 12.dp)
             .fillMaxWidth()
             .height(54.dp)
             .clip(RoundedCornerShape(12.dp))
