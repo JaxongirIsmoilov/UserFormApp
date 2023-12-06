@@ -47,7 +47,6 @@ fun DatePickerPreview(
     componentData: ComponentData,
     content: String,
     isEnable: Boolean,
-    modifier: Modifier,
     gettingDate: (String) -> Unit = {}
 ) {
     var pickedDate by remember {
@@ -66,9 +65,10 @@ fun DatePickerPreview(
     val dateDialogState = rememberMaterialDialogState()
 
     Column(
-        modifier = modifier.then(
-            if (componentData.isVisible) modifier.fillMaxWidth() else modifier.size(0.dp)
-        )
+//        modifier = Modifier.then(
+//            if (componentData.isVisible) Modifier.fillMaxWidth() else Modifier.size(0.dp)
+//        )
+    modifier = Modifier.fillMaxWidth()
     ) {
         Text(text = content, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(8.dp))
@@ -151,6 +151,6 @@ fun DatePickerPreviewNew() {
             imageType = ImageTypeEnum.NONE,
             weight = ""
         ),
-        "", false, modifier = Modifier
+        "", false
     )
 }

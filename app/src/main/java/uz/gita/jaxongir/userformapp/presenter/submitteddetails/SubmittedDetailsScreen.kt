@@ -114,12 +114,11 @@ fun DetailsScreenContent(
                                     item {
                                         SampleSpinnerPreview(
                                             list = data.variants ?: listOf(),
-                                            preselected = data.variants[0] ?: "",
+                                            preselected = data.selectedSpinnerText ?: "",
                                             onSelectionChanged = {},
                                             content = data.content,
                                             componentData = data,
                                             deleteComp = {},
-                                            modifier = Modifier.fillMaxWidth(),
                                             false,
                                             isDraft = true
                                         )
@@ -137,7 +136,6 @@ fun DetailsScreenContent(
                                                 componentData = data,
                                                 {},
                                                 isEnable = false,
-                                                modifier = Modifier.fillMaxWidth(),
                                                 true
                                             )
                                         }
@@ -212,7 +210,6 @@ fun DetailsScreenContent(
                                             componentData = data,
                                             content = data.content,
                                             isEnable = false,
-                                            modifier = Modifier.fillMaxWidth()
                                         ) {
                                         }
                                     }
@@ -354,7 +351,6 @@ fun DetailsScreenContent(
                                                                 list = data.variants,
                                                                 { (data.selected) },
                                                                 componentData = data,
-                                                                modifier = Modifier,
                                                                 deleteComp = {},
                                                                 isEnable = false,
                                                                 isInDraft = true,
@@ -379,7 +375,6 @@ fun DetailsScreenContent(
                                                                 onSelectionChanged = {},
                                                                 content = data.content,
                                                                 componentData = data,
-                                                                modifier = Modifier,
                                                                 deleteComp = {},
                                                                 isEnable = false,
                                                                 isDraft = true
@@ -406,7 +401,6 @@ fun DetailsScreenContent(
                                                                 componentData = data,
                                                                 content = data.content,
                                                                 isEnable = false,
-                                                                modifier = Modifier.fillMaxWidth(),
                                                             )
                                                         }
                                                     }

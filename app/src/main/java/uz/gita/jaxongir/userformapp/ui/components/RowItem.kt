@@ -47,7 +47,6 @@ fun RowItem(
                         content = data.content,
                         componentData = data,
                         {},
-                        modifier = Modifier.weight(1f),
                         true,
                         isDraft = false
                     )
@@ -81,7 +80,7 @@ fun RowItem(
                                             )
                                         )
                                     }
-                            }, isEnable = true, modifier = Modifier.weight(1f), isInDraft = false
+                            }, isEnable = true, isInDraft = false
                         )
                     }
 
@@ -169,7 +168,7 @@ fun RowItem(
 
                     DatePickerPreview(
                         componentData = data,
-                        content = data.content, modifier = Modifier.weight(1f), isEnable = true
+                        content = data.content, isEnable = true
                     ) {
                             onEventDispatcher.invoke(
                                 MainContract.Intent.UpdateComponent(

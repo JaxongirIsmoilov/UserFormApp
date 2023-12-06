@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -29,21 +28,20 @@ fun SelectorItem(
     componentData: ComponentData,
     deleteComp: (String) -> Unit,
     isEnable: Boolean,
-    modifier: Modifier,
     isInDraft: Boolean
 ) {
     val selectedItem = remember { mutableStateOf<String?>(null) }
     val listSem = arrayListOf<Boolean>()
 
     Column(
-        modifier = modifier
-            .then(
-                if (componentData.isVisible) Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                else Modifier.size(0.dp)
-            )
-
+//        modifier = Modifier
+//            .then(
+//                if (componentData.isVisible) Modifier
+//                    .fillMaxWidth()
+//                    .wrapContentHeight()
+//                else Modifier.size(0.dp)
+//            )
+        modifier = Modifier.fillMaxWidth()
     ) {
 
         Spacer(modifier = Modifier.size(10.dp))
@@ -67,7 +65,7 @@ fun SelectorItem(
             CheckBoxItem(
                 title = s,
                 { deleteComp(s) },
-                state = if (isInDraft) componentData.selected[index] else false , isEnable = isEnable
+                state = if (isInDraft) componentData.selected[index] else false, isEnable = isEnable
             ) {
                 listSem.add(it)
                 onSaveStates.invoke(listSem)

@@ -24,7 +24,6 @@ import uz.gita.jaxongir.userformapp.data.model.ComponentData
 import uz.gita.jaxongir.userformapp.domain.repository.AppRepository
 import uz.gita.jaxongir.userformapp.utills.myLog2
 import javax.inject.Inject
-
 class AppRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val pref: MyPref,

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -37,7 +38,6 @@ fun SampleSpinnerPreview(
     content: String,
     componentData: ComponentData,
     deleteComp: (String) -> Unit,
-    modifier: Modifier,
     isEnable: Boolean,
     isDraft: Boolean,
 ) {
@@ -46,9 +46,10 @@ fun SampleSpinnerPreview(
     var expanded by remember { mutableStateOf(false) }
 
     Box(
-        modifier = modifier.then(
-            if (componentData.isVisible) Modifier.wrapContentSize() else Modifier.size(0.dp)
-        )
+//        modifier = Modifier.then(
+//            if (componentData.isVisible) Modifier.fillMaxWidth().wrapContentSize() else Modifier.size(0.dp)
+//        )
+    modifier = Modifier.fillMaxWidth()
     ) {
         Column {
             Row {

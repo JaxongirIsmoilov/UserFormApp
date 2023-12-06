@@ -35,7 +35,7 @@ class DraftDetailsViewModelImpl @Inject constructor(
                 viewModelScope.launch {
                     appRepository.addSavedItems(
                         FormRequest(
-                            intent.list,
+                            intent.list.toList(),
                             isDraft = true,
                             myShared.getId(),
                             intent.enteredValuesList,
@@ -57,7 +57,7 @@ class DraftDetailsViewModelImpl @Inject constructor(
                 viewModelScope.launch {
                     appRepository.addSavedItems(
                         FormRequest(
-                            intent.list,
+                            intent.list.toList(),
                             isDraft = false,
                             myShared.getId(),
                             intent.enteredValuesList,
