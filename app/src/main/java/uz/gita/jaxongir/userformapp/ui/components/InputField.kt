@@ -1,6 +1,7 @@
 package uz.gita.jaxongir.userformapp.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -13,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import uz.gita.jaxongir.userformapp.data.enums.TextFieldType
 import uz.gita.jaxongir.userformapp.data.model.ComponentData
 
@@ -56,7 +58,8 @@ fun InputField(
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 label = { Text(text = componentData.content) },
-                modifier = modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth()
+                    .padding(horizontal = 12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFFF3951),
                     unfocusedBorderColor = Color(0xFFFF7686)
@@ -88,7 +91,8 @@ fun InputField(
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text(text = componentData.content) },
-                modifier = modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth()
+                    .padding(horizontal = 12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFFF3951),
                     unfocusedBorderColor = Color(0xFFFF7686)
@@ -110,7 +114,8 @@ fun InputField(
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 label = { Text(text = componentData.content) },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFFF3951),
                     unfocusedBorderColor = Color(0xFFFF7686)
@@ -130,7 +135,8 @@ fun InputField(
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 label = { Text(text = componentData.content) },
-                modifier = modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth()
+                    .padding(horizontal = 12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFFF3951),
                     unfocusedBorderColor = Color(0xFFFF7686)
